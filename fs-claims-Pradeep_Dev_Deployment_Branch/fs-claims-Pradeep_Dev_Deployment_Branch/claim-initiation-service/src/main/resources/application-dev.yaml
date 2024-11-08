@@ -1,0 +1,38 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /claim/initiation
+
+spring:
+  mvc:
+    problemdeatils:
+      enabled: true
+
+  datasource:
+    url: jdbc:sqlserver://sz-ue2-fintechclaimworx-d-sql-01.database.windows.net;databaseName=FS_CLAIMS_DEV
+    username: fs_claims_app_np
+    password: QTrCjeUosrNPk7rV
+
+logging:
+  config: classpath:log4j2.xml
+
+claim-integration:
+  rest:
+    url: http://claim-integration-service:8081/claim/integration
+
+claim-security:
+  rest:
+    url: http://claim-security-service:8083/claim/security
+    
+claim-notification:
+  rest:
+    url: http://localhost:8084/claim/notification
+
+prepare-RGA:
+  error-messages:
+    residential-carpet: "Failed Min Requirements : Residential Carpet Under 50 feet"
+    commercial-carpet: "Failed Min Requirements : Commercial Under 70 feet"
+    residential-hard-surface: "Failed Min Requirements : Residential HardSurface Under 250 feet"
+    outSourced: "Failed it is OutSourced"
+    allowanceToKeepServiceToKeep: "Failed To AllowanceToKeep/ServiceToKeep"
+    directShippedProduct : "Failed it is a Direct Shipped Product"

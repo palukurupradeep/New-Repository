@@ -1,0 +1,41 @@
+{{- range $serviceName, $serviceConfig := .Values.services }}
+{{- if and $serviceConfig.enabled (ne $serviceName "claim-ui") }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceName }}
+  labels:
+    {{- include "claim-services.labels" $ | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ $serviceConfig.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ $serviceName }}
+{{- end }}
+{{- end }}
+
+---
+{{- if index .Values.services "claim-ui" "enabled" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: claim-ui
+  labels:
+    {{- include "claim-services.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    {{- range $index, $port := index .Values.services "claim-ui" "ports" }}
+    - port: {{ $port }}
+      targetPort: port-{{ $index }}
+      protocol: TCP
+      name: port-{{ $index }}
+    {{- end }}
+  selector:
+    app: claim-ui
+{{- end }}

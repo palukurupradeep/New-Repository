@@ -1,0 +1,21 @@
+
+<div class="body" [ngClass]="getBodyClass()">
+    <div class="main">
+        <div class="container-fluid">
+            <table>
+                <thead>
+                <th>Claim ID</th>
+                <th>Claim number</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let claim of claims">
+                    <td>{{ claim.claimId }}</td>
+                    <td><a [routerLink]="['/claim-detail', claim.claimNumber]">{{ claim.claimNumber }}</a></td>
+                    
+                  </tr>
+            </tbody>
+
+            </table>
+            </div>
+            </div>
+            </div>

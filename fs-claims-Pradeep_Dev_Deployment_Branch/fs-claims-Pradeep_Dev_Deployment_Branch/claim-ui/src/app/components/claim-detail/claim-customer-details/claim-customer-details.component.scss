@@ -1,0 +1,377 @@
+*{font-family: 'Montserrat';}
+.card-details-section{white-space: normal; }
+.pr-15{padding: 0 0 0 15px;}
+.select-card-details{border: 0;}
+.TM-cards h5{margin-right: 30px; white-space: nowrap;}
+.text-primary-color {
+  text-decoration: none;
+    color: #5d87ff !important;
+  }
+  .fs-18 {
+    font-size: 18px !important;
+  }
+
+  .search-wq {
+    position: relative;
+  
+    input {
+      width: 100%;
+      height: 48px;
+      flex-shrink: 0;
+      border-radius: 30px !important;
+      border: 1px solid #5d87ff;
+      background: #fff;
+      padding-left: 50px !important;
+      color: #5d87ff;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+  
+      &::placeholder {
+        color: #5d87ff;
+      }
+    }
+  
+    i.fa {
+      position: absolute;
+      left: 20px;
+      top: 18px;
+      font-size: 16px;
+      color: #5d87ff;
+    }
+  }
+  
+  .search-wq-rs {
+    position: relative;
+    height: 48px;
+  
+    input {
+      width: 95% !important;
+      border-radius: 10px;
+      color: #2a3547;
+    }
+  
+    button.btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      width: 40%;
+    }
+  
+    .cd-customer-label {
+      background-color: #fff;
+      border: 1px solid #5d87ff;
+      border-radius: 10px;
+      width: 95%;
+      height: 48px;
+      color: #2a3547;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 10px 15px;
+      pointer-events: none;
+    }
+  }
+   .py-12 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  
+  .py-5n {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
+  .py-20 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .px-20 {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .card-box-10 {
+    border-radius: 10px;
+    background-color: #fff;
+    height: 100%;
+    border: 1px solid #fff;
+  
+    &.border-blue {
+      border: 1px solid #5d87ff;
+    }
+  
+    h4 {
+      color: #2a3547;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+    }
+  
+    p {
+      color: #5d87ff;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      margin-bottom: 0;
+    }
+  
+    h5 {
+      color: #2a3547;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+      margin-bottom: 0;
+    }
+  
+    .card-box-ic {
+      span {
+        width: 54px;
+        height: 54px;
+        border-radius: 100%;
+        float: right;
+        background-color: #5d87ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  
+        img {
+          height: 30px;
+        }
+      }
+    }
+  }
+
+  .border-grey{border: 1px solid #D0D2DA; border-radius: 10px;}
+  .claim-detail--search-section {
+    border-radius: 10px;
+    background: #fff;
+    padding: 20px;
+  
+    p,
+    // a {
+    //   color: #2a3547;
+    //   font-size: 18px;
+    //   font-style: normal;
+    //   font-weight: 400;
+    //   line-height: 28px;
+    //   text-decoration: none;
+    //   /* 155.556% */
+    // }
+  
+    // a:hover {
+    //   color: #5d87ff;
+    // }
+  
+    .border-bottom {
+      border-color: #a5a5a5 !important;
+    }
+  
+    .form-select {
+      border: none;
+      width: auto;
+      box-shadow: none;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .mt-20 {
+    margin-top: 20px;
+  }
+  
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  
+  .mb-10 {
+    margin-bottom: 10px;
+  }
+  
+  .ml-20 {
+    margin-left: 15px;
+  }
+  @media (max-width: 1599px) {
+    .card-box-10 {
+      h4 {
+        font-size: 20px;
+      }
+  
+      p,
+      .form-select,
+      h5 {
+        font-size: 15px !important;
+      }
+  
+      .card-box-ic {
+        span {
+          width: 50px;
+          height: 50px;
+  
+          img {
+            height: 30px;
+          }
+        }
+      }
+    }
+
+    .fs-18 {
+      font-size: 16px !important;
+    }
+  
+    .form-select {
+      font-size: 16px;
+    }
+  
+    .claim-detail--search-section {
+  
+      p,
+      a {
+        font-size: 16px;
+        line-height: normal;
+      }
+    }
+  
+    .claim-contact--section {
+      h4 {
+        font-size: 20px;
+      }
+  
+      p,
+      a {
+        font-size: 16px;
+        line-height: 22px;
+      }
+    }
+  
+    .h-400 {
+      max-height: 340px;
+    }
+  
+    .cd-notification {
+      span {
+        font-size: 15px;
+      }
+    }
+  
+    h4 {
+      font-size: 18px;
+    }
+  }
+
+  .fail-style {
+    color: red;
+  margin: 5px 5px 0px 0px;
+  font-size: 11px !important;
+  cursor: default;
+  font-weight: 400;
+  position: absolute;
+  }
+
+  @media (min-width: 1200px) and (max-width:1600px) {
+    .main {
+  
+      .btn-primary,
+      .btn-secondary {
+        font-size: 14px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  
+    .cd-toggle-open,
+    .px-20 {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+  }
+
+  .search input {
+    text-indent: 0;
+  }
+
+.customer-activity .active
+  {
+    width: 35px;
+    height: 35px;
+    float: right;
+    flex-shrink: 0;
+    border-radius: 48px;
+    border: 1px solid #5d87ff;
+    background: #5d87ff;
+    padding: 6px 5px 6px 6px;;
+    margin: 0 2px;
+  }
+  .customer-activity .active img{
+    height: 18px;
+}
+.customer-activity{
+  display: inline-block;
+  text-align: right;
+  padding: 0px;
+}
+.badge-task{
+  border-radius: 5px;
+    background: #7e7e7e;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 3px 10px;
+    margin-right: 10px;
+    border: 0px;
+}
+
+.user-icon{
+  font-size: 20px;
+  color: #fff;
+}
+.icon-background{
+    width: 35px;
+    height: 35px;
+    float: right;
+    flex-shrink: 0;
+    border-radius: 48px;
+    border: 1px solid grey;
+    background: grey;
+    padding: 6px 5px 6px 6px;;
+    margin: 0 2px;
+}
+
+
+.icon-sticky .fa-sticky-note {
+  font-family: "Font Awesome 6 Free" !important;
+}
+.icon-sticky{
+  color: #5d87ff;
+    border: 1px solid #5d87ff;
+    padding: 1px 2px;
+    border-radius: 4px;
+    width: 22px;
+    height: 21px;
+    background: transparent;
+}
+
+.no-underline {
+  text-decoration: none !important;
+}
+
+.hyper-highlight{
+  text-decoration: none; 
+  white-space: nowrap;
+}
+// .remove-highlight:hover {
+//   color: #5d87ff;
+// }

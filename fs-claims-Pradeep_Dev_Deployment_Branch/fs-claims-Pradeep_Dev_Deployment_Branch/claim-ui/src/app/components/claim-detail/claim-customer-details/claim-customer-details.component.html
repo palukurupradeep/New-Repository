@@ -1,0 +1,313 @@
+<!-- <div class="claim-detail--search-section h-100"> -->
+    <div class="row">
+        <div class="col-12">
+            <div class="search-wq search-wq-rs">
+                <!-- <i class="fa fa-search"></i> -->
+                <div class="cd-customer-label fs-18"> {{ claimDetails.customerNumber ? '#' + claimDetails.customerNumber : '' }} </div>
+                <button class="btn btn-primary" type="button"
+                    data-bs-toggle="modal"
+                    (click)="openchangeCustomerModal()"
+                    [disabled]="claimIsVoid"
+                  
+                >Change</button>
+            </div>
+        </div>
+       
+        <div class="row mt-2 card-details-section pr-15">
+        <div class="col-8 col-lg-8">
+            <p class="mb-0 fw-normal fs-18">
+                <a href="#" class="fw-medium text-primary-color">
+                    {{ customerDetails.customerNumber }}
+                  </a>
+                  <span *ngIf="customerDetails.customerNumber && customerDetails.customerName"> - </span>
+                  <span>{{ customerDetails?.customerName?.toUpperCase() }}</span>
+                  <!-- <span *ngIf="customerDetails.primaryCustNumber && customerDetails.primaryCustName">
+                  {{ '( Primary Customer - ' + customerDetails.primaryCustNumber + ' - ' + customerDetails.primaryCustName + ')'}}
+                  </span> -->
+                  <span *ngIf="customerDetails.primaryCustNumber?.trim() && customerDetails.primaryCustName?.trim()">
+                    {{ '( Primary Customer - ' + customerDetails.primaryCustNumber + ' - ' + customerDetails.primaryCustName.toUpperCase() + ')'}}
+                  </span>
+                  
+                  <br/>
+                  
+                <!-- {{customerDetails.dbaName}}<br/> -->
+                <ng-container *ngFor="let address of customerDetails.address">
+                    <ng-container *ngIf="address.addressType === 'MAILING'">
+                    {{ address.addressLine1.toUpperCase() }} <br/>
+                    {{ address.addressLine2.toUpperCase() }}
+                    <br/>
+                  {{ address.city.toUpperCase() }}{{ address.city && address.stateCode ? ', ' : '' }}{{ address.stateCode.toUpperCase() }} {{ address.zipCode + ' - '}}
+                    
+                    </ng-container>
+                </ng-container>  
+                <br />
+                 
+                  <span *ngIf="customerDetails.phoneCountryCode && customerDetails.phoneNumber"> 
+                    <a href="tel:{{ '+' + customerDetails.phoneCountryCode + customerDetails.phoneNumber }}" 
+                       class="hyper-highlight">
+                      {{ '+' + customerDetails.phoneCountryCode + ' ' + customerDetails.phoneNumber }} 
+                    </a>
+                    <span>Ext.{{customerDetails.phoneExtension}}</span>
+                  </span><br/>
+                  <span *ngIf="customerDetails.storeType !== undefined">
+                    Store Type: {{ customerDetails.storeType.toUpperCase()  + ' - ' + ' / '}}
+                  </span><br/>
+                  
+                  <span *ngIf="customerDetails.groupAccount !== undefined">
+                    Group Account: {{ customerDetails.groupAccount }}
+                  </span> 
+                                             
+            </p>
+        </div>
+        <div class="col-4 col-lg-4 customer-activity">
+            <a  (click)="customerWatchlistAddAndRemove()" 
+             [ngClass]="isCustomerInWatchlist ? 'active' : 'icon-background'">
+                <svg class="user-icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+                    >
+                    <path fill="currentColor"
+                          d="M10.63 14.1a6.998 6.998 0 0 1 9.27-3.47a6.998 6.998 0 0 1 3.47 9.27A6.98 6.98 0 0 1 17 24c-2.7 0-5.17-1.56-6.33-4H1v-2c.06-1.14.84-2.07 2.34-2.82S6.72 14.04 9 14c.57 0 1.11.05 1.63.1M9 4c1.12.03 2.06.42 2.81 1.17S12.93 6.86 12.93 8c0 1.14-.37 2.08-1.12 2.83c-.75.75-1.69 1.12-2.81 1.12s-2.06-.37-2.81-1.12C5.44 10.08 5.07 9.14 5.07 8c0-1.14.37-2.08 1.12-2.83C6.94 4.42 7.88 4.03 9 4m8 18a5 5 0 0 0 5-5a5 5 0 0 0-5-5a5 5 0 0 0-5 5a5 5 0 0 0 5 5m-1-8h1.5v2.82l2.44 1.41l-.75 1.3L16 17.69z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+    <div class="col-12 col-lg-12 mt-2 mb-20">
+        <div class="customer-activity">
+            <button *ngIf="storeCustomerNumber[0]?.alignedAccount=='Yes' "
+             class="badge-task">Aligned</button>
+            <button *ngIf="storeCustomerNumber[0]?.ccaAccount=='Yes'" 
+            class="badge-task">CCA</button>
+            <button class="badge-task">ESP</button>
+            <button *ngIf="stickNoteStoreData[0]?.hasSpecialClaimsHandling=='Yes'"
+            class="icon-sticky claim-contact-link" 
+             (click)="openStickNoteModal()"><i class="fas fa-sticky-note"></i></button>
+    </div>
+    </div>
+        <div class="col-12 mb-20">
+            <div class="card-box-10 py-12 px-20 border-grey">
+                <ng-template #popTemplate4>
+                    <p class="mb-0 d-flex align-items-center">
+                        <img src="../../../assets/images/ic_phone.svg" />
+                        <span class="text-white ps-2">
+                            <a href="tel:(920)686-0600"
+                                class="text-white text-decoration-none">
+                               {{territoryManagerData.sfdOfficePhone}}</a></span>
+                    </p>
+                </ng-template>
+
+                <ng-template #popTemplate5>
+                    <p class="mb-0 d-flex align-items-center">
+                        <img src="../../../assets/images/ic_phone.svg" />
+                        <span class="text-white ps-2">
+                            <a href="tel:(920)686-0600"
+                                class="text-white text-decoration-none">
+                                {{regionData?.sfdOfficePhone}} </a></span>
+                    </p>
+                </ng-template>
+
+                <ng-template #popTemplate6>
+                    <p class="mb-0 d-flex align-items-center">
+                        <img src="../../../assets/images/ic_phone.svg" />
+                        <span class="text-white ps-2">
+                            <a href="tel:(920)686-0600"
+                                class="text-white text-decoration-none">
+                                {{divisoinData?.sfdOfficePhone}} </a></span>
+                    </p>
+                </ng-template>
+
+                <div class="d-flex justify-content-between w-100">
+                    <h5 class="fs-18">TM</h5>
+                    <button type="button" class="btn btn-none border-0 p-0 text-end"
+                        containerClass="customClassTooltip" [popover]="popTemplate4" triggers="hover"
+                        [outsideClick]="true" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <p class="text-primary-color fw-normal fs-18"> {{territoryManagerData?.sfdFormattedName}}({{ claimDetails.territory}})</p>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 mb-20">
+            <div class="card-box-10 py-12 px-20 border-grey">
+                <div class="d-flex justify-content-between">
+                    <h5 class="fs-18">RVP</h5>
+                    <button type="button" class="btn btn-none border-0 p-0 text-end"
+                        containerClass="customClassTooltip" [popover]="popTemplate5" triggers="hover"
+                        [outsideClick]="true" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <p class="text-primary-color fw-normal fs-18">{{regionData?.sfdFormattedName}} ({{ claimDetails.region}})</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-20">
+            <div class="card-box-10 py-12 px-20 border-grey">
+                <div class="d-flex justify-content-between">
+                    <h5 class="fs-18">DGM/DVP</h5><button type="button"
+                        class="btn btn-none border-0 p-0 text-end"
+                        containerClass="customClassTooltip" [popover]="popTemplate6" triggers="hover"
+                        [outsideClick]="true" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <p class="text-primary-color fw-normal fs-18">{{divisoinData?.sfdFormattedName}} ({{ claimDetails.division}})</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-20">
+            <div class="border-bottom"></div>
+        </div>
+        <div class="col-12 mb-20">
+            <div class="card-box-10 py-12 px-20 border-blue TM-cards">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fs-18">TM (Charge)</h5>
+                    <!-- <select class="form-select form-control form-control-20 fs-18 fw-medium select-card-details">
+                        <option>Jane Doe (08)</option>
+                        <option>Jane Doe (08)</option>
+                    </select> -->
+                    <button type="button"
+                        class="btn btn-none border-0 p-0 text-end"
+                        containerClass="customClassTooltip" [popover]="popTemplate6" triggers="hover"
+                        [outsideClick]="true" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <p class="text-primary-color fw-normal fs-18">Jane Doe (08)</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- </div> -->
+
+<div class="modal modal-bg" 
+    id="changeCustomerModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="changeCustomerModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeCustomerModalLabel">Change Customer Number</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"  class="btn-close" (click)="closeCustmoerModel()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4 justify-content-end justify-content-lg-start">
+                    <label for="change"
+                        class="col-12 col-xxl-4 col-xl-3 col-lg-4 col-md-12 col-sm-12 col-form-label">Customer
+                        Number</label>
+                    <div class="col-12 col-xxl-2 col-xl-6 col-lg-4 col-md-6 col-sm-12">
+                        <div class="search search-right cursor-pointer mb-2">
+                            <form [formGroup]="claimForm">
+                                <i
+                                    *ngIf="true"
+                                    class="fa fa-search"
+                                    [class.disabled]="!customerNumber.value || isSearchIconClicked"
+                                    (click)="isSearchIconClicked = true; getCustomerDetails(customerNumber.value)"
+                                ></i>           
+                                <input
+                                    type="text"
+                                    appInputRestriction
+                                    [inputType]="'numeric'"
+                                    (keyup.enter)="isSearchIconClicked = true; getCustomerDetails(customerNumber.value)"
+                                    (keydown)="setCustomerNumber(customerNumber.value)"
+                                    
+                                    #customerNumber
+                                    class="form-control hide-spin-buttons"
+                                    [ngClass]="{ 'is-danger': displayMessage.customer }"
+                                    formControlName="customer"
+                                />
+            
+                                <div
+                                    class="fail-style"
+                                    *ngIf="displayMessage.customer " >
+                                    {{ displayMessage.customer }}
+                                </div>  
+                                <!-- Display error message for 404 response -->
+                                <p *ngIf="showCustomerNotFoundError" class="fail-style">
+                                    Customer Number is invalid.Please provide a valid number
+                                </p>
+                            </form>
+                          
+                        </div>
+                      </div>
+                      <div class="col-12"></div>
+                      <div
+                        class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12"
+                      ></div>
+                      <div class="col-12 col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                        <p class="customer-details" *ngIf="customerData">
+                          {{ customerData.customerName }}
+                          {{ customerData.customerNumber }}
+                          {{ customerData.customerEmail }}
+                          {{ customerData.phoneNumber }}
+          
+                          <br>  <ng-container *ngFor="let address of customerData.address">
+                            <ng-container *ngIf="address.addressType === 'PHYSICAL'">
+                              {{ address.addressLine1 }}
+                              {{ address.city }}
+                              {{ address.stateCode }} 
+                              {{ address.zipCode }}
+          
+                            </ng-container>
+                          </ng-container>
+                        </p>
+                      </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"  class="btn btn-secondary me-3" (click)="closeCustmoerModel()">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" [disabled]="disableUpdate"
+                            (click)="updateCustomerNum()"
+                        >
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sales Force Factory -->
+<div class="modal modal-bg fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Sales Force Directory</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>Sales Force Directory</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div
+  class="modal modal-bg modal-md" id="sticknote">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Title</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('sticknote')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+       <p>{{stickNoteStoreData[0]?.specialClaimsHandlingComments}}</p>
+    </div>
+      </div>
+      <!-- <div class="modal-footer">
+        
+      </div> -->
+    </div>
+  </div>
+</div>

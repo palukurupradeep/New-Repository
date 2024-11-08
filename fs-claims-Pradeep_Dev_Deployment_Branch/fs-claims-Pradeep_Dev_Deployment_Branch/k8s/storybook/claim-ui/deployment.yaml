@@ -1,0 +1,55 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: claim-ui-service-deployment
+    namespace: claim-apps
+  spec:
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    replicas: 1
+    selector:
+      matchLabels:
+        app: claim-ui-service
+    template:
+      metadata:
+        labels:
+          app: claim-ui-service
+      spec:
+        imagePullSecrets:
+          - name: jfrog-registry-secret     
+        containers:
+          - name: claim-ui-service-container
+            image: jfrog.shawinc.io/docker-local/claim-ui-service:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 80
+                name: http-port
+              - containerPort: 4200
+                name: angular-port
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "150m"
+              limits:
+                memory: "1500Mi"
+                cpu: "500m"
+            # livenessProbe:
+            #   httpGet:
+            #     path: /claim/ui/actuator/health  # Adjusted path for liveness probe
+            #     port: 4200
+            #   initialDelaySeconds: 30
+            #   periodSeconds: 10
+            #   timeoutSeconds: 5
+            #   failureThreshold: 3
+            # readinessProbe:
+            #   httpGet:
+            #     path: /claim/ui/actuator/health  # Adjusted path for readiness probe
+            #     port: 4200
+              # initialDelaySeconds: 5
+              # periodSeconds: 10
+              # timeoutSeconds: 5
+              # failureThreshold: 3
+        

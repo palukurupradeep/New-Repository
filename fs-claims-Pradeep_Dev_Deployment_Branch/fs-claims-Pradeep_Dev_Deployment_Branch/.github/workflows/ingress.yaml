@@ -1,0 +1,97 @@
+name: Deploy NGINX Ingress Controller
+
+on:
+  push:
+    branches:
+      - TMP7777610_shawinc-patch-1
+
+jobs:
+  deploy-nginx-ingress:
+    runs-on: [self-hosted, linux]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Install helm
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        # token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        kubeconfig: ${{ github.workspace }}/kubeconfig
+    
+    # Setup Kubelogin
+    - uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.24'
+    
+    # - name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v1
+
+    # - name: Import Nginx Images to ACR
+    #   run: |
+    #     REGISTRY_NAME="szue2fintechaksdacr1"
+    #     SOURCE_REGISTRY=registry.k8s.io
+    #     CONTROLLER_IMAGE=ingress-nginx/controller
+    #     CONTROLLER_TAG=v1.8.4
+    #     PATCH_IMAGE=ingress-nginx/kube-webhook-certgen
+    #     PATCH_TAG=v20230407
+    #     DEFAULTBACKEND_IMAGE=defaultbackend-amd64
+    #     DEFAULTBACKEND_TAG=1.5
+    #     az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+    #     # az acr login --name $REGISTRY_NAME
+    #     az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$CONTROLLER_IMAGE:$CONTROLLER_TAG --image $CONTROLLER_IMAGE:$CONTROLLER_TAG
+    #     az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATCH_TAG --image $PATCH_IMAGE:$PATCH_TAG
+    #     az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
+
+    - name: Install NGINX Ingress Controller
+      run: |
+        REGISTRY_NAME="szue2fintechaksdacr1"
+        SOURCE_REGISTRY=registry.k8s.io
+        CONTROLLER_IMAGE=ingress-nginx/controller
+        CONTROLLER_TAG=v1.8.1
+        PATCH_IMAGE=ingress-nginx/kube-webhook-certgen
+        PATCH_TAG=v20230407
+        DEFAULTBACKEND_IMAGE=defaultbackend-amd64
+        DEFAULTBACKEND_TAG=1.5
+        ACR_URL=szue2fintechaksdacr1.azurecr.io
+
+        helm version
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        az aks get-credentials --resource-group ${{secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+        kubelogin convert-kubeconfig -l azurecli
+        kubectl label namespace ingress-nginx app.kubernetes.io/name=ingress-nginx
+        # Set variable for ACR location to use for pulling images
+        # kubectl create namespace ingress-nginx
+        # kubectl create secret docker-registry acr-pull \
+        #     --namespace ingress-nginx \
+        #     --docker-server=$ACR_URL \
+        #     --docker-username=${{ secrets.AZURE_CLIENT_ID}} \
+        #     --docker-password=${{ secrets.AZURE_CLIENT_SECRET}}
+
+        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx --force-update
+        helm repo update
+        helm install ingress-nginx ingress-nginx/ingress-nginx \
+          -n ingress-nginx \
+          --set controller.admissionWebhooks.patch.image.repository="${REGISTRY_NAME}.azurecr.io/ingress-nginx/kube-webhook-certgen:v20230407" \
+          --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          --set controller.image.repository="${REGISTRY_NAME}.azurecr.io/ingress-nginx/controller:v1.8.4" \
+          --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"=true \
+          --set imagePullSecrets=["acr-pull"]
+
+
+        
+    # - name: Display NGINX Ingress Controller Pods
+    #   run: |
+    #     kubectl get ns
+
+    # - name: Display NGINX Ingress Controller Services
+    #   run: |
+    #     kubectl get services -n default

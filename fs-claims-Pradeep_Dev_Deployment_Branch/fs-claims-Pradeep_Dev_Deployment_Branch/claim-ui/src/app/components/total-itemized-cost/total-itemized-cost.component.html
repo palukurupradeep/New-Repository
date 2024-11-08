@@ -1,0 +1,451 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+
+        <div>
+            <h5 class="mb-3">Total Itemized Cost</h5>
+            <table class="table table-striped table-hover table-sorting">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-end">Estimate</th>
+                        <th class="text-end">Actual</th>
+                        <!-- once receive the actual data in the response have to bind it  presently binding the estimate value -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Merchandise Total</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.marchandiseTotal?.total != 0">
+                            ${{ticCalculationData?.marchandiseTotal?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.marchandiseTotal?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+
+                        <td class="pt-0"><a class="claim-contact-link" (click)="openModalView()">
+                                <img src="../../../assets/images/ic_edit.svg" />
+                            </a></td>
+                    </tr>
+                    <tr>
+                        <td>Z Labor</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.labor?.total != 0">
+                            ${{ticCalculationData?.labor?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.labor?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+
+                        <td class="pt-0"><a class="claim-contact-link" (click)="openModalLabor()">
+                                <img src="../../../assets/images/ic_edit.svg" />
+                            </a></td>
+                    </tr>
+                    <tr>
+                        <td>Dealer Service Fees</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.dealerServiceFees?.total != 0">
+                            ${{ticCalculationData?.dealerServiceFees?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.dealerServiceFees?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+                            <td *ngIf="ticCalculationData?.dealerServiceFees?.total != 0"><a class="text-primary"><i class="fa-solid fa-eye" 
+                                (click)="openModaldealerCharges(ticCalculationData.dealerServiceFees)"></i></a></td>
+                            <td  *ngIf="ticCalculationData?.dealerServiceFees?.total == 0"><a class="text-primary"><i class="fa-solid fa-eye view-disabled" 
+                                    ></i></a></td> 
+                       
+                            </tr>
+                    <tr>
+                        <td>Freight</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.freightResponse?.total != 0">
+                            ${{ticCalculationData?.freightResponse?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.freightResponse?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+                        <td *ngIf="ticCalculationData?.freightResponse?.total != 0"><a class="text-primary"><i class="fa-solid fa-eye" 
+                            (click)="openModaldealerCharges(ticCalculationData.freightResponse)"></i></a></td>
+                            <td *ngIf="ticCalculationData?.freightResponse?.total == 0"><a class="text-primary"><i class="fa-solid fa-eye view-disabled" 
+                               ></i></a></td>
+                      
+                    </tr>
+                    <tr>
+                        <td>Other Charges</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.otherCharges?.total != 0">
+                            ${{ticCalculationData?.otherCharges?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.otherCharges?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+                        <td *ngIf="ticCalculationData?.otherCharges?.total != 0"><a class="text-primary"><i class="fa-solid fa-eye"
+                            (click)="openModaldealerCharges(ticCalculationData.otherCharges)"></i></a></td>
+                         <td *ngIf="ticCalculationData?.otherCharges?.total == 0"><a class="text-primary"><i class="fa-solid fa-eye view-disabled"
+                               ></i></a></td>
+                       
+                        </tr>
+                    <tr>
+                        <td>Sales Tax</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.salesTax?.total != 0">
+                            ${{ticCalculationData?.salesTax?.total}}</td>
+                        <td class="align-right" *ngIf="ticCalculationData?.salesTax?.total == 0">$0.00</td>
+                        <td class="align-right">$0.00</td>
+                        <td *ngIf="ticCalculationData?.salesTax?.total != 0"><a class="text-primary"><i class="fa-solid fa-eye"
+                             (click)="openModaldealerCharges(ticCalculationData.salesTax)"></i></a></td>
+                         <td *ngIf="ticCalculationData?.salesTax?.total == 0"><a class="text-primary "><i class="fa-solid fa-eye view-disabled"
+                                ></i></a></td>
+                     
+                    </tr>
+                    <tr>
+                        <td>Inspection/Service Fees</td>
+                        <td class="align-right">$0.00</td>
+                        <td class="align-right">$0.00</td>
+                        <td><a class="text-primary"><i class="fa-solid fa-eye"></i></a></td>
+                  
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Total</td>
+                        <td class="align-right font-bold">${{ticCalculationData?.total}}</td>
+                        <td class="align-right font-bold">${{ticCalculationData?.total}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Cost Avoidance Dollars</td>
+                        <td class="align-right"></td>
+                        <td class="align-right font-bold">$0.00</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Percent Actual STK</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">0.00%</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Total Actual STK</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">$0.00</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Percent Actual ATK</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">0.00%</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Total Actual ATK</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">$0.00</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Estimate Restock Percent</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">0.00%</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Actual Restock Percent</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">0.00%</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Actual Restock Dollars</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">$0.00</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="align-right font-bold">Actual Return Freight</td>
+                        <td class="align-right font-bold"></td>
+                        <td class="align-right font-bold">$0.00%</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal modal-bg" id="detailstotalcost" tabindex="-1" role="dialog"
+            aria-labelledby="FieldChooserLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> View More Details </h5>
+                        <button type="button" class="btn-close" (click)="closeModal('detailstotalcost')">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="popup-total-cost">
+                            <div>
+                                <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th>Inv/Clm</th>
+                                            <th>Reason Code</th>
+                                            <th>Style</th>
+                                            <th>Color</th>
+
+                                            <th>Credit Memo No</th>
+                                            <th>Credit Memo Date</th>
+                                            <th>Resolution</th>
+                                            <th>Estimate</th>
+                                            <th>Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="ticCalculationData?.marchandiseTotal?.lineDetails.length != 0">
+                                        <tr *ngFor="let data of ticCalculationData?.marchandiseTotal?.lineDetails; let i= index">
+                                            <!-- <td>{{ data.lineNumber.length >= 2 ? data.lineNumber : '00' + data.lineNumber }}</td> -->
+                                            <td>{{ data.lineNumber.length >= 2 ? data.lineNumber : '00' + data.lineNumber  + '/' }} {{  data.lineNumber.length >= 2 ? data.lineNumber : '00' + data.lineNumber }}</td>
+                                            <td><a href=""  [popover]="data.reasonCode"
+                                                containerClass="customClassTooltip"
+                                                triggers="mouseenter:mouseleave">{{data.reasonCode}}</a></td>
+                                            <td><a href="" [popover]="data.style"
+                                                containerClass="customClassTooltip"
+                                                triggers="mouseenter:mouseleave">{{data.style}}</a></td>
+                                            <td><a href="" [popover]="data.color"
+                                                containerClass="customClassTooltip"
+                                                triggers="mouseenter:mouseleave">{{data.color}}</a></td>
+
+                                            <td><a href="">343050</a></td>
+                                            <td>03/15/2023</td>
+                                            <td></td>
+                                            <td><input type="text" class="search-input" [(value)]="data.estimateAmount"
+                                                (keyup)="changeEstimateAmt($event,i)"></td>
+                                                <td><input type="text" class="search-input" value="775.03" disabled></td>
+                                       
+                                        </tr>
+<tr><td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><label class="new-total">Total</label></td>
+    <td> <div *ngIf="ticCalculationData?.marchandiseTotal?.lineDetails.length != 0" class="d-flex align-items-center">
+    <input type="text" class="search-input" [(value)]="totalMerchandiseAmount">
+</div></td></tr>
+                                    </tbody>
+                                    <tbody *ngIf="ticCalculationData?.marchandiseTotal?.lineDetails.length == 0">
+                                        <tr><td>
+                                            No Record Found
+                                        </td></tr>
+                                    </tbody>
+                                  <!--   <div *ngIf="ticCalculationData?.marchandiseTotal?.lineDetails.length != 0">
+                                        <p>Total</p>
+                                        <input type="text" class="search-input" [(value)]="totalMerchandiseAmount">
+                                    </div> -->
+                                </table>
+                            </div>
+                            <!-- <div> -->
+                                <!-- <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Estimate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody
+                                        *ngFor="let data of ticCalculationData?.marchandiseTotal.lineDetails; let i= index">
+                                        <tr>
+                                            <td></td>
+                                            <td><input type="text" class="search-input" [(value)]="data.estimateAmount"
+                                                    (keyup)="changeEstimateAmt($event,i)"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table> -->
+                                <!-- <div>
+                                    <p>Total</p>
+                                    <input type="text" class="search-input" [(value)]="totalMerchandiseAmount">
+                                </div> -->
+                            <!-- </div> -->
+                            <!-- <div>
+                                <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td><input type="text" class="search-input" value="775.03" disabled></td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary mx-2"
+                            (click)="closeModal('detailstotalcost')">Submit</button>
+                        <button type="button" class="btn btn-secondary"
+                            (click)="closeModal('detailstotalcost')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-bg" id="laborline" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> Add / Edit Labor </h5>
+                        <button type="button" class="btn-close" (click)="closeModal('laborline')">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-3 row align-items-center">
+                            <label class="w-auto col-form-label">Labor Type</label>
+                            <div class="col-4">
+                                <mat-form-field appearance="fill">
+                                    <mat-select placeholder="Select Labor Rate">
+                                        <mat-option value="CARPET CUTS">
+                                            CARPET CUTS
+                                        </mat-option>
+                                        <mat-option value="CARPET ROLLS/BALANCES">
+                                            CARPET ROLLS/BALANCES
+                                        </mat-option>
+                                        <mat-option value="HARDSURFACE">
+                                            HARDSURFACE
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="w-auto">OR</div>
+                            <div class="col-4">
+                                <input class="form-control" type="text">
+                            </div>
+                            <button class="btn-primary col">ADD</button>
+                        </div>
+                        <!--  <div class="top-area d-flex justify-content-end align-items-center">
+                <button class="btn-primary mx-2 p-x-1 btn-equal-wh-48 flex-shrink-0 text-end"><i  aria-hidden="true" class="fa fa-plus"></i></button>
+            </div> -->
+                        <div class="row">
+                            <table class="table table-striped table-hover table-sorting mb-3">
+                                <thead>
+                                    <tr>
+                                        <th>Labor Type</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>UOM</th>
+                                        <th>Estimated Cost</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    <tr>
+
+                                        <td>CARPET</td>
+                                        <td> <input type="text" class="form-control"></td>
+                                        <td> <input type="text" class="form-control"></td>
+                                        <td><mat-form-field appearance="fill">
+                                                <mat-select placeholder="Select UOM">
+                                                    <mat-option *ngFor="let unit of unitOFMeasureData"
+                                                        [value]="unit.value">
+                                                        {{unit.unitOfMeasureCode}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field></td>
+                                        <td class="align-right">$120</td>
+                                        <td><a class="claim-contact-link mx-2">
+                                                <img src="../../../assets/images/ic_edit.svg" /></a>
+                                            <a class="claim-contact-link"><img
+                                                    src="../../../assets/images/ic_delete.svg"></a>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary mx-2">Save</button>
+                        <button type="button" class="btn btn-secondary"
+                            (click)="closeModal('laborline')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-bg" id="dealerCharges" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> View More Details </h5>
+                        <button type="button" class="btn-close" (click)="closeModal('dealerCharges')">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="popup-total-cost">
+                            <div>
+                                <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th>Inv/Clm</th>
+                                            <th>Reason Code</th>
+                                            <th>Style</th>
+                                            <th>Color</th>
+                                            <th>Credit Memo No</th>
+                                            <th>Credit Memo Date</th>
+                                            <th>Resolution</th>
+                                            <th>Estimate</th>
+                                            <th>Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="modalData.length != 0">
+                                        <tr *ngFor="let item of modalData">
+                                            <!-- <p class="fw-semibold">No Cost to Display -->
+                                                <td>{{item.lineNumber}}</td>
+                                                <td><a href="">{{item.reasonCode}}</a></td>
+                                                <td><a href="">{{item.style}}</a></td>
+                                                <td><a href="">{{item.color}}</a></td>
+    
+                                                <td><a href="">343050</a></td>
+                                                <td>03/15/2023</td>
+                                                <td></td>
+                                                <td><input type="text" class="search-input"
+                                                    [(value)]="item.estimateAmount" disabled></td>
+                                                <td><input type="text" class="search-input" disabled></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <div>
+                                <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Estimate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of modalData">
+                                            <td></td>
+                                            <td><input type="text" class="search-input"
+                                                [(value)]="item.estimateAmount" disabled></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> -->
+                            <!-- <div>
+                                <table class="table table-striped table-hover table-sorting">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td><input type="text" class="search-input" disabled></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> -->
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-primary mx-2" (click)="closeModal('id')">Submit</button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal('id')">Cancel</button>
+            </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

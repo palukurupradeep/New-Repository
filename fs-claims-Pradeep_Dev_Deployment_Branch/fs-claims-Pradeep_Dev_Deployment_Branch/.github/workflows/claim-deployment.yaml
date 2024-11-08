@@ -1,0 +1,220 @@
+# Claim Deployment Pipeline
+# This workflow handles the CI/CD process for the claim services
+
+name: Claim Deployment Pipeline
+
+# Trigger the workflow on push to Demo_Deployment_Branch or pull requests to main
+on:
+  push:
+    branches:
+      - Pradeep_Dev_Deployment_Branch
+  pull_request:
+    branches: [main]
+
+# Environment variables
+env:
+  NAMESPACE: claim-apps
+
+jobs:
+  # Linting job
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run linters
+      run: |
+        # TODO: Add specific linting commands for your project
+        echo "Running linters..."
+
+  # Testing job
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    # TODO: Uncomment and configure test step
+    # - name: Run tests
+    #   run: ./gradlew test
+
+  # Build job
+  build:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - name: claim-initiation-service
+            dockerfile: claim-initiation-service/Dockerfile
+            context: claim-initiation-service/
+          - name: claim-integration-service
+            dockerfile: claim-integration-service/Dockerfile
+            context: claim-integration-service/
+          - name: claim-security-service
+            dockerfile: claim-security-service/Dockerfile
+            context: claim-security-service/
+          - name: claim-ui-service
+            dockerfile: claim-ui/Dockerfile
+            context: claim-ui/
+          - name: claim-notification-service
+            dockerfile: claim-notification-service/Dockerfile
+            context: claim-notification-service/
+          - name: claim-batch-service
+            dockerfile: claim-batch-service/Dockerfile
+            context: claim-batch-service/
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to JFrog
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ vars.JF_HOST }}
+        username: ${{ secrets.JF_USER }}
+        password: ${{ secrets.JF_PASSWORD }}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ${{ matrix.service.context }}
+        file: ${{ matrix.service.dockerfile }}
+        push: true
+        tags: |
+          ${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:${{ github.sha }}
+          ${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:latest
+        cache-from: type=registry,ref=${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:buildcache
+        cache-to: type=registry,ref=${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:buildcache,mode=max
+
+  # Deployment job
+  deploy:
+    needs: build
+    runs-on: [self-hosted, linux]
+    environment: production
+    strategy:
+      matrix:
+        service:
+          - name: claim-initiation-service
+            k8s_path: k8s/storybook/claim-initiation-service
+          - name: claim-integration-service
+            k8s_path: k8s/storybook/claim-integration-service
+          - name: claim-security-service
+            k8s_path: k8s/storybook/claim-security-service
+          - name: claim-ui-service
+            k8s_path: k8s/storybook/claim-ui
+          - name: claim-notification-service
+            k8s_path: k8s/storybook/claim-notification-service
+          - name: claim-batch-service
+            k8s_path: k8s/storybook/claim-batch-service
+    steps:
+    - uses: actions/checkout@v3
+
+    # TODO: Consider using Azure login action for better security
+    # - name: Azure login
+    #   uses: azure/login@v1
+    #   with:
+    #     creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.25.0'
+    
+    - uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.24' 
+
+    - name: Get AKS Credentials
+      run: |  
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+        kubelogin convert-kubeconfig -l azurecli
+
+    - name: Verify JFrog secret
+      run: |
+        if kubectl get secret jfrog-registry-secret -n ${{ env.NAMESPACE }} &> /dev/null; then
+          echo "Secret 'jfrog-registry-secret' exists in namespace ${{ env.NAMESPACE }}"
+          echo "Verifying secret content:"
+          kubectl get secret jfrog-registry-secret -n ${{ env.NAMESPACE }} -o jsonpath='{.data.\.dockerconfigjson}' | base64 --decode
+        else
+          echo "Secret 'jfrog-registry-secret' not found in namespace ${{ env.NAMESPACE }}"
+          kubectl create secret docker-registry jfrog-registry-secret \
+          --docker-server=${{ vars.JF_HOST }} \
+          --docker-username=${{ secrets.JF_USER }} \
+          --docker-password=${{ secrets.JF_PASSWORD }} \
+          --namespace=${{ env.NAMESPACE }} \
+          --dry-run=client -o yaml | kubectl apply -f -
+          echo "Created secret 'jfrog-registry-secret' in namespace ${{ env.NAMESPACE }}"
+        fi
+
+    # TODO: Implement image pull test for production readiness
+    # - name: Test image pull
+    #   run: |
+    #     echo "Testing image pull for ${{ matrix.service.name }}"
+    #     kubectl run test-${{ matrix.service.name }} \
+    #       --image=${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:${{ github.sha }} \
+    #       --namespace=${{ env.NAMESPACE }} \
+    #       --overrides='{ "spec": { "imagePullSecrets": [{"name": "jfrog-registry-secret"}] } }' \
+    #       --rm -i --restart=Never \
+    #       -- echo "Image pulled successfully"
+      
+    - name: Deploy service
+      run: |
+        # Ensure namespace exists
+        kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
+        
+        # Update the image in the deployment file
+        sed -i 's|image: .*|image: ${{ vars.JF_HOST }}/financialservices-docker-local/${{ matrix.service.name }}:${{ github.sha }}|' ${{ matrix.service.k8s_path }}/deployment.yaml
+        
+        # Apply Kubernetes manifests
+        kubectl apply -f ${{ matrix.service.k8s_path }}/deployment.yaml \
+                      -f ${{ matrix.service.k8s_path }}/ingress.yaml \
+                      -f ${{ matrix.service.k8s_path }}/service.yaml \
+                      -n ${{ env.NAMESPACE }}
+        
+        # TODO: Implement deployment status check and debugging
+        # kubectl rollout status deployment/${{ matrix.service.name }}-deployment -n ${{ env.NAMESPACE }} --timeout=600s || {
+        #   echo "Deployment failed. Debugging information:"
+        #   kubectl describe deployment/${{ matrix.service.name }}-deployment -n ${{ env.NAMESPACE }}
+        #   kubectl get pods -n ${{ env.NAMESPACE }} -l app=${{ matrix.service.name }}
+        #   kubectl logs -n ${{ env.NAMESPACE }} -l app=${{ matrix.service.name }} --all-containers --tail=100
+        #   exit 1
+        # }
+
+    # TODO: Implement deployment verification
+    # - name: Verify deployment
+    #   run: kubectl get all -n ${{ env.NAMESPACE }} -l app=${{ matrix.service.name }}
+
+    # TODO: Implement rollback strategy
+    # - name: Rollback on failure
+    #   if: failure()
+    #   run: kubectl rollout undo deployment/${{ matrix.service.name }}-deployment -n ${{ env.NAMESPACE }}
+
+  # Post-deployment job
+  post-deploy:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run integration tests
+      run: echo "Running integration tests..."  # TODO: Replace with actual integration test command
+
+    - name: Monitor deployment
+      run: |
+        # TODO: Add monitoring and alerting setup here
+        echo "Setting up monitoring and alerting..."
+
+    # TODO: Implement team notification
+    # - name: Notify team
+    #   if: always()
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     status: ${{ job.status }}
+    #     text: Deployment to production completed with status ${{ job.status }}
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

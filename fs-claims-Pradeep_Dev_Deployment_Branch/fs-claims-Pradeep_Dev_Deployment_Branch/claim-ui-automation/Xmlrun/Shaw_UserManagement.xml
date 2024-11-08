@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShawClaimX Project Automation  " verbose="10">
+	<parameter name="appURL"
+		value="https://fs-claims-sys.shawinc.com/admin/users" />
+	<parameter name="browserType" value="chrome" />
+	<test
+		name="ShawClaimX Project Functionalities - User Management Module Flow ">
+		<classes>
+			<class
+				name="com.shawclaimx.ui.usermanagement.tests.UserListPageTest" />
+			<class
+				name="com.shawclaimx.ui.usermanagement.tests.UserListPageNegativeTest" />
+
+
+		</classes>
+	</test>
+</suite>

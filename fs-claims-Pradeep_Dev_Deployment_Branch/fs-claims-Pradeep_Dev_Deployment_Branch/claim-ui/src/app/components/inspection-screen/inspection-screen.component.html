@@ -1,0 +1,76 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+<div class="row mt-2 mb-2">
+    <h4>Inspections</h4>
+    <div class="col-md-12 mt-2">
+        <p class="col-4" style="font-weight: 500;">Claim Number : <span>689370</span></p>
+        <div class="table-responsive mb-3">
+                <table class="table table-striped table-hover" id="inspections-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th> Request No. </th>
+                            <th>Status</th>
+                            <th>Inspector No.</th>
+                            <th>Inspector Name</th>
+                            <th>Invoice No.</th>
+                            <th>Invoice Date</th>
+                            <th>Request Date</th>
+                            <th>Report Received Date</th>
+                            <th>Style No.</th>
+                            <th>Quantity</th>
+                            <th>State</th>
+                            <th>Analyst</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="13" class="text-center d-none">No Records Found</td>
+                        <td><i class="fas fa-file"></i></td>
+                        <td><a href="">0416304</a></td>
+                        <td>COMPLETE</td>
+                        <td><a href="">0001282</a></td>
+                        <td><p class="text-uppercase">John s hume<br>
+                        <a href="">Shume@sbcglobal.net</a><br>
+                    (281) 850-4284 </p></td>
+                    <td><a href="">5445</a></td>
+                        <td>12/30/2024</td>
+                        <td>12/30/2024</td>
+                        <td>12/30/2024</td>
+                        <td>0925V</td>
+                        <td><p>42.00 BOX <br>
+                        (1165.08 SF)</p></td>
+                        <td>TX</td>
+                        <td>Erin Dodd</td>
+                    </tr>   
+                    <tr>
+                        <td colspan="13" class="text-center d-none">No Records Found</td>
+                        <td><i class="fas fa-file"></i></td>
+                        <td><a href="">0416304</a></td>
+                        <td>COMPLETE</td>
+                        <td><a href="">0001282</a></td>
+                        <td><p class="text-uppercase">John s hume<br>
+                        <a href="">Shume@sbcglobal.net</a><br>
+                    (281) 850-4284 </p></td>
+                    <td><a href="">5445</a></td>
+                        <td>12/30/2024</td>
+                        <td>12/30/2024</td>
+                        <td>12/30/2024</td>
+                        <td>0925V</td>
+                        <td><p>42.00 BOX <br>
+                        (1165.08 SF)</p></td>
+                        <td>TX</td>
+                        <td>Erin Dodd</td>
+                    </tr>                
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>

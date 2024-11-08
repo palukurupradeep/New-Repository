@@ -1,0 +1,179 @@
+<form [formGroup]="inventoryForm" (ngSubmit)="onSubmit()">
+    <div class="col-12 mt-3 mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="mb-0">View Inventory</h6>
+            <div class="d-flex align-self-end">
+                <button type="submit" class="btn-primary mx-3" [disabled]="!inventoryForm.valid">Go</button>
+                <button type="button" class="btn-secondary mx-3" (click)="onReset()">Reset</button>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-2">
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Order Date</label>
+                    <div class="col-8 d-flex align-items-center">
+                        <input type="text" class="form-control col" formControlName="orderDate">
+                        <p class="mb-0 align-self-center col-4 ml-2">MEDIA</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-4 col-form-label  py-0">Color Number</label>
+                    <div class="col-8 d-flex align-items-center">
+                        <mat-form-field appearance="fill" class="col-5">
+                            <mat-select formControlName="colorNumber" placeholder="Select Color">
+                                <mat-option *ngFor="let color of colorOptions" [value]="color">{{ color }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="col-5 mx-2">
+                            <mat-select formControlName="location" placeholder="Select Location">
+                                <mat-option *ngFor="let location of locationOptions" [value]="location">{{ location }}</mat-option>
+                              </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Grade</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" formControlName="grade">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Manufacturing Style</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">M6681</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Manufacturing Color</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">62202</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Assigned Total</label>
+                    <div class="col-sm-8">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Standard Roll Length</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">200 ft.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Backorder Total</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Dye Run</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">15000</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Standard Lead Time</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">ATS Date</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Selling Company</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">64 - Queen Commercial</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Status</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">Active</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Product Type</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">20 - Running Line Contract</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-4 col-form-label  py-0">Ref Number</label>
+                    <div class="col-8 d-flex align-items-center">
+                        <input type="text" class="form-control col mr-2" placeholder="102" formControlName="refNumber">
+                        -
+                        <p class="mb-0 ml-2 col-4 text-uppercase">Shaw</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Collection Description</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">Contract</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-4 col-form-label  py-0">Manufacturing Location</label>
+                    <div class="col-sm-8">
+                        <p class="mb-0 text-uppercase">East</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>

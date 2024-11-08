@@ -1,0 +1,212 @@
+
+.due-items .day-count {
+    width: 10%;
+    float: left;
+    text-align: center;
+    font-size: 14px;
+    padding: 7px;
+}
+
+.due-items .day-count h6 {
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+}
+
+.due-items .day-count span {
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+}
+
+.due-end {
+    color: #FF2E2E;
+    border-left: 4px solid red;
+}
+
+.due-warning {
+    color: #FCAE1E;
+    ;
+    border-left: 4px solid #FCAE1E;
+    ;
+}
+
+.due-end h6 {
+    color: #FF2E2E;
+}
+
+.due-warning h6 {
+    color: #FCAE1E;
+}
+
+.due-items .due-info {
+    width: 90%;
+    padding-left: 20px;
+}
+
+.due-items .due-info h5 {
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.due-items .due-info p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.filter {
+    display: inline-block;
+    width: 5%;
+    color: var(--primary);
+}
+
+.table-striped td {
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #2A3547;
+}
+
+.due-indication-red {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0px 5px 0px 0;
+    background: #FF2E2E;
+    display: inline-block;
+}
+
+.due-indication-orange {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0px 5px 0px 0;
+    background: #FCAE1E;
+    display: inline-block;
+}
+
+.due-indication-green {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0px 5px 0px 0;
+    background: #32CD32;
+    display: inline-block;
+}
+
+.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.custom-select {
+    width: auto !important;
+    display: inline-block !important;
+    margin-right: 15px;
+    background: url('/src/assets/images/down-filled-triangular-arrow.png') right 3px center/8px 10px no-repeat;
+}
+
+.copy-right {
+    border-radius: 15px;
+}
+
+.card {
+    transition: .5s;
+}
+
+.card:hover {
+    box-shadow: 1px 9px 11px -3px #c5c5c5;
+}
+
+.search {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.page-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.btn-tablu-panel .btn.btn-sm{
+    width: 100%;
+    border-radius: 20px !important;
+    padding: 15px 10px!important;
+    font-size: 18px !important;
+}
+
+.table-sorting thead th>span {
+    background: url(../../../../assets/images//ic_sortable.svg) no-repeat right top;
+    cursor: pointer;
+    width: 15px;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+    height: 15px;
+    margin-left: 3px;
+    transition: all .5s ease;
+    background-size: 15px;
+}
+.p-2 {
+    padding: 1.5rem 0.5rem!important;
+}
+table th {
+    font-size: 10px!important;
+    padding: 0.5rem 0.2rem !important;
+}
+table td {
+    font-size: 10px!important;
+    padding: 0.5rem !important;
+    line-height: 15px !important;
+}
+.stop-watch .fa{
+    font-size: 15px;
+    color: #FF2E2E;
+}
+.card.p-2 h4{
+    margin-bottom: 0px !important;
+    font-weight: 600;
+}
+.card.p-2 .border-bottom{
+    margin: 5px 0;
+}
+.margin_top p{
+    margin-bottom: 10px;
+}
+.red-color{
+    color: #FF2E2E;
+}
+.green-color{
+    color: #32CD32;
+}
+.orange-color{
+    color: #FCAE1E;
+}
+
+@media (min-width: 768px) {
+    .due-items .day-count {
+        width: 20%;
+    }
+
+    .due-items .due-info {
+        width: 80%;
+        padding-left: 0px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .search {
+        width: 50%;
+    }
+}
+
+.table-styles {
+    display: inline-block;
+    text-align: center;
+    list-style-type: none;
+    padding: 1%;
+}

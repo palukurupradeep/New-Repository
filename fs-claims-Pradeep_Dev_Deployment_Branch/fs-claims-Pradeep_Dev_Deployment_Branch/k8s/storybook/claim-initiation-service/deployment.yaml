@@ -1,0 +1,52 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: claim-initiation-service-deployment
+    namespace: claim-apps
+  spec:
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    replicas: 1
+    selector:
+      matchLabels:
+        app: claim-initiation-service
+    template:
+      metadata:
+        labels:
+          app: claim-initiation-service
+      spec:
+        imagePullSecrets:
+          - name: jfrog-registry-secret     
+        containers:
+          - name: claim-initiation-service-container
+            image: jfrog.shawinc.io/docker-local/claim-initiation-service:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 8082
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "150m"
+              limits:
+                memory: "1500Mi"
+                cpu: "500m"
+            # livenessProbe:
+            #   httpGet:
+            #     path: /claim/initiation/actuator/health  # Adjusted path for liveness probe
+            #     port: 8082
+            #   initialDelaySeconds: 30
+            #   periodSeconds: 10
+            #   timeoutSeconds: 5
+            #   failureThreshold: 3
+            # readinessProbe:
+            #   httpGet:
+            #     path: /claim/initiation/actuator/health  # Adjusted path for readiness probe
+            #     port: 8082
+              # initialDelaySeconds: 5
+              # periodSeconds: 10
+              # timeoutSeconds: 5
+              # failureThreshold: 3
+        

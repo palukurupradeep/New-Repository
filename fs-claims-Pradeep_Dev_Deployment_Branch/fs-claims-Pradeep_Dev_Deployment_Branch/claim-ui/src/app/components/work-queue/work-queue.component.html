@@ -1,0 +1,333 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header></app-header>
+  <div class="main pb-4">
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-lg-2">
+          <div class="page-head">
+            <h1 class="mb-0">Work Queue </h1>
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+          </div>         
+        </div>
+                       <!-- First Dropdown -->
+<div class="col-lg-2">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedGroupName" (selectionChange)="getManagersList()">
+      <mat-option *ngFor="let group of groupList" [value]="group.userGroupId">
+        {{ group.userGroupDescription }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- Second Dropdown -->
+<div class="col-lg-2">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedManagerName" (selectionChange)="onManagerSelected()">
+      <mat-option *ngFor="let manager of managerList" [value]="manager.userId">
+        {{ manager.firstName + ' ' + manager.middleInitial + ' ' + manager.lastName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+        <div class="col-lg-2" style="display: none;">
+          <button type="button" class="btn btn-sm btn-primary"> My Work Queue </button>
+        </div>
+        <div class="col text-end">
+
+          <button type="button" class="btn btn-primary me-2" (click)="resetTable()">Reset</button>
+
+          <button type="button"  (click)="openFieldChooserModal()" class="btn btn-sm btn-primary">
+            Field Chooser </button>
+        </div>
+
+      </div>
+    
+      
+      <div class="row mb-3">
+       
+        
+        <div class="card">
+          <div class="claim-info work-queue-info px-3">
+            <div class="py-3" *ngIf="loadingData; else tableContent">
+              <!-- Show spinner while loading data -->
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+           
+            <ng-template #tableContent>
+              <!-- <div class="new-div-queue"> -->
+                <div [ngClass]="{
+                  'new-div-queue': claimWorkQueuesList?.workQueueDetailsDTO?.length === 0,
+                  'new-div-queue full-height-queue': claimWorkQueuesList?.workQueueDetailsDTO?.length > 0
+                }">
+            <table class="table table-striped  work-queue-table"  matSort (matSortChange)="sortDataValue($event)">
+              <thead>   
+                <tr>
+                  <ng-container *ngFor="let field of fetchUserWorkQueueFields">
+                     <th *ngIf="field.workQueueFieldName != ''"
+                      mat-sort-header="{{field.workQueueFieldName}}">
+                      {{ field.workQueueFieldName }}   
+                      <span></span>   
+                    </th>
+                    <th *ngIf="field.workQueueFieldName == ''">
+                    {{ field.workQueueFieldName }}   
+                    <span></span>   
+                  </th>
+                  </ng-container>
+                </tr>
+             
+          
+            <tr>
+                  <ng-container *ngFor="let field of fetchUserWorkQueueFields">
+                    <th>
+                      <input *ngIf="field.showSearchInput !== false" type="text" class="search-input"
+                        [(ngModel)]="searchFilters[field.workQueueFieldName]"
+                        (input)="onSearch(field.workQueueFieldName, searchFilters[field.workQueueFieldName])">
+                    </th>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="claimWorkQueuesList.length === 0; else dataAvailable">
+                  <tr>
+                    <td class="text-center" [attr.colspan]="fetchUserWorkQueueFields.length + 1">
+                      <div class="center-content">Record Not Found</div>
+                    </td>
+                  </tr>
+                </ng-container>
+                
+               
+                
+                <ng-template #dataAvailable>
+                  <ng-container *ngIf="claimWorkQueuesList?.workQueueDetailsDTO?.length > 0; else noData">
+                    <!-- Iterate through claimWorkQueuesList to create rows -->
+                    <tr *ngFor="let item of claimWorkQueuesList.workQueueDetailsDTO">
+                      <!-- Iterate through work queue fields to create cells -->
+                      <ng-container *ngFor="let field of fetchUserWorkQueueFields">
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === ''">
+                          <a [routerLink]="['/claim-detail', item['claimNumber']]" class="inactive new-svg icon-warning" *ngIf="item.priorityClaim">
+                            <img src="../../../assets/images/ic_warning.svg" alt="">
+                          </a>
+                          <a [routerLink]="['/claim-detail', item['claimNumber']]" class="inactive new-svg icon-hand" *ngIf="item.jobStop">
+                            <img src="../../../assets/images/ic_hand.svg" alt="">
+                          </a>
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'claim number'" class="pl-15">
+                          <a [routerLink]="['/claim-detail', item[transformToCamelCase(field.workQueueFieldName)]]">
+                            {{ item[transformToCamelCase(field.workQueueFieldName)] }}
+                          </a>
+                        </td>
+                        <td class="align-right" *ngIf="field.workQueueFieldName.toLowerCase() === 'claim amount'" class="pr-11 text-end">
+                          <span>
+                            {{ item[transformToCamelCase(field.workQueueFieldName)]  |  currency:'USD':'symbol':'1.2-2':'en-US'}}
+                          </span>
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'reason code'" class="pl-15">
+                          <ng-template #popTemplate2>
+                            <p class="mb-0">
+                              {{ item.claimReasonDescription || 'NA' }}
+                            </p>
+                          </ng-template>
+                          <span containerClass="customClassTooltip" [popover]="popTemplate2" triggers="mouseenter:mouseleave">
+                            {{ item[transformToCamelCase(field.workQueueFieldName)] }}
+                          </span>
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'sell company'" class="pl-15">
+                          <ng-template #popTemplate3>
+                            <p class="mb-0">
+                              {{ item.sellingCompanyName || 'NA' }}
+                            </p>
+                          </ng-template>
+                          <span containerClass="customClassTooltip" [popover]="popTemplate3" triggers="mouseenter:mouseleave" placement="top">
+                            {{ item[transformToCamelCase(field.workQueueFieldName)] }}
+                          </span>
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'claim age'" class="pl-15">
+                          <!-- Directly display the claim age with formatted date -->
+                          {{ item[transformToCamelCase(field.workQueueFieldName)] }} ({{ item.createdDate | date: "MM/dd/yyyy" }})
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'last activity age'">
+                          <!-- Directly display the last activity age with formatted date -->
+                          {{ item[transformToCamelCase(field.workQueueFieldName)] }} ({{ item.modifiedDate | date: "MM/dd/yyyy" }})
+
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'customer name'" class="pl-12">
+                          {{ item[transformToCamelCase(field.workQueueFieldName)] }}
+                        </td>
+                        <td *ngIf="field.workQueueFieldName.toLowerCase() === 'trace date'" class="pl-15">
+                       {{ item[transformToCamelCase(field.workQueueFieldName)] | date: 'MM/dd/yyyy' }}
+                        </td>
+                        
+                        <td *ngIf="!['trace date','last activity age','claim number', 'claim amount', 'reason code', 'sell company', 'claim age', 'customer name', ''].includes(field.workQueueFieldName.toLowerCase())" class="pl-12">
+                          {{ item[transformToCamelCase(field.workQueueFieldName)] }}
+                        </td>
+                      </ng-container>
+                    </tr>
+                  </ng-container>
+
+                  <ng-template #noData>
+                    <tr>
+                      <td class="text-center" [attr.colspan]="fetchUserWorkQueueFields.length + 1">
+                        <div class="center-content">Record Not Found</div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </ng-template>
+                
+
+              </tbody>
+            </table>
+          </div>
+        <!-- <div class="row">
+              <div class="col-sm-12 col-md-6 text-end text-md-start">
+                <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block">
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a class="page-link" (click)="onPreviousPageClick()" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of getPageNumbers()">
+                      <a class="page-link" (click)="onPageNumberClick(page)"
+                        [class.active]="page === claimWorkQueuesListCurrentPage">{{ page }}</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" (click)="onNextPageClick()" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 mt-2 text-end">
+                <div class="dataTables_length d-sm-inline-block table-page-view">
+                  <div class="d-flex align-items-center">
+                    <label class="per-page-style">Per Page</label>
+
+                    <select
+                      class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                      id="perPageSelect" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+                      <option *ngFor="let option of perPageOptions" [value]="option">
+                        {{ option }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div> --> 
+          </ng-template>
+          </div>
+          <div class="row mt-3 mb-3">
+            <div class="col-sm-12 col-md-6 text-end text-md-start">
+              <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link" (click)="onPreviousPageClick()" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getPageNumbers()">
+                    <a class="page-link" (click)="onPageNumberClick(page)"
+                      [class.active]="page === claimWorkQueuesListCurrentPage">{{ page }}</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" (click)="onNextPageClick()" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 mt-2 text-end">
+              <div class="dataTables_length d-sm-inline-block table-page-view">
+                <div class="d-flex align-items-center">
+                  <label class="per-page-style">Per Page</label>
+
+                  <select
+                    class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                    id="perPageSelect" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+                    <option *ngFor="let option of perPageOptions" [value]="option">
+                      {{ option }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+     
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+  
+<!-- Add Column Modal -->
+<div class="modal modal-bg" id="FieldChooser" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="justify-content: flex-end;">
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeFieldChooserModal()"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Column Options</h5>
+        <p class="mb-0">Add or remove columns.</p>
+        <p>To change the column order, drag and drop a field.</p>
+
+        <div class="recipe">
+          <div class="recipe__ingredients">
+            <table cellpadding="0" cellspacing="0" border="0" class="recipe-table" id="recipeTable">
+              <tbody id="recipeTableBody">
+                <tr>
+                  <td class="recipe-table__cell">
+                    <div cdkDropList class="example-list mt-20" (cdkDropListDropped)="drop($event)">
+                      <div class="example-box" *ngFor="let field of filterFetchUserWorkQueueFields, let i = index" cdkDrag>
+                     
+                        <div class="w-100 drag-content">
+                          <div class="container">
+                            <div class="drag-icon">
+                              <i class="fas fa-grip-vertical" cdkDragHandle></i>
+                            </div>
+                            <div class="selected-field">{{ field.workQueueFieldName }}</div>
+                            <div class="icon-delete">
+                              <button class="recipe-table__del-row-btn" (click)="deleteColumn(i)">x</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="new-drag-value" *ngIf="showAddColumnDialog">
+              <select #newColumnSelect [(ngModel)]="selectedColumn" class="form-control form-select" (change)="addColumn()">
+                <option *ngFor="let unmatchedColumn of unmatchedFields" [value]="unmatchedColumn.workQueueFieldName">
+                  {{ unmatchedColumn.workQueueFieldName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="recipe-table__add-row">
+              <button class="btn btn-primary" (click)="openAddColumnDialog()" [class.disabled]="unmatchedFields.length === 0">
+                + Add Column
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+     
+        <button type="button" class="btn btn-primary" [disabled]="!enableOk" (click)="addUserWorkQueueFields()">Ok</button>
+        <button type="button" class="btn btn-secondary" (click)="closeFieldChooserModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

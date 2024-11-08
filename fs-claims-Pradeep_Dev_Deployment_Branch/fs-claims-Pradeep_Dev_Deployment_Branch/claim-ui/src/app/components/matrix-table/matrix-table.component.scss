@@ -1,0 +1,76 @@
+.matrix-table td, .matrix-table th {
+    padding: 10px;
+}
+.matrix-table input {
+    
+    text-align: center;
+}
+
+.mb-new-5{margin-bottom: 5px;}
+
+.p-18{padding: 18px;}
+
+.per-page-select-style{margin-right: 20px; min-width: 80px;}
+
+.arrow-left-style{font-size: 24px; margin-right: 15px; color: #0b5ed7;cursor: pointer;}
+
+.pagination-top{border-bottom: 1px solid var(--primary);margin-bottom: 20px;padding-bottom: 12px;}
+
+.per-page-style{padding-right: 10px; margin-right: 10px;}
+
+.back-btn-border{border-bottom: 1px solid var(--primary); padding-bottom: 10px;}
+
+.stepper-body {
+    height: 100vh;
+}
+.mat-mdc-form-field-subscript-wrapper
+    {
+        display: none !important;
+    }
+
+    .permission-container {
+        display: flex;
+        flex-wrap: nowrap; /* Prevent wrapping to the next line */
+      }
+      
+      mat-chip {
+        margin-right: 10px; /* Add spacing between elements */
+}
+.search-input {
+    max-width: none;
+    width:100%;
+    outline: none;
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 5px 6px;
+    /* You can adjust this value as needed */
+  }
+
+  .btn-view
+      {
+        background-color: #fff;
+    color: rgb(93, 135, 255);
+    display: inline-block;
+    border-radius: 16px;
+    font-family: Roboto, sans-serif;
+    line-height: 32px;
+    padding: 0 15px;
+    border: 1px solid rgb(93, 135, 255);
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 12px !important;
+      }
+
+    .permission-heading {
+        top: 25px;
+    position: absolute;
+    left: 55px;
+    
+    width: 92%;
+    padding-bottom: 10px;
+}
+   
+#editModelLabel span{
+    text-transform: uppercase !important;
+   }   

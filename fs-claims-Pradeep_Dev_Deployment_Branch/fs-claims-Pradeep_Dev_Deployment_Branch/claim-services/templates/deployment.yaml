@@ -1,0 +1,71 @@
+{{- range $serviceName, $serviceConfig := .Values.services }}
+{{- if and $serviceConfig.enabled (ne $serviceName "claim-ui") }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $serviceName }}
+  labels:
+    {{- include "claim-services.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ $serviceConfig.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $serviceName }}
+    spec:
+      {{- with $.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ $serviceName }}
+          image: "{{ $serviceConfig.image.repository }}:{{ $serviceConfig.image.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: {{ $serviceConfig.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml $serviceConfig.resources | nindent 12 }}
+{{- end }}
+{{- end }}
+
+---
+{{- if index .Values.services "claim-ui" "enabled" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claim-ui
+  labels:
+    {{- include "claim-services.labels" . | nindent 4 }}
+spec:
+  replicas: {{ index .Values.services "claim-ui" "replicaCount" }}
+  selector:
+    matchLabels:
+      app: claim-ui
+  template:
+    metadata:
+      labels:
+        app: claim-ui
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: claim-ui
+          image: "{{ index .Values.services "claim-ui" "image" "repository" }}:{{ index .Values.services "claim-ui" "image" "tag" }}"
+          imagePullPolicy: Always
+          ports:
+            {{- range $index, $port := index .Values.services "claim-ui" "ports" }}
+            - name: port-{{ $index }}
+              containerPort: {{ $port }}
+              protocol: TCP
+            {{- end }}
+          resources:
+            {{- toYaml (index .Values.services "claim-ui" "resources") | nindent 12 }}
+{{- end }}

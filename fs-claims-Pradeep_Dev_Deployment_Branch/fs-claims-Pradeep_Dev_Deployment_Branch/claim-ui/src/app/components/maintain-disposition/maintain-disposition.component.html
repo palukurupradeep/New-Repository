@@ -1,0 +1,225 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+            <div class="p-3">
+                <div class="d-flex justify-content-between">
+                    <h4>Maintain Disposition</h4>
+                    <h6>Disposition : {{fetchLinedata?.dispositionNumber}}</h6>
+                  
+                </div>
+                <div class="row mt-2 top-field">
+                    <div class="col-6">
+                        <p class="fw-semibold">
+                            Invoice #{{ fetchLinedata?.claimDispositionLineDTO[0]?.invNumber }} - {{ fetchLinedata?.claimDispositionLineDTO[0]?.invDate | date: 'MM/dd/yyyy' }} (Order #{{  fetchLinedata?.claimDispositionLineDTO[0]?.orderNUmber }})
+       
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="fw-semibold text-end">
+                            Amounts given in UNITED STATES $
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col" class="w-250">Disposition Type</th>
+                                        <th scope="col">Inv</th>
+                                        <th scope="col">Style</th>
+                                        <th scope="col">Color</th>
+                                        <th scope="col">PO</th>
+                                        <th scope="col">RGA</th>
+                                        <th scope="col">Qty</th>
+                                        <th scope="col">UOM</th>
+                                        <th scope="col" class="text-center">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  *ngFor="let line of fetchLinedata?.claimDispositionLineDTO">
+                                        <!-- <td> <mat-checkbox></mat-checkbox></td> -->
+                                         <td></td>
+                                        <td>
+                                            <mat-form-field>
+                                                <mat-select  [disabled]="true" [(ngModel)]="dispotypeData">
+                                                    <mat-option [value]="fetchLinedata?.dispositionType">
+                                                        {{fetchLinedata?.dispositionType}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                       
+                                        <td> {{ line.lineNumber.length >= 2 ? line.lineNumber : '00' + line.lineNumber }}</td>
+                                        <td>{{line.styleNumber}}</td>
+                                        <td>{{line.colorNumber}}</td>
+                                        <td>{{line.purchaseOrder}}</td>
+                                        <td>{{fetchLinedata.documentNumber}}</td>
+                                        <td>{{line.quantity | currency:'USD':'symbol':'1.2-2'}}</td>
+                                        <td>{{line.unitOfMeasure}}</td>
+                                        <td class="text-end">{{line.amountUsd | currency:'USD':'symbol':'1.2-2'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold text-end" colspan="9">Total</td>
+                                        <td class="fw-semibold text-end">{{totalAmountUsd | currency:'USD':'symbol':'1.2-2'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2 mb-3 top-field">
+                    <form [formGroup]="dispositionForm">
+                    <div class="col-12">
+                        <p class="fw-semibold">Select Disposition Options</p>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">To</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <p class="text-uppercase mb-0"
+                                        >{{fetchLinedata?.companyName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Attn</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <input type="text" class="form-control " formControlName="attn">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Phone</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <input type="text" formControlName="phone" class="form-control ">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Fax</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <input type="text" formControlName="fax" class="form-control ">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Email</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <input type="text" formControlName="email" class="form-control ">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">End User</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <p class="text-uppercase mb-0">{{fetchLinedata?.endUserName}}
+                                           </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Select Standard Message</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <mat-form-field appearance="fill">
+                                            <mat-select 
+                                                [(value)]="selectedNote" formControlName="notetemplate">
+                                                <mat-option *ngFor="let data of noteText" [value]="data.noteTemplateId">
+                                                    {{data.noteTemplateName}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Standard Message</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <p class="text-uppercase mb-0">
+                                            {{ fetchLinedata?.standardMessage }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Special Instructions</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-6 text-uppercase position-relative mb-2">
+                                        <textarea class="form-control" formControlName="specialinstructions"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-secondary mx-2" (click)="openVoidModal()"> Void</button>
+                        <button type="button" class="btn btn-primary mx-2">PDF</button>
+                        <button type="button" class="btn btn-secondary" (click)="navToClaimdetail()">Done</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>
+
+<!-- void Modal -->
+<div class="modal modal-bg modal-md" id="voidModalDispo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Void Action</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p>Are you sure want to void?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="confirmToClaimdetail()">
+                    Confirm
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>

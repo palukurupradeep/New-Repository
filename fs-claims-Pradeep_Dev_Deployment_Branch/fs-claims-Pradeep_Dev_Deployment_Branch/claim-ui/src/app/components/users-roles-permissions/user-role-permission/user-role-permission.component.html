@@ -1,0 +1,72 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header></app-header>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" >
+      <a class="nav-link" [ngClass] = "{ 'active' :userModel}" aria-current="page" >
+        <h5 class="cursor-pointer" (click)="changeTab('user')">Users</h5>
+      </a>
+    </li>
+    <li class="nav-item">
+  
+      <a class="nav-link" [ngClass] = "{ 'active' :rolesModel}">  
+      <h5 class="cursor-pointer" (click)="changeTab('role')">Roles</h5> </a> </li>
+    <li class="nav-item">
+      <a class="nav-link" [ngClass] = "{ 'active' :permissionModel}" aria-current="page" >
+        <h5 class="cursor-pointer" (click)="changeTab('permission')">Permissions</h5></a>
+     
+    </li>
+    <!-- <li class="nav-item" >
+      <a class="nav-link" [ngClass] = "{ 'active' :userMange}" >
+        <h5 class="cursor-pointer" (click)="changeTab('userMange')">Users Management</h5>
+      </a>
+    </li> -->
+    <li class="nav-item">
+      <a class="nav-link"  [ngClass] = "{ 'active' :roleMange}">  
+        <h5 class="cursor-pointer" (click)="changeTab('roleMange')">Roles Management</h5> 
+      </a> 
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [ngClass] = "{ 'active' :perMange}" >
+        <h5 class="cursor-pointer" (click)="changeTab('permissionMange')">Permissions Management</h5>
+      </a>
+    </li>
+  </ul>
+
+  <div class="mt-3">
+    <div *ngIf="userModel">
+      <app-user-profile-management></app-user-profile-management>
+    </div>
+  </div>
+  <div>
+    <div *ngIf="rolesModel">
+      <app-roles-matrix-table></app-roles-matrix-table>
+      
+    </div>
+  </div>
+  <div>
+    <div *ngIf="permissionModel">
+      <app-matrix-table></app-matrix-table>
+      
+    </div>
+  </div>
+  <!-- <div class="mt-3 main">
+    <div *ngIf="userMange">
+      <app-usermanagement-stepper></app-usermanagement-stepper>
+    </div>
+  </div> -->
+
+  <div *ngIf="roleMange">
+    <div >
+        <app-stepper></app-stepper>
+    </div>
+  </div>
+
+  <div>
+    <div *ngIf="perMange">
+        <app-permissions-stepper></app-permissions-stepper>
+      
+    </div>
+  </div>
+</div>

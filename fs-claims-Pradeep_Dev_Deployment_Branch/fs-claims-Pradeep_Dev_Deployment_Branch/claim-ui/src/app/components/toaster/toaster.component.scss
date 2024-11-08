@@ -1,0 +1,108 @@
+// /* toaster.component.css */
+// .toaster-container {
+//     position: fixed;
+//     top: 10px;
+//     right: 10px;
+//     z-index: 1000;
+//   }
+  
+//   .toast {
+//     display: flex;
+//     align-items: center;
+//     padding: 10px 20px;
+//     margin: 10px 0;
+//     border-radius: 5px;
+//     color: white;
+//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+//     opacity: 0.9;
+//     transition: opacity 0.5s ease-in-out;
+//   }
+  
+//   .toast.success {
+//     background-color: #28a745;
+//   }
+  
+//   .toast.error {
+//     background-color: #dc3545;
+//   }
+  
+//   .toast.warning {
+//     background-color: #ffc107;
+//     color: #212529;
+//   }
+  
+//   .toast-close-btn {
+//     background: transparent;
+//     border: none;
+//     color: white;
+//     font-size: 16px;
+//     cursor: pointer;
+//     margin-left: 10px;
+//   }
+  
+//   .toast:hover {
+//     opacity: 1;
+//   }
+  
+//   // .toast-content {
+//   //   flex: 1;
+//   // }
+  
+
+.toaster-container {
+  position: fixed;
+  top: 0; /* Align the container at the very top of the page */
+  left: 50%;
+  transform: translateX(-50%); /* Center the container horizontally */
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px; /* Optional: Add padding at the top if you want some space */
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  transition: opacity 0.5s ease-in-out;
+  min-width: 300px; /* Ensure a minimum width */
+  text-align: center; /* Center the text */
+}
+
+.toast.success {
+  background-color: #5d87ff;
+}
+
+.toast.error {
+  background-color: #dc3545;
+}
+
+.toast.warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.toast:hover {
+  opacity: 1;
+}
+
+.toast-content {
+  flex: 1;
+  text-align: center; /* Center the content within the toast */
+}

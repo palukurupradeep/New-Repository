@@ -1,0 +1,825 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mt-2 mb-2">
+                <h4>Claim Vendor Profile</h4>
+                <div class="col-12 mt-2 mb-3">
+                    <!-- <p class="fs-15 fw-medium mb-3">View Restricted Customers</p> -->
+                    <div class="text-end mt-2 mb-3 col-12">
+                      <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="openModal()">Add Vendor</button>
+                      <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Update</button>
+                      <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10">Clear</button>
+                      </div>
+                     <!--  <div class="text-end mt-2 mb-2 col-12">
+                        <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Add</button>
+                        </div> -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="col-12">
+                              <!--   <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Geocode Quality</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <p>&nbsp;</p>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div> -->
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Claims Vendor Number</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2 position-relative">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <i  class="fa fa-search disabled"></i>
+                                             <input type="text" class="form-control">
+
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Federal Id</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                    <p>&nbsp;</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">PS Vendor Id</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                    <p>&nbsp;</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Legal Name <span class="text-danger">*</span></label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                     <p>Sample Value</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Trade/DBA Name</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                    <p>&nbsp;</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Primary Contact <span class="text-danger">*</span></label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                    <p>&nbsp;</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Secondary Contact </label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <!-- <input type="text" class="form-control"> -->
+                                    <p>&nbsp;</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="col-12">
+                            <div class="form-group row mb-2">
+                              <label for="" class="col-sm-4 col-form-label py-0 ">Latitude, Longitude</label>
+                              <div  class="col-sm-8 row">
+                                  <div class="form-group mb-2">
+                                      <div  class="col-sm-9 text-uppercase">
+                                        <p>-1.0, 0.0</p>
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-group row mb-2">
+                              <label for="" class="col-sm-4 col-form-label py-0 ">Status</label>
+                              <div  class="col-sm-8 row">
+                                  <div class="form-group mb-2">
+                                    <div  class="col-sm-9 form-check form-switch">
+                                      <input type="checkbox" formControlName="status" class="form-check-input ">
+                                          </div>                                       
+                                    </div>  
+                                </div>                                       
+                            </div>
+                          </div>
+                <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">PS Vendor Location</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                              <div  class="col-sm-9 text-uppercase">
+                                <!-- <input type="text" class="form-control"> -->
+                                <p>&nbsp;</p>
+                                </div>                                       
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">W-9</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>                                     
+                            </div>                                      
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">PS Vendor Maintenance Form</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>                                     
+                            </div>                                     
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">Claims Vendor Profile Form</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>                                     
+                            </div>                                      
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">Review Date</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>                                     
+                            </div>                                       
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label py-0 ">Inspector Background Check Completed</label>
+                      <div  class="col-sm-8 row">
+                          <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>
+                                </div>                                                                         
+                            </div>
+                        </div>                                       
+                    </div>
+                  </div>
+                  </div>
+                    </div>
+                    <hr class="mt-2">
+                    <div class="row">
+                        <div class="col-6">
+                          <label for="" class="col col-form-label py-3 fw-semibold top-label">Physical Address</label>
+                          <div class="col-12 text-uppercase">
+                           <p>ELITE FLOOR DESIGN INC0112082</p> 
+<p>519-0470</p>
+<p>3828 BARRINGER DR.CHARLOTTE</p>
+<p>NC 28217</p>
+                          </div>
+                          <!-- <div class="disabled-new"> -->
+                         <!--  <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Country</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <select class="form-select form-control">
+                                                <option name="Option1">Option1</option>    
+                                                <option name="Option2">Option2</option>    
+                                                </select>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Contact Name</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <input type="text" class="form-control">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Address</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <input type="text" class="form-control" placeholder="Address Line1"><br>
+                                            <input type="text" class="form-control" placeholder="Address Line2">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">City</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">State</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <select class="form-select form-control">
+                                        <option name="Option1">Option1</option>    
+                                        <option name="Option2">Option2</option>    
+                                        </select>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Postal Code</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">County</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div> -->
+                    <!-- </div> -->
+                        </div>
+                        <div class="col-6 d-none">
+                            <label for="" class="col col-form-label py-3 fw-semibold ">Remit-To Address</label>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Country <span class="text-danger">*</span></label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <select class="form-select form-control">
+                                                <option name="Option1">Option1</option>    
+                                                <option name="Option2">Option2</option>    
+                                                </select>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Contact Name</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <input type="text" class="form-control">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-4 col-form-label py-0 ">Address</label>
+                                  <div  class="col-sm-8 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-9 text-uppercase">
+                                            <input type="text" class="form-control" placeholder="Address Line1"><br>
+                                            <input type="text" class="form-control" placeholder="Address Line2">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">City <span class="text-danger">*</span></label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">State <span class="text-danger">*</span></label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <select class="form-select form-control">
+                                        <option name="Option1">Option1</option>    
+                                        <option name="Option2">Option2</option>    
+                                        </select>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">Postal Code <span class="text-danger">*</span></label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label py-0 ">County</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                        </div>
+                        <!-- <div class="col-12">
+                            <div class="form-group row mb-2">
+                              <label for="" class="col-sm-4 col-form-label py-0 ">Use Physical Address as Remit to Address</label>
+                              <div  class="col-sm-8 row">
+                                  <div class="form-group mb-2">
+                                      <div  class="col-sm-9 form-check form-switch">
+                                    <input type="checkbox" formControlName="physicalasRemit" class="form-check-input mt-2">
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                          </div> -->
+                    </div>
+                    <hr class="mt-2">
+                    <div class="row">
+                        <label for="" class="col col-form-label py-3 fw-semibold">Contact Information</label>
+                        <div class="col-12">
+                          <div class="form-group row mb-2">
+                            <label for="" class="col-2 col-form-label py-0 ">Business Phone <span class="text-danger">*</span></label>
+                            <div  class="col-10 ">
+                                <div class="form-group row mb-2">
+                                    <div class="col-2">
+                                        <div class="form-input mb-lg-0 mb-2">
+                                          <select
+                                            class="form-select form-control"
+                                            aria-label="Default select example"
+                                            formControlName="phoneHome"
+                                            id="phone-business">
+                                            <option>+1</option>
+                                          </select>
+                                         </div>
+                                      </div>
+                                      <div class="col-5">
+                                        <div class="form-input">                       
+                                          <input
+                                          type="text"
+                                          class="form-control"
+                                          id="phone-business"
+                                          formControlName="home"
+                                          maxlength="12"
+                                          minlength="10"
+                                        />
+                                        
+                                        </div>
+                                      </div>
+                                      <div class="col-1">
+                                        <div class="form-input">
+                                          <p class="mb-0 mt-2">Ext.</p>
+                                        </div>
+                                      </div>
+                                      <div class="col-2">
+                                        <div class="form-input">
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="phone-home"
+                                            maxlength="8"
+                                            formControlName="extHome"
+                                          />
+                                        </div>
+                                      </div>                                    
+                                  </div>
+                              </div>                                       
+                          </div>
+                        </div>
+                    
+                          <div class="col-12">
+                            <div class="form-group row mb-2">
+                              <label for="" class="col-2 col-form-label py-0 ">Cell</label>
+                              <div  class="col-10 ">
+                                  <div class="form-group row mb-2">
+                                      <div class="col-2">
+                                          <div class="form-input mb-lg-0 mb-2">
+                                            <select
+                                              class="form-select form-control"
+                                              aria-label="Default select example"
+                                              formControlName="phoneHome"
+                                              id="phone-business">
+                                              <option>+1</option>
+                                            </select>
+                                           </div>
+                                        </div>
+                                        <div class="col-5">
+                                          <div class="form-input">                       
+                                            <input
+                                            type="text"
+                                            class="form-control"
+                                            id="phone-business"
+                                            formControlName="home"
+                                            maxlength="12"
+                                            minlength="10"
+                                          />
+                                          
+                                          </div>
+                                        </div>
+                                        <div class="col-1">
+                                          <div class="form-input">
+                                            <p class="mb-0 mt-2">Ext.</p>
+                                          </div>
+                                        </div>
+                                        <div class="col-2">
+                                          <div class="form-input">
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="phone-home"
+                                              maxlength="8"
+                                              formControlName="extHome"
+                                            />
+                                          </div>
+                                        </div>                                    
+                                    </div>
+                                </div>                                       
+                            </div>
+                          </div>
+                          
+                          <div class="col-12">
+                            <div class="form-group row mb-2">
+                              <label for="" class="col-2 col-form-label py-0 ">Email <span class="text-danger">*</span></label>
+                              <div  class="col-10 row">
+                                  <div class="form-group mb-2">
+                                      <div  class="col-sm-9 text-uppercase">
+                                        <input type="text" class="form-control">
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                  </div>
+                <div class="col-12 mt-2">
+                  <div class="d-flex justify-content-between mb-3">
+                    <p class="fs-15 fw-semibold mb-3">Certifying Agencies</p>
+                    <button type="button"  class="d-sm-inline-block text-end btn btn-sm btn-primary ml-10"  (click)="opencertificateModal()">Add Certificate</button>
+                  </div>
+                    <div class="table-responsive mb-3">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Actions</th>
+                                        <th> Certifying Agency </th>
+                                        <th> Service Type </th>
+                                        <th>Certificate No.</th>
+                                        <th>Certificate Exp. Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                  <td  class="justify-content-around p-10">
+                                    <a class="text-primary model-click">
+                                       <i class="fa-solid fa-pencil"></i>
+                                     </a>&nbsp;&nbsp;
+                                     <a  
+                                     class="text-danger" >
+                                     <i class="fa-solid fa-trash-can"></i></a>
+                                   </td>
+                                    <td> <p class="text-uppercase mb-0">Agency 1</p></td>
+                                    <td> <p class="text-uppercase mb-0">Residential</p></td>
+                                    <td>  <p class="text-uppercase mb-0">5398493</p></td>
+                                    <td> <p class="text-uppercase mb-0">12/31/20234</p>   </td>
+                                </tr>                
+                                </tbody>
+                            </table>
+                    </div>
+                   <!--  <div class="text-end mt-2 mb-2 col-12">
+                        <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Add</button>
+                        <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Update</button>
+                        <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10">Delete</button>
+                        </div> -->
+                </div>
+                <div class="col-12 mt-2 ">
+                  <p class="fs-15 fw-medium mb-3">Remit-to Address</p>
+                  <div class="table-responsive mb-3">
+                          <table class="table table-striped table-hover">
+                              <thead>
+                                  <tr>
+                                      <!-- <th></th> -->
+                                      <th> Name 1 </th>
+                                      <th> Name 2</th>
+                                      <th> Location </th>
+                                      <th>Remit To Address</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                               
+                              <tr>
+                                  <!-- <td><input class="form-check-input" type="radio"></td> -->
+                                  <td> <p class="text-uppercase mb-0">Priority One inspection southwest LLC</p></td>
+                                  <td>  </td>
+                                  <td> <!-- <select class="form-select form-control" >
+                                      <option value="">Select Location</option>
+                                      <option name="Option1">Option1</option>    
+                                      <option name="Option2">Option2</option>    
+                                      </select> --></td>
+                                  <td> <p class="text-uppercase fw-semibold mb-0">6056 East rochell<br>Mesa, AZ 85215<br>US</p></td>
+                              </tr>                
+                              </tbody>
+                          </table>
+                  </div>
+              </div>
+                <div class="col-12 mt-2 mb-3">
+                    <p class="fs-15 fw-semibold mb-3">Services</p>
+                    <div class="row">
+                        <div class="col-3">
+                            <p class="fw-semibold mb-3">Service Type</p>  
+                            <div class="form-group row mb-3">
+                              <div *ngFor="let values of inspectionSeviceTypes">
+                                  <label for="" class="col-sm-6 col-form-label">{{values.inspectionServiceTypeName}}</label>
+                                  <div  class="col-sm-2">
+                                      <div class="form-check form-inline">
+                                          <input type="checkbox" 
+                                           class="form-check-input mt-2">
+                                      </div>
+                                  </div> 
+                              </div>
+                                                              
+                          </div>
+                            <p class="text-danger fs-12 d-none">*Please choose atleast one type</p>
+                        </div>
+                        <div class="col-1 border-left-1">
+                        </div>
+                        <div class="col-8">
+                            <p class="fw-semibold mb-3">Services Offered</p>  
+                            <div class="form-group row mb-3">
+                              <div *ngFor="let services of inspectionSevices">
+                                  <label for="" class="col-sm-3 col-form-label">{{services.inspectionServiceName}}</label>
+                                  <div  class="col-sm-1">
+                                      <div class="form-check form-inline">
+                                          <input type="checkbox"   
+                                           class="form-check-input mt-2">
+                                      </div>
+                                  </div> 
+                              </div>
+                           </div>  
+                            <p class="text-danger fs-12 d-none">*Please choose atleast one service</p>
+                        </div>
+                    </div>
+                </div>
+            <!--     <div class="col-12 mt-3">
+                    <p class="fs-15 fw-medium mb-3">Schedule of Charges</p>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width: 50%"> Charge Description </th>
+                                    <th> Price </th>
+                                    <th>UOM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td> <select class="form-select form-control">
+                                        <option value="">Select Charge</option>
+                                        <option name="Option1">Option1</option>    
+                                        <option name="Option2">Option2</option>    
+                                        </select></td>
+                                        <td>  <input type="text" class="form-control" placeholder="0.0"></td>
+                                    <td> <select class="form-select form-control" >
+                                        <option name="SY">SY</option>    
+                                        <option name="Option2">Option2</option>    
+                                        </select></td>
+                                </tr>                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-2 mb-2 col-12">
+                        <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Add</button>
+                        <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10">Update</button>
+                        <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10">Delete</button>
+                        </div>
+                    <p class="fw-medium mb-2">Comments</p>
+                    <div class="row mb-2">
+                    <div class="col-4">
+                    </div>
+                    <div class="col-8 text-uppercase">
+                    </div>
+                </div>
+                </div> -->
+                <!-- Add certificate modal -->
+            <div class="modal modal-bg" id="certificateModal" >
+              <div class="modal-dialog modal-md">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title p-0" id="certificateModalTitle">Add Certificate</h4>
+                          <button type="button" class="btn-close" id="certificateModalCloseButton" aria-label="Close" (click)="closeModal('certificateModal')"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form class="mt-4" id="certificateModalForm">
+                              <div class="row mb-3">
+                                  <label class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label" >
+                                    Certifying Agency
+                                  </label>
+                                  <div class="col-12 col-xxl-10 col-xl-9 col-lg-6 col-md-6 col-sm-12" >
+                                    <mat-form-field >
+                                      <mat-select >
+                                          <mat-option *ngFor="let status of allCertifyingAgency" >
+                                             {{status.certifyingAgencyName}} 
+                                          </mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <label class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label" >
+                                    Service Type
+                                  </label>
+                                  <div class="col-12 col-xxl-10 col-xl-9 col-lg-6 col-md-6 col-sm-12">
+                                    <mat-form-field >
+                                      <mat-select >
+                                          <mat-option *ngFor="let status of inspectonTableData" >
+                                             {{status.inspectionRequestTypeName}} 
+                                          </mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label" >
+                                  Certificate No.
+                                </label>
+                                <div class="col-12 col-xxl-10 col-xl-9 col-lg-6 col-md-6 col-sm-12">
+                                  <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label" >
+                                Certificate Exp. Date
+                              </label>
+                              <div class="col-12 col-xxl-10 col-xl-9 col-lg-6 col-md-6 col-sm-12 position-relative">
+                                <input type="text" class="form-control">
+                                <span  class="datepicker-new-modal"><i  class="fa-regular fa-calendar-days"></i></span>
+                              </div>
+                          </div>
+                          </form>
+                      </div>
+                      <div class="modal-footer mt-4">
+                          <div class="row">
+                              <div class="col-12 text-end">
+                                  <button type="button" class="btn btn-primary mx-2" (click)="closeModal('certificateModal')">
+                                      Add
+                                  </button>
+                                  <button type="button" class="btn btn-secondary" (click)="closeModal('certificateModal')">
+                                      Cancel
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            </div>
+
+<app-footer></app-footer>
+</div>
+</div>
+<!-- vendor modal -->
+<div class="modal modal-bg" id="vendorModal" >
+  <div class="modal-dialog modal-md">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title p-0" id="vendorModalTitle">Vendor Search</h4>
+              <button type="button" class="btn-close" id="vendorModalCloseButton"
+               aria-label="Close" (click)="closeModal('vendorModal')"></button>
+          </div>
+          <div class="modal-body">
+            <div class="col-12">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label py-0 ">Claims Vendor Number</label>
+                <div  class="col-sm-8 row">
+                    <div class="form-group mb-2 position-relative">
+                        <div  class="col-sm-9 text-uppercase">
+                          <i  class="fa fa-search disabled"></i>
+                           <input type="text" class="form-control">
+
+                          </div>                                       
+                      </div>
+                  </div>                                       
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer mt-4">
+              <div class="row">
+                  <div class="col-12 text-end">
+                      <button type="button" class="btn btn-primary mx-2" (click)="closeModal('vendorModal')">
+                          Add
+                      </button>
+                      <button type="button" class="btn btn-secondary" (click)="closeModal('vendorModal')">
+                          Cancel
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

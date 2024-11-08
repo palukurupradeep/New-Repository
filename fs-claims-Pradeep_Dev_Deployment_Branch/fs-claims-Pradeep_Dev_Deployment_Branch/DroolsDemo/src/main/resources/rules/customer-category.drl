@@ -1,0 +1,56 @@
+import org.example.model.CustomerRequest;
+import org.example.model.ProductCategory;
+import org.example.model.CustomerCategory;
+global org.example.model.CustomerType customerType;
+
+dialect "mvel"
+
+rule "Normal Customer with carpet size range 100-200"
+    when
+        $cr : CustomerRequest(cusType == CustomerCategory.NORMAL.getValue()
+            && prodType == ProductCategory.CARPET.getValue()
+                && (size > 99 && size < 201)
+                    && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 30)
+    then
+        System.out.println("Normal Customer with carpet size range 100-200");
+        customerType.setProductCategory(ProductCategory.CARPET);
+        customerType.setCustomerType(CustomerCategory.NORMAL);
+        customerType.setDiscount($cr.getDiscount());
+end
+
+rule "Normal Customer with carpet size range 200-300"
+    when
+        $cr : CustomerRequest(cusType == CustomerCategory.NORMAL.getValue()
+            && prodType == ProductCategory.CARPET.getValue()
+                && (size > 200 && size < 301)
+                    && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 30)
+    then
+        System.out.println("Normal Customer with carpet size range 200-300");
+        customerType.setProductCategory(ProductCategory.CARPET);
+        customerType.setCustomerType(CustomerCategory.NORMAL);
+        customerType.setDiscount($cr.getDiscount());
+end
+
+rule "Normal Customer with carpet size range 300-400"
+    when
+        $cr : CustomerRequest(cusType == CustomerCategory.NORMAL.getValue()
+            && prodType == ProductCategory.CARPET.getValue()
+                && (size > 300 && size < 401)
+                    && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 30)
+    then
+        System.out.println("Normal Customer with carpet size range 300-400");
+        customerType.setProductCategory(ProductCategory.CARPET);
+        customerType.setCustomerType(CustomerCategory.NORMAL);
+        customerType.setDiscount($cr.getDiscount());
+end
+
+rule "Check Customer Type and Product Type and invoice date for Premium Customer"
+    when
+        CustomerRequest(cusType == CustomerCategory.PREMIUM.getValue()
+            && prodType == ProductCategory.HARD_SURFACE.getValue()
+                && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 45)
+    then
+        customerType.setProductCategory(ProductCategory.HARD_SURFACE);
+        customerType.setCustomerType(CustomerCategory.PREMIUM);
+        customerType.setDiscount(20);
+end

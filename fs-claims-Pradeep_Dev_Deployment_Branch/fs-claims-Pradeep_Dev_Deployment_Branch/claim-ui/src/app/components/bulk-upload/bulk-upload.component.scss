@@ -1,0 +1,36 @@
+.datepicker {
+    position: absolute;
+    cursor: pointer;
+    right: 10px;
+    top: 5px;
+    margin-top: 0;
+    color: #5d87ff;
+    font-size: 18px;
+}
+.ml-10{
+    margin-left: 10px;
+}
+.per-page-style {
+    white-space: nowrap; 
+    padding-right: 10px; 
+    margin-right: 10px;
+}
+
+tbody tr, tbody td {
+    border-bottom-width: 0px!important;
+    line-height: inherit !important;
+}
+.inactive-card{
+    background-color: #e8e8ed!important;
+    border: 1px solid #E8E8ED!important;
+}
+.inactive-card h3{
+    padding: 0;
+    margin: 0;
+    font-size: 13px!important;
+}
+.px-20 {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+

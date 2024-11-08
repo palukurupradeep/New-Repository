@@ -1,0 +1,15 @@
+server:
+  port: 8084
+
+azure:
+  maps:
+    subscription-key: FXdhU7CTXj-tOCqJGoDVifYnT8bECkOsQ0QUIXnfJuY
+  email:
+    endpoint: https://sz-ue2-claimworx-d-acs-01.unitedstates.communication.azure.com
+    key:
+      credentials: onY5gSoZx2RStlWxBY1snGCk3zvCrmqUPQd3O4EkuqMs8d7E4LVzee8v6C1XWk1nYtnDzqOmobiAd3HTP3vZkg==
+    senderaddress: DoNotReply@claims.shawinc.com
+
+logging:
+  config: classpath:log4j2.xml
+

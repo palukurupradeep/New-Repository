@@ -1,0 +1,48 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+      <div class="container-fluid">
+        <div class="row mb-3">
+          <div class="col-lg-12">
+            <h1 class="mb-0">Dashboard Widget Configuration  </h1>
+          </div>
+        </div>
+      <!-- Add this to your template -->
+      <div class="card claim-info p-4">
+        <div class="row mb-3" *ngFor="let widget of dashBoardWidgetsList">
+          <div class="col-lg-12 text-end">
+            <div class="form-group row mb-3">
+              <label for="" class="col-sm-3 col-form-label">{{ widget.dashboardWidgetName }}</label>
+              <div class="col-sm-1">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    id="{{ widget.dashboardWidgetId }}"
+                    class="form-check-input mt-2"
+                    [(ngModel)]="widget.enabled"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="row mt-2">
+          <div class="col-lg-12 mt-2 text-end d-flex gap-3 justify-content-end flex-wrap">
+            <a class="d-sm-inline-block btn btn-sm btn-secondary" (click)="resetDefaults()">Reset</a>
+            <button class="d-sm-inline-block btn btn-sm btn-primary" (click)="onApplyButtonClick()">Apply</button>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+
+        
+        
+    </div>
+    <app-footer></app-footer>
+
+</div>
+

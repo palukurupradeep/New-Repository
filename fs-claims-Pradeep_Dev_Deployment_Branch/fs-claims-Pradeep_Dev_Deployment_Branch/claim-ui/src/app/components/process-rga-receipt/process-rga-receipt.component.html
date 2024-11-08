@@ -1,0 +1,918 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+            <div class="p-3">
+                <h4>Process Receipts</h4>
+                <div class="row">
+                    <h6 class="mb-3 py-2">Process Receipts</h6>
+                    <div class="col-6">
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">Plant</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div class="col-12 text-uppercase position-relative mb-2">
+                                        <mat-form-field appearance="fill">
+                                            <mat-select placeholder="Select Plant" [(value)]="selectedPlant">
+                                                <mat-option *ngFor="let plant of plants" [value]="plant">
+                                                    {{ plant }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-3 col-form-label">RA #</label>
+                            <div class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div
+                                        class="col-12 text-uppercase position-relative search-new-1 cursor-pointer mb-2">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" class="form-control" formControlName="rganumber">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <h6 class="mb-3 py-2">Plant PQ RA's</h6>
+                        <div class="table-responsive mb-3">
+                            <form>
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <!--  <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Line</th>
+                        <th scope="col">Selling Style</th>
+                        <th scope="col">Inventory Style</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Roll Nbr</th>
+                        <th scope="col">Lot</th>
+                        <th scope="col">Width</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">New Roll Nbr</th>
+                        <th scope="col">Bin Location</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Received Date / Time</th>
+                        <th scope="col">UOM</th>
+                    </tr> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of plantTableData" [class.tr-selected]="row.plant === 'DU'">
+                                            <td><a href="">{{ row.id }}</a></td>
+                                            <td>{{ row.plant }}</td>
+                                            <td>{{ row.receivedDate }}</td>
+                                            <td>{{ row.status }}</td>
+                                            <td>{{ row.width }}</td>
+                                            <td>{{ row.rollNumber }}</td>
+                                            <td>{{ row.lot }}</td>
+                                            <td>{{ row.quantity }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-2 mb-3">
+                        <div class="accordion--section">
+                            <accordion>
+                                <div>
+                                    <accordion-group>
+                                        <button
+                                            class="btn-block bg-none border-0 justify-content-between d-flex w-100 shadow-none btn-accordion align-items-center"
+                                            accordion-heading type="button">
+                                            <h6 class="mb-0 ">RA # 357627</h6>
+                                            <button class="panel-arrow text-end"> <i class="fa fa-angle-down"
+                                                    aria-hidden="true"></i></button>
+                                        </button>
+
+                                        <div class="table-responsive mb-3">
+                                            <form>
+                                                <table class="table table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Action</th>
+                                                            <th scope="col">Line#</th>
+                                                            <th scope="col">SKU Number</th>
+                                                            <th scope="col">PM</th>
+                                                            <th scope="col">Grade</th>
+                                                            <th scope="col">Style Name</th>
+                                                            <th scope="col">Color Name</th>
+                                                            <th scope="col">Trailer #</th>
+                                                            <th scope="col">From Plant</th>
+                                                            <th scope="col">Pending Quantity</th>
+                                                            <th scope="col">Received Quantity</th>
+                                                            <th scope="col">Sent Quantity</th>
+                                                            <th scope="col">Open Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <!--  <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-form-field appearance="fill">
+                                            <mat-select  placeholder="Select Action">
+                                              <mat-option value="Change Trailer">
+                                                Change Trailer
+                                              </mat-option>
+                                              <mat-option value=" Grade Reclass">
+                                                Grade Reclass
+                                              </mat-option>
+                                              <mat-option value="Relocate">
+                                                Relocate
+                                              </mat-option>
+                                              <mat-option value="Receive">
+                                                Receive
+                                              </mat-option>
+                                              <mat-option value="Scrap">
+                                                Scrap
+                                              </mat-option>
+                                              <mat-option value="Send">
+                                                Send
+                                              </mat-option>
+                                              <mat-option value="Shrink">
+                                                Shrink
+                                              </mat-option>
+                                              <mat-option value="Style Reclass">
+                                                Style Reclass
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                    </td>
+                                    <td>001</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>44</td>
+                                    <td>64</td>
+                                    <td>64</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-form-field appearance="fill">
+                                            <mat-select  placeholder="Select Action">
+                                                <mat-option value="Change Trailer">
+                                                  Change Trailer
+                                                </mat-option>
+                                                <mat-option value=" Grade Reclass">
+                                                  Grade Reclass
+                                                </mat-option>
+                                                <mat-option value="Relocate">
+                                                  Relocate
+                                                </mat-option>
+                                                <mat-option value="Receive">
+                                                  Receive
+                                                </mat-option>
+                                                <mat-option value="Scrap">
+                                                  Scrap
+                                                </mat-option>
+                                                <mat-option value="Send">
+                                                  Send
+                                                </mat-option>
+                                                <mat-option value="Shrink">
+                                                  Shrink
+                                                </mat-option>
+                                                <mat-option value="Style Reclass">
+                                                  Style Reclass
+                                                </mat-option>
+                                              </mat-select>
+                                      </mat-form-field></td>
+                                    <td>003</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>   -->
+
+                                                    <!-- Selected Actions Static html, Dev should take the layout and make it dynamic -->
+
+                                                    <!-- Change trailer selected -->
+                                                    <!--  <tbody>
+                                <tr>
+                                    <td>Change Trailer</td>
+                                    <td>001</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>44</td>
+                                    <td>64</td>
+                                    <td>64</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                      <td>003</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>  -->
+
+
+                                                    <!-- Glass Reclass selected -->
+                                                    <!--  <tbody>
+                                <tr>
+                                    <td>Glass Reclass</td>
+                                    <td>001</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>44</td>
+                                    <td>64</td>
+                                    <td>64</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                      <td>003</td>
+                                    <td>UV757 02905 21T</td>
+                                    <td>P</td>
+                                    <td>A</td>
+                                    <td>CPREMIUM9 30 MIL</td>
+                                    <td>OPULENCE OAK</td>
+                                    <td>NIL</td>
+                                    <td>DU</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>   -->
+
+                                                    <!-- Relocate/ receive/scrap/Shrink/Style Reclass/send Selected -->
+                                                    <tbody>
+                                                        <tr *ngFor="let row of raTableData">
+                                                            <!-- <td>Relocate</td> -->
+                                                            <!-- <td></td> -->
+                                                            <!-- <td>Shrink</td> -->
+                                                            <!-- <td>Style Reclass</td> -->
+                                                            <td>{{ row.action }}</td>
+                                                            <td>{{ row.lineNumber }}</td>
+                                                            <td>{{ row.skuNumber }}</td>
+                                                            <td>{{ row.pm }}</td>
+                                                            <td>{{ row.grade }}</td>
+                                                            <td>{{ row.styleName }}</td>
+                                                            <td>{{ row.colorName }}</td>
+                                                            <td>{{ row.trailerNumber }}</td>
+                                                            <td>{{ row.fromPlant }}</td>
+                                                            <td>{{ row.pendingQuantity }}</td>
+                                                            <td>{{ row.receivedQuantity }}</td>
+                                                            <td>{{ row.sentQuantity }}</td>
+                                                            <td>{{ row.openQuantity }}</td>
+                                                        </tr>
+                                                        <!-- <tr> -->
+                                                        <!-- <td>Receive</td> -->
+                                                        <!-- <td>Scrap</td> -->
+                                                        <!-- <td></td>
+                                                            <td>003</td>
+                                                            <td>UV757 02905 21T</td>
+                                                            <td>P</td>
+                                                            <td>A</td>
+                                                            <td>CPREMIUM9 30 MIL</td>
+                                                            <td>OPULENCE OAK</td>
+                                                            <td>NIL</td>
+                                                            <td>DU</td>
+                                                            <td>10</td>
+                                                            <td>10</td>
+                                                            <td>10</td>
+                                                            <td>0</td>
+                                                        </tr> -->
+                                                    </tbody>
+
+                                                </table>
+                                            </form>
+
+                                            <!-- Change trailer bottom form -->
+                                            <!--  <hr>
+                    <div class="row mt-3">
+                    <div class="col-4">
+                        <div class="form-group row mb-2 align-items-center">
+                            <label for="" class="col-sm-3 col-form-label">Action</label>
+                            <div  class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div  class="col-12 text-uppercase position-relative">
+                                       <p class="mb-0">Change Trailer</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group row mb-2 align-items-center">
+                                <label for="" class="col-sm-3 col-form-label">Line</label>
+                                <div  class="col-sm-9 row">
+                                    <div class="form-group">
+                                        <div  class="col-12 text-uppercase position-relative">
+                                           <p class="mb-0">001</p>
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-4 col-form-label">SKU Number</label>
+                                    <div  class="col-sm-8 row">
+                                        <div class="form-group">
+                                            <div  class="col-12 text-uppercase position-relative">
+                                               <p class="mb-0">UV757 02905 21T</p>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 mt-2">
+                                    <div class="form-group row mb-2 align-items-center">
+                                        <label for="" class="col-sm-3 col-form-label">Old Trailer</label>
+                                        <div  class="col-sm-9 row">
+                                            <div class="form-group">
+                                                <div  class="col-12 text-uppercase position-relative ">
+                                                  <p class="mb-0">NA</p>
+                                                </div>                                       
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="form-group row mb-2 align-items-center">
+                                            <label for="" class="col-sm-3 col-form-label">New Trailer</label>
+                                            <div  class="col-sm-9 row">
+                                                <div class="form-group">
+                                                    <div  class="col-12 text-uppercase position-relative mb-2">
+                                                        <input type="text" class="form-control" formControlName="sku">
+                                                    </div>                                       
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        </div>
+                                        </div>  -->
+
+                                            <!-- Glass Reclass bottom form -->
+                                            <!--  <hr>
+                    <div class="row mt-3">
+                    <div class="col-4">
+                        <div class="form-group row mb-2 align-items-center">
+                            <label for="" class="col-sm-3 col-form-label">Action</label>
+                            <div  class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div  class="col-12 text-uppercase position-relative">
+                                       <p class="mb-0">Glass Reclass</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group row mb-2 align-items-center">
+                                <label for="" class="col-sm-3 col-form-label">Line</label>
+                                <div  class="col-sm-9 row">
+                                    <div class="form-group">
+                                        <div  class="col-12 text-uppercase position-relative">
+                                           <p class="mb-0">001</p>
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-4 col-form-label">SKU Number</label>
+                                    <div  class="col-sm-8 row">
+                                        <div class="form-group">
+                                            <div  class="col-12 text-uppercase position-relative">
+                                               <p class="mb-0">UV757 02905 21T</p>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 mt-2">
+                                    <div class="form-group row mb-2 align-items-center">
+                                        <label for="" class="col-sm-3 col-form-label">New Dyelot</label>
+                                        <div  class="col-sm-9 row">
+                                            <div class="form-group">
+                                                <div  class="col-12 text-uppercase position-relative ">
+                                                    <input type="text" class="form-control" formControlName="sku">
+                                                </div>                                       
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="form-group row mb-2 align-items-center">
+                                            <label for="" class="col-sm-3 col-form-label">Grade</label>
+                                            <div  class="col-sm-9 row">
+                                                <div class="form-group">
+                                                    <div  class="col-12 text-uppercase position-relative ">
+                                                        <mat-form-field appearance="fill">
+                                                            <mat-select  placeholder="Select Grade">
+                                                              <mat-option value="A">
+                                                                A
+                                                              </mat-option>
+                                                              <mat-option value="B">
+                                                               B
+                                                              </mat-option>
+                                                            </mat-select>
+                                                          </mat-form-field>
+                                                    </div>                                       
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="form-group row mb-2 align-items-center">
+                                            <label for="" class="col-sm-3 col-form-label">Quantity</label>
+                                            <div  class="col-sm-9 row">
+                                                <div class="form-group">
+                                                    <div  class="col-12 text-uppercase position-relative mb-2">
+                                                        <input type="text" class="form-control" formControlName="Quantity">
+                                                    </div>                                       
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        </div>
+                                        <div class="col-6 mt-2">
+                                            <div class="form-group row mb-2 align-items-center">
+                                                <label for="" class="col-sm-3 col-form-label">Defect Code</label>
+                                                <div  class="col-sm-9 row">
+                                                    <div class="form-group">
+                                                        <div  class="col-12 text-uppercase position-relative ">
+                                                            <mat-form-field appearance="fill">
+                                                                <mat-select  placeholder="Select Defect Code">
+                                                                  <mat-option value="No Defect Code Selected">
+                                                                    No Defect Code Selected
+                                                                  </mat-option>
+                                                                  <mat-option value="Defect Code">
+                                                                   Defect Code
+                                                                  </mat-option>
+                                                                </mat-select>
+                                                              </mat-form-field>
+                                                        </div>                                       
+                                                    </div>
+                                                </div>                                       
+                                            </div>
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">Comment</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative mb-2">
+                                                                <input type="text" class="form-control" formControlName="comment">
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>
+                                        </div>  -->
+
+                                            <!-- Relocate Bottom Form -->
+                                            <!-- <hr>
+                    <div class="row mt-3">
+                    <div class="col-4">
+                        <div class="form-group row mb-2 align-items-center">
+                            <label for="" class="col-sm-3 col-form-label">Action</label>
+                            <div  class="col-sm-9 row">
+                                <div class="form-group">
+                                    <div  class="col-12 text-uppercase position-relative">
+                                       <p class="mb-0">Relocate</p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group row mb-2 align-items-center">
+                                <label for="" class="col-sm-3 col-form-label">Line</label>
+                                <div  class="col-sm-9 row">
+                                    <div class="form-group">
+                                        <div  class="col-12 text-uppercase position-relative">
+                                           <p class="mb-0">001</p>
+                                        </div>                                       
+                                    </div>
+                                </div>                                       
+                            </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-4 col-form-label">SKU Number</label>
+                                    <div  class="col-sm-8 row">
+                                        <div class="form-group">
+                                            <div  class="col-12 text-uppercase position-relative">
+                                               <p class="mb-0">UV757 02905 21T</p>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 mt-2">
+                                    <div class="form-group row mb-2 align-items-center">
+                                        <label for="" class="col-sm-3 col-form-label">To Bin</label>
+                                        <div  class="col-sm-9 row">
+                                            <div class="form-group">
+                                                <div  class="col-12 text-uppercase position-relative ">
+                                                    <input type="text" class="form-control" formControlName="bin">
+                                                </div>                                       
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="form-group row mb-2 align-items-center">
+                                            <label for="" class="col-sm-3 col-form-label">To Bin Qty</label>
+                                            <div  class="col-sm-9 row">
+                                                <div class="form-group">
+                                                    <div  class="col-12 text-uppercase position-relative ">
+                                                        <input type="text" class="form-control" formControlName="binqty">
+                                                    </div>                                       
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        </div>                                   
+                                        </div> -->
+
+                                            <!-- Receive/ scrap/Shrink/Style Reclas bottom part-->
+                                            <hr>
+                                            <div class="row mt-3">
+                                                <div class="col-4">
+                                                    <div class="form-group row mb-2 align-items-center">
+                                                        <label for="" class="col-sm-3 col-form-label">Action</label>
+                                                        <div class="col-sm-9 row">
+                                                            <div class="form-group">
+                                                                <div class="col-12 text-uppercase position-relative">
+                                                                    <!-- <p class="mb-0">Receive</p> -->
+                                                                    <!-- <p class="mb-0">Scrap</p> -->
+                                                                    <!-- <p class="mb-0">Shrink</p> -->
+                                                                    <!-- <p class="mb-0">Style Reclass</p> -->
+                                                                    <p class="mb-0">{{ formData.action }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group row mb-2 align-items-center">
+                                                        <label for="" class="col-sm-3 col-form-label">Line</label>
+                                                        <div class="col-sm-9 row">
+                                                            <div class="form-group">
+                                                                <div class="col-12 text-uppercase position-relative">
+                                                                    <p class="mb-0">{{ formData.lineNumber }}</p>
+                                                                    <!-- <p class="mb-0">003</p> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group row mb-2 align-items-center">
+                                                        <label for="" class="col-sm-4 col-form-label">SKU Number</label>
+                                                        <div class="col-sm-8 row">
+                                                            <div class="form-group">
+                                                                <div class="col-12 text-uppercase position-relative">
+                                                                    <p class="mb-0">{{ formData.skuNumber }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <!-- REceive bottom area -->
+                                                <!-- <div class="col-12 mt-2">
+                                    <div class="form-group row mb-2 align-items-center">
+                                        <label for="" class="col-sm-12 col-form-label">Click  Submit to receive the pending  quantity</label>                                     
+                                    </div>
+                                    </div>   -->
+                                                <!-- Scrap Bottom Area -->
+                                                <!-- <div class="row mt-2">
+                                        <div class="col-6 mt-2">
+                                            <div class="form-group row mb-2 align-items-center">
+                                                <label for="" class="col-sm-3 col-form-label">Qty To Scrap</label>
+                                                <div  class="col-sm-9 row">
+                                                    <div class="form-group">
+                                                        <div  class="col-12 text-uppercase position-relative ">
+                                                            <input type="text" class="form-control" formControlName="scrapqty">
+                                                        </div>                                       
+                                                    </div>
+                                                </div>                                       
+                                            </div>
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">Defect Code</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative ">
+                                                                <mat-form-field appearance="fill">
+                                                                    <mat-select  placeholder="Select Defect Code">
+                                                                      <mat-option value="No Defect Code Selected">
+                                                                        No Defect Code Selected
+                                                                      </mat-option>
+                                                                      <mat-option value="Defect Codes">
+                                                                       Defect Codes
+                                                                      </mat-option>
+                                                                    </mat-select>
+                                                                  </mat-form-field>
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">Comment</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative ">
+                                                                <input type="text" class="form-control" formControlName="cmnt">
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>                                   
+                                                </div>   -->
+                                                <!-- style reclass Area -->
+                                                <!-- <div class="row mt-2">
+                                        <div class="col-6 mt-2">
+                                            <div class="form-group row mb-2 align-items-center">
+                                                <label for="" class="col-sm-3 col-form-label">New Style </label>
+                                                <div  class="col-sm-9 row">
+                                                    <div class="form-group">
+                                                        <div  class="col-12 text-uppercase position-relative ">
+                                                            <input type="text" class="form-control" formControlName="scrapqty">
+                                                        </div>                                       
+                                                    </div>
+                                                </div>                                       
+                                            </div>
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">New Color</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative ">
+                                                                <input type="text" class="form-control" formControlName="scrapqty">
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>
+                                                <div class="col-6 mt-2">
+                                                    <div class="form-group row mb-2 align-items-center">
+                                                        <label for="" class="col-sm-3 col-form-label">New Dyelot</label>
+                                                        <div  class="col-sm-9 row">
+                                                            <div class="form-group">
+                                                                <div  class="col-12 text-uppercase position-relative ">
+                                                                    <input type="text" class="form-control" formControlName="scrapqty">
+                                                                </div>                                       
+                                                            </div>
+                                                        </div>                                       
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for="" class="col-sm-3 col-form-label">Quantity</label>
+                                                            <div  class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div  class="col-12 text-uppercase position-relative ">
+                                                                        <input type="text" class="form-control" formControlName="scrapqty">
+                                                                    </div>                                       
+                                                                </div>
+                                                            </div>                                       
+                                                        </div>
+                                                        </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">Grade</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative ">
+                                                                <mat-form-field appearance="fill">
+                                                                    <mat-select  placeholder="Select Grade">
+                                                                      <mat-option value="A">
+                                                                        A
+                                                                      </mat-option>
+                                                                      <mat-option value="B">
+                                                                       B
+                                                                      </mat-option>
+                                                                    </mat-select>
+                                                                  </mat-form-field>
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>
+                                                <div class="col-6 mt-2">
+                                                    <div class="form-group row mb-2 align-items-center">
+                                                        <label for="" class="col-sm-3 col-form-label">Grade</label>
+                                                        <div  class="col-sm-9 row">
+                                                            <div class="form-group">
+                                                                <div  class="col-12 text-uppercase position-relative ">
+                                                                    <mat-form-field appearance="fill">
+                                                                        <mat-select  placeholder="Select Defect Code">
+                                                                          <mat-option value="No Defect Code Selected">
+                                                                            No Defect Code Selected
+                                                                          </mat-option>
+                                                                          <mat-option value="Defect Codes">
+                                                                            Defect Codes
+                                                                          </mat-option>
+                                                                        </mat-select>
+                                                                      </mat-form-field>
+                                                                </div>                                       
+                                                            </div>
+                                                        </div>                                       
+                                                    </div>
+                                                    </div>
+                                            <div class="col-6 mt-2">
+                                                <div class="form-group row mb-2 align-items-center">
+                                                    <label for="" class="col-sm-3 col-form-label">Comment</label>
+                                                    <div  class="col-sm-9 row">
+                                                        <div class="form-group">
+                                                            <div  class="col-12 text-uppercase position-relative ">
+                                                                <input type="text" class="form-control" formControlName="cmnt">
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>                                       
+                                                </div>
+                                                </div>                                   
+                                                </div>   -->
+                                                <!-- Send Bottom area -->
+                                                <div class="row mt-2" [formGroup]="form">
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for="" class="col-sm-3 col-form-label">Send to
+                                                                Plant
+                                                            </label>
+                                                            <div class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div
+                                                                        class="col-12 text-uppercase position-relative ">
+                                                                        <mat-form-field appearance="fill">
+                                                                            <mat-select formControlName="sendToPlant"
+                                                                                placeholder="Select Plant">
+                                                                                <mat-option
+                                                                                    *ngFor="let plant of raFormData?.sendToPlant"
+                                                                                    [value]="plant">
+                                                                                    {{ plant }}
+                                                                                </mat-option>
+                                                                            </mat-select>
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for=""
+                                                                class="col-sm-3 col-form-label">Quantity</label>
+                                                            <div class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div
+                                                                        class="col-12 text-uppercase position-relative ">
+                                                                        <input type="text" class="form-control"
+                                                                            formControlName="scrapqty">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for="" class="col-sm-3 col-form-label">Trailer
+                                                                #</label>
+                                                            <div class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div
+                                                                        class="col-12 text-uppercase position-relative ">
+                                                                        <input type="text" class="form-control"
+                                                                            formControlName="scrapqty">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for="" class="col-sm-3 col-form-label">Expected
+                                                                Receive Date (MM/DD/YY)</label>
+                                                            <div class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div
+                                                                        class="col-12 text-uppercase position-relative ">
+                                                                        <input type="text" formcontrolname="date"
+                                                                            bsdatepicker="" triggers="dbllclick:click"
+                                                                            placeholder="MM/DD/YYYY"
+                                                                            class="form-control "><span
+                                                                            class="datepicker"><i
+                                                                                class="fa-regular fa-calendar-days"></i></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 mt-2">
+                                                        <div class="form-group row mb-2 align-items-center">
+                                                            <label for=""
+                                                                class="col-sm-3 col-form-label">Comment</label>
+                                                            <div class="col-sm-9 row">
+                                                                <div class="form-group">
+                                                                    <div
+                                                                        class="col-12 text-uppercase position-relative ">
+                                                                        <input type="text" class="form-control"
+                                                                            formControlName="cmnt">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </accordion-group>
+                                </div>
+                            </accordion>
+                        </div>
+                    </div>
+                </div>
+                <!-- confirm modal -->
+                <div class="modal modal-bg " id="confirmModal">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmation</h5>
+                                <button type="button" class="btn-close" (click)="closeModal('confirmModal')"></button>
+                            </div>
+                            <div class="modal-body">
+                                Change Trailer Completed Successfully.
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-12 d-flex gap-3 flex-wrap">
+                                        <button type="button" class="btn btn-primary">
+                                            OK
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- footer -->
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-primary mx-2" (click)="confirmModal()">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="closeModal('confirmModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

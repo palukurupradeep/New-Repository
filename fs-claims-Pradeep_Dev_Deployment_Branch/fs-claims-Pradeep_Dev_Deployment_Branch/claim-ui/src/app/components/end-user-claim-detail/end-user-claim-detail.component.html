@@ -1,0 +1,598 @@
+ <!-- Modal End User Information -->
+ <div
+ class="modal modal-bg"
+ id="enduserinfo"
+ data-bs-backdrop="static"
+ data-bs-keyboard="false"
+ tabindex="-1"
+ aria-labelledby="enduserinfoLabel"
+ aria-hidden="true"
+>
+ <div class="modal-dialog modal-fullscreen-all modal-dialog-centered">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title" id="enduserinfoLabel">
+         Enter End User Information
+       </h5>
+       <button
+         type="button"
+         class="btn-close"
+         (click)="CloseModalEndUserInfo()"
+       ></button>
+     </div>
+
+     <form class="needs-validation" novalidate [formGroup]="addEndUserForm">
+       <div class="modal-body">
+         <div class="row">
+           <!-- <div class="col-lg-12">
+             <h6>Contact Name</h6>
+           </div> -->
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="first-name"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >First Name <span class="text-danger">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     [ngClass]="{ 'is-danger': displayMessage.firstName}"
+                     formControlName="firstName"
+                     class="form-control"
+                     id="first-name"
+                     (input) = "trimAndUpdate('firstName')" 
+                   />                 
+                   <p *ngIf="displayMessage.firstName" class="fail-style">
+                     {{ displayMessage.firstName }}
+                   </p>
+                 </div>
+                 <div class="valid-feedback">Looks good!</div>
+               </div>
+             </div>
+           </div>
+           
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="middle-initial"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >Middle Initial</label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <input
+                   type="text"
+                   class="form-control"
+                   id="middle-initial"
+                   formControlName="middleInitial"
+                   (input) = "trimAndUpdate('middleInitial')"
+                 />
+                 <p *ngIf="displayMessage.middleInitial" class="fail-style">
+                   {{ displayMessage.middleInitial }}
+                 </p>
+               </div>
+             </div>
+           </div>
+           
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="last-name"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >Last Name <span class="text-danger">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     [ngClass]="{ 'is-danger': displayMessage.lastName }"
+                     class="form-control"
+                     id="last-name"
+                     formControlName="lastName"
+                     (input) = "trimAndUpdate('lastName')" 
+                   />
+                   <p *ngIf="displayMessage.lastName" class="fail-style">
+                     {{ displayMessage.lastName }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="company-name"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >Company Name</label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     [ngClass]="{
+                                       'is-danger': displayMessage.companyName
+                                     }"
+                     class="form-control"
+                     id="company-name" 
+                     formControlName="companyName"
+                     (input) = "trimAndUpdate('companyName')" 
+                   />
+                   <p *ngIf="displayMessage.companyName" class="fail-style">
+                     {{ displayMessage.companyName }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="col-lg-6 col-xl-8 col-xxl-8">
+             <div class="row mb-4">
+               <label
+                 for="Store"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-2 col-xxl-2 col-form-label"
+                 >Email</label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-10 col-xxl-10">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="Store"
+                     formControlName="email"
+                     placeholder=""
+                     [ngClass]="{ 'is-danger': displayMessage.email }"
+                     (input) = "trimAndUpdate('email')"
+                   />
+                   <p *ngIf="displayMessage.email" class="fail-style">
+                     {{ displayMessage.email }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="clearfix"></div>
+           <div class="col-lg-12 col-xl-12 col-xxl-12">
+             <div class="row mb-4 justify-content-end justify-content-lg-start">
+               <label
+                 for="address"
+                 class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 col-xxl-2 col-form-label w-custome-11"
+                 >Address <span class="text-danger">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-5 w-custome-44">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     [ngClass]="{ 'is-danger': displayMessage.address }"
+                     class="form-control"
+                     id="address"
+                     formControlName="address"
+                     placeholder=""
+                   />
+                   <p *ngIf="displayMessage.address" class="fail-style">
+                     {{ displayMessage.address }}
+                   </p>
+                 </div>
+               </div>
+               <div
+                 class="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-5 mt-3 mt-lg-0 w-custome-44"
+               >
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="address-name"
+                     formControlName="addressName"
+                     placeholder=""
+                   />
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <div class="col-12 col-lg-12 col-xl-8 col-xxl-8">
+             <div class="row mb-4">
+               <label
+                 for="country"
+                 class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 col-xxl-2 col-form-label white-nowrap">Country <span class="text-danger">*</span></label
+               >
+               <div
+                 class="col-12 col-sm-12 col-md-8 col-lg-10 col-xxl-10"
+               >
+                 <div class="form-input">
+                   <select
+                     class="form-select form-control"
+                     aria-label="Default select example"
+                     id="country"
+                     formControlName="country"
+                     (change)="getCountryCodeByStates()"
+                     [ngClass]="{ 'is-danger': displayMessage.country }"
+                   >
+                     <option
+                       *ngFor="let country of countries"
+                       [value]="country.isoCountryId"
+                     >
+                       {{ country.isoCountryName }}
+                     </option>
+                   </select>
+                   <p *ngIf="displayMessage.country" class="fail-style">
+                     {{ displayMessage.country }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+          
+           
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="state"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >State <span class="text-danger" *ngIf="selectedCountryHasStates">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
+                 <div class="form-input">
+                   <select
+                     class="form-select form-control"
+                     aria-label="Default select example"
+                     formControlName="state"
+                     id="state"
+                     [ngClass]="{ 'is-danger': displayMessage.state }"
+                   >
+                     <option
+                       *ngFor="let state of filteredStates"
+                       [value]="state.isoStateId"
+                     >
+                       {{ state.isoStateName }}
+                     </option>
+                   </select>
+                   <p *ngIf="displayMessage.state" class="fail-style">
+                     {{ displayMessage.state }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="city"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >City <span class="text-danger">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     [ngClass]="{ 'is-danger': displayMessage.city }"
+                     class="form-control"
+                     id="city"
+                     formControlName="city" 
+                   />
+                   <p *ngIf="displayMessage.city" class="fail-style">
+                     {{ displayMessage.city }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+          
+
+           
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="country"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                 >County</label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="country"
+                     formControlName="county"
+                     (input) = "trimAndUpdate('county')" 
+                   />
+                 </div>
+               </div>
+             </div>
+           </div>
+        
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-4">
+               <label
+                 for="postal-code"
+                 class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label white-nowrap">Postal Code <span class="text-danger">*</span></label
+               >
+               <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     appInputRestriction
+                     [inputType]="'alphanumeric'"
+                     [ngClass]="{ 'is-danger': displayMessage.postalCode }"
+                     class="form-control"
+                     id="postal-code"
+                     formControlName="postalCode"
+                     (input) = "trimAndUpdate('postalCode')"
+                   />
+                   <p *ngIf="displayMessage.postalCode" class="fail-style">
+                     {{ displayMessage.postalCode }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           
+           <div class="clearfix"></div>
+           <div class="col-xxl-4 mb-4">
+             <strong>Any one of the phone details is required.</strong>
+             <span class="text-danger">*</span>
+           </div>
+           <br /><br />
+           <div class="clearfix"></div>
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-3 flex-lg-nowrap">
+               <label
+                 for="phone-business"
+                 class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                 >Phone (Business)</label
+               >
+               <div class="phone-1-col">
+                 <div class="form-input mb-lg-0 mb-2">
+                   <select
+                     class="form-select form-control"
+                     aria-label="Default select example"
+                     formControlName="phone"
+                     id="phoneNumberCountryCode"
+                   >
+                     <option
+                       *ngFor="let code of isoDialingCodes"
+                       [value]="code"
+                     >
+                       {{ code }}
+                     </option>
+                   </select>
+                 </div>
+               </div>
+               <div class="phone-2-col">
+                 <div class="form-input">
+                   <input
+                   *ngIf="((addEndUserForm.value.country ==240
+                   || addEndUserForm.value.country ==32 
+                   || addEndUserForm.value.country ==41)
+                   && addEndUserForm.value.phone =='+1') || 
+                   ((addEndUserForm.value.country !=240
+                   || addEndUserForm.value.country !=32 
+                   || addEndUserForm.value.country !=41)
+                   && addEndUserForm.value.phone =='+1')"
+                     appPhoneNumber
+                     type="text"
+                     class="form-control"
+                     id="phone-business"
+                     formControlName="business"
+                     minlength="10"
+                     placeholder=""
+                   />
+                   <input
+                   *ngIf="(addEndUserForm.value.country !=240
+                   || addEndUserForm.value.country !=32
+                   || addEndUserForm.value.country !=41)
+                   && addEndUserForm.value.phone !='+1'"
+                     type="text"
+                     class="form-control"
+                     id="phone-business"
+                     formControlName="business"
+                     maxlength=12
+                     minlength=10
+                   />
+                 </div>
+               </div>
+               <div class="phone-3-col">
+                 <div class="form-input">
+                   <p class="mb-0 mt-2">Ext.</p>
+                 </div>
+               </div>
+               <div class="phone-4-col">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="phone-business"
+                     maxlength="8"
+                     formControlName="extension" 
+                   />
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="clearfix"></div>
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+             <div class="row mb-3 flex-lg-nowrap">
+               <label
+                 for="phone-home"
+                 class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                 >Phone (Home)</label
+               >
+               <div class="phone-1-col">
+                 <div class="form-input mb-lg-0 mb-2">
+                   <select
+                     class="form-select form-control"
+                     aria-label="Default select example"
+                     formControlName="phoneHome"
+                     id="phone-home"
+                     [ngClass]="{ 'is-danger': displayMessage.phoneHome }"
+                   >
+                     <option
+                       *ngFor="let code of isoDialingCodes"
+                       [value]="code"
+                     >
+                      {{ code }}
+                     </option>
+                   </select>
+                  </div>
+               </div>
+               <div class="phone-2-col">
+                 <div class="form-input">
+                   <input
+                   *ngIf="((addEndUserForm.value.country ==240
+                   || addEndUserForm.value.country ==32 
+                   || addEndUserForm.value.country ==41)
+                   && addEndUserForm.value.phoneHome =='+1') || 
+                   ((addEndUserForm.value.country !=240
+                   || addEndUserForm.value.country !=32 
+                   || addEndUserForm.value.country !=41)
+                   && addEndUserForm.value.phoneHome =='+1')"
+                     appPhoneNumber
+                     type="text"
+                     class="form-control"
+                     id="phone-home"
+                     formControlName="home"
+                     placeholder=""
+                     minlength="10"
+                   />
+
+                   <input
+                   *ngIf="(addEndUserForm.value.country !=240
+                   || addEndUserForm.value.country !=32 
+                   || addEndUserForm.value.country !=41)
+                   && addEndUserForm.value.phoneHome !='+1'"
+                   type="text"
+                   class="form-control"
+                   id="phone-home"
+                   formControlName="home"
+                   maxlength="12"
+                   minlength="10"
+                 />
+                 
+                 </div>
+               </div>
+               <div class="phone-3-col">
+                 <div class="form-input">
+                   <p class="mb-0 mt-2">Ext.</p>
+                 </div>
+               </div>
+               <div class="phone-4-col">
+                 <div class="form-input">
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="phone-home"
+                     maxlength="8"
+                     formControlName="extHome"
+                   />
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="clearfix"></div>
+           <div class="col-lg-6 col-xl-4 col-xxl-4">
+            <div class="row mb-3 flex-lg-nowrap">
+              <label
+                for="Store"
+                class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                >Phone (Cell)</label
+              >
+              <div class="phone-1-col">
+                <div class="form-input mb-lg-0 mb-2">
+                  <select
+                    class="form-select form-control"
+                    aria-label="Default select example"
+                    formControlName="phoneCell"
+                    id="phone-cell"
+                    (input) = "trimAndUpdate('phoneCell')" 
+                    [ngClass]="{ 'is-danger': displayMessage.phoneCell }"
+                  >
+                    <option
+                      *ngFor="let code of isoDialingCodes"
+                      [value]="code"
+                    >
+                     {{ code }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="phone-2-col">
+                <div class="form-input">
+                  <input
+                  *ngIf="((addEndUserForm.value.country ==240
+                  || addEndUserForm.value.country ==32 
+                  || addEndUserForm.value.country ==41)
+                  && addEndUserForm.value.phoneCell =='+1') || 
+                  ((addEndUserForm.value.country !=240
+                  || addEndUserForm.value.country !=32 
+                  || addEndUserForm.value.country !=41)
+                  && addEndUserForm.value.phoneCell =='+1')"
+                    appPhoneNumber
+                    type="text"
+                    class="form-control"
+                    id="Store"
+                    formControlName="cell"
+                    placeholder=""
+                    minlength="10"
+                  />
+                  <input
+                  *ngIf="(addEndUserForm.value.country !=240
+                || addEndUserForm.value.country !=32 
+                || addEndUserForm.value.country !=41)
+                && addEndUserForm.value.phoneCell !='+1'"
+                  type="text"
+                  class="form-control"
+                  id="Store"
+                  formControlName="cell"
+                  maxlength="12"
+                  minlength="10"
+                />
+                </div>
+              </div>
+              <div class="phone-3-col">
+                <div class="form-input">
+                  <p class="mb-0 mt-2">Ext.</p>
+                </div>
+              </div>
+              <div class="phone-4-col">
+                <div class="form-input">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="Store"
+                    maxlength="8"
+                    formControlName="extCell"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+           <!-- <div class="modal-divider"></div> -->
+           <!-- <div class="col-lg-12 mb-4">
+             <h6>Contact Information</h6>
+           </div> -->
+         </div>
+       </div>
+       <div class="modal-footer">
+         <div class="row">
+           <div class="col-12 d-flex gap-3 flex-wrap">
+             <button
+               type="button"
+               class="btn btn-secondary"
+               (click)="CloseModalEndUserInfo()"
+             >
+               Cancel
+             </button>
+             <button
+               type="button"
+               (click)="addFormDetails()"
+               class="btn btn-primary"
+               [disabled]="addEndUserForm.invalid || checkNumValidate()"
+             >
+               Update
+             </button>
+           </div>
+         </div>
+       </div>
+     </form>
+   </div>
+ </div>
+</div>

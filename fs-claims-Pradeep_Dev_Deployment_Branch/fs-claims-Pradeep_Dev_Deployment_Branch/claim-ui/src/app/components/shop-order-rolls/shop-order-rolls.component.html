@@ -1,0 +1,54 @@
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Roll Nbr</th>
+          <th scope="col">Create Date</th>
+          <th scope="col">Plant Nbr</th>
+          <th scope="col">Credit Memo Nbr</th>
+          <th scope="col">Issued Date</th>
+          <th scope="col">Line Nbr</th>
+          <th scope="col">Reason Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let roll of shopOrderRolls">
+          <td class="text-uppercase"><a href="">{{ roll.rollNbr }}</a></td>
+          <td class="text-uppercase">{{ roll.createDate }}</td>
+          <td class="text-uppercase">{{ roll.plantNbr }}</td>
+           <!-- Handling multi-line values for Credit Memo Nbr -->
+        <td *ngIf="roll.creditMemoNbr">
+          <ng-container *ngFor="let memo of roll.creditMemoNbr.split('<br>')">
+            <div>{{ memo }}</div>
+          </ng-container>
+        </td>
+        <td *ngIf="!roll.creditMemoNbr"></td>
+
+        <!-- Handling multi-line values for Issued Date -->
+        <td *ngIf="roll.issuedDate">
+          <ng-container *ngFor="let date of roll.issuedDate.split('<br>')">
+            <div>{{ date }}</div>
+          </ng-container>
+        </td>
+        <td *ngIf="!roll.issuedDate"></td>
+
+        <!-- Handling multi-line values for Line Nbr -->
+        <td *ngIf="roll.lineNbr">
+          <ng-container *ngFor="let line of roll.lineNbr.split('<br>')">
+            <div>{{ line }}</div>
+          </ng-container>
+        </td>
+        <td *ngIf="!roll.lineNbr"></td>
+
+        <!-- Handling multi-line values for Reason Code -->
+        <td *ngIf="roll.reasonCode">
+          <ng-container *ngFor="let code of roll.reasonCode.split('<br>')">
+            <div>{{ code }}</div>
+          </ng-container>
+        </td>
+        <td *ngIf="!roll.reasonCode"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  

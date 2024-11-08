@@ -1,0 +1,741 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"  [childNav]="childNavValue"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header></app-header>
+<div class="main pb-4">
+  
+    <div class="container-fluid">
+
+      <div class="row mb-3">
+        <div class="col-lg-4">
+          <div class="page-head">
+            <h1 class="mb-0">Roles</h1>
+          </div>         
+        </div>
+
+        <div class="col-lg-8 text-end">
+          <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openUserModal()"
+      *ngIf="!backBtn"
+    >
+      Add Role
+    </button>
+        </div>
+
+      </div>
+
+      <div *ngIf="!backBtn" class="card claim-info p-4">
+        
+
+        <div class="row mt-0">
+          <div class="col-12">
+            <div class="d-flex justify-content-end">
+              <!-- <button class="btn btn-primary" (click)="openRoleModal()">
+                Add Role
+              </button> -->
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="table-responsive" *ngIf="!loading; else spinner">
+              <table class="table table-striped table-hover table-sorting">
+                <thead>
+                  <tr class="bg-light th-ws-nowrap">
+                    <th>Actions</th>
+                    <th>Role Code</th>
+                <th>Role Description</th>
+                    <th>Users</th>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.roleCode"
+                        (input)="onRolesAndUsersSearch()"
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.roleDescription"
+                        (input)="onRolesAndUsersSearch()"
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.userDescription"
+                        (input)="onRolesAndUsersSearch()"
+                        class="search-input"
+                      />
+                    </th>
+                   
+                  </tr>
+                 
+                </thead>
+                <tbody *ngIf="rolesList.length > 0">
+                  <tr *ngFor="let role of rolesList.slice((roleListCurrentPage - 1) * roleListItemsPerPage, roleListCurrentPage * roleListItemsPerPage)">
+                  <!-- <tr *ngFor="let role of rolesList">  -->
+                    <td  class="justify-content-around p-10">
+                      <a
+                         class="text-primary model-click"
+                         data-bs-toggle="modal"
+                         data-bs-target="#editModel"
+                         (click)="editUsers(role)"
+                       >
+                         <i class="fa-solid fa-pencil"></i>
+                       </a>&nbsp;&nbsp;
+                       <a  
+                       class="text-danger" 
+                     
+                       (click)="onDeleteRole(role)">
+                       <i class="fa-solid fa-trash-can"></i></a>
+                     </td>
+                    <td>{{ role.roleCode }}</td>
+                    <td>{{ role.roleDescription }}</td>
+                    <td class="chips ">
+                      <ng-container *ngFor="let user of role.users; let i = index">
+                        <mat-chip
+                          [style.background-color]="'#5d87ff'"
+                          [style.color]="'white'"
+                          *ngIf="i < 4"
+                        >
+                          {{ user.firstName + ' ' + user.middleInitial + ' ' + user.lastName }}
+                        </mat-chip>
+                      </ng-container>
+                      <ng-container *ngIf="role.users && role.users.length > 5">
+                        <span class="btn-view" (click)="viewMore(role.users,role)">View More </span>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  <!-- Add more rows as needed -->
+                </tbody>
+              </table>
+              <ng-template>
+                <tbody *ngIf="rolesList.length == 0">
+                  <tr>
+                    <td class="text-center" colspan="6">
+                      <p class="mb-0 py-2">Record Not Found</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-template>
+            </div>
+            <ng-template #spinner>
+              <div class="py-3 text-center">
+                  <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+          </ng-template>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 text-end text-md-start">
+            <div
+                class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+              >
+              <ul class="pagination">
+                <li class="page-item">
+                  <a
+                      class="page-link"
+                      (click)="onPreviousPageClick(true)"
+                      aria-label="Previous"
+                    >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <ng-container *ngFor="let page of getPageNumbers(true)">
+                  <ng-container
+                    *ngIf="
+                      page <= 5 ||
+                      page > getPageNumbers(true).length - 5 ||
+                      (page >= roleListCurrentPage - 2 &&
+                          page <= roleListCurrentPage + 2)
+                    "
+                  >
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        (click)="onPageNumberClick(page, true)"
+                        [class.active]="page === roleListCurrentPage"
+                        >{{ page }}</a
+                      >
+                    </li>
+                  </ng-container>
+                  <ng-container
+                      *ngIf="page === 5 && getPageNumbers(true).length > 10"
+                    >
+                    <li class="page-item disabled">
+                      <span class="page-link">...</span>
+                    </li>
+                  </ng-container>
+                </ng-container>
+                <li class="page-item">
+                  <a
+                      class="page-link"
+                      (click)="onNextPageClick(true)"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 text-end">
+              <div class="dataTables_length d-sm-inline-block table-page-view">
+                <div class="d-flex align-items-center">
+                  <label style="white-space: nowrap; padding-right: 10px; margin-right: 10px;">Per Page</label>
+              
+                  <select
+                    class="custom-select custom-select-sm form-select form-control form-control-sm"
+                    id="perPageSelect"
+                    [(ngModel)]="roleListItemsPerPage"
+                    (change)="onItemsPerPageChange()"
+                    style="margin-right: 20px; min-width: 80px;" 
+                  >
+                    <option *ngFor="let option of perPageOptions" [value]="option">
+                      {{ option }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div> 
+      </div>
+    </div>
+    <div
+  *ngIf="backBtn && addModal"
+  class="mt-4"
+  >
+   
+      <div class="modal-content px-0">
+        <div class="modal-header">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+           
+              <i class="fas fa-arrow-left arrow-left-style"   (click)="backToTable()"
+              *ngIf="backBtn"></i>
+              <h5 class="mb-0">Add Role</h5>
+          </div>
+         
+        </div>
+        <div class="modal-body">
+          <app-stepper></app-stepper>
+        </div>
+
+      </div>
+
+    </div>
+  
+ 
+  <div
+   *ngIf="backBtn && editModal"
+    id="editModel"
+    
+  >
+   
+      <!-- <div class="modal-content"> -->
+        <div class="modal-header">
+          <div class="d-flex mb-2 align-items-center">
+           
+            <i class="fas fa-arrow-left arrow-left-style"   (click)="backToTable()"
+            *ngIf="backBtn"></i>
+            <h5 class="modal-title" id="editModelLabel">Users Associated To <span>{{roleName}}</span></h5>
+        </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover "
+              matSort (matSortChange)="sortData($event)">
+                <thead>
+                  <tr class="bg-light th-ws-nowrap">
+                    <th></th>
+                      <th mat-sort-header="activeDirectoryId">  Active Directory ID</th>
+                      <th mat-sort-header="firstName"> First Name</th>
+                      <th mat-sort-header="middleInitial"> Middle Initial</th>
+                      <th mat-sort-header="lastName"> Last Name</th>
+                      <th mat-sort-header="emailAddress"> Email Address</th>
+                  
+                   
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.activeDirectoryId"
+                        (input)="
+                        onSearch(
+                            'ActiveDirectoryId',
+                            searchText.activeDirectoryId
+                          )
+                        "
+                        (keypress)="onKeyPress($event)"
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.firstName"
+                        (input)="onSearch('FirstName', searchText.firstName)"
+                        (keypress)="onKeyPress($event)"
+                        class="search-input"
+                      />
+                    </th>
+                    <th></th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.lastName"
+                        (input)="onSearch('LastName', searchText.lastName)"
+                        (keypress)="onKeyPress($event)"
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.emailAddress"
+                        (input)="
+                        onSearch('EmailAddress', searchText.emailAddress)
+                        "
+                        (keypress)="onKeyPress($event)"
+                        class="search-input"
+                      />
+                    </th>
+                    
+                  </tr>
+                </thead>
+                
+                <tbody *ngIf="!loading; else spinner">
+                  <tr *ngFor="let user of users">
+                    <td>
+                      <mat-checkbox
+                      [(ngModel)]="user.selected"
+                      (change)="onCheckboxChange(user.userId,roleId, $event.checked)"
+                     
+                    >
+                    </mat-checkbox>
+                    </td>
+                    <td>{{ user.activeDirectoryId }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.middleInitial }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.emailAddress }}</td>
+                  </tr>
+                  <tr *ngIf="users.length == 0">
+                    <td class="text-center" colspan="7">
+                      <p class="mb-0 py-2">Record Not Found</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #spinner>
+              <tr>
+                <td colspan="7" class="text-center align-middle">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </div>
+        </div>
+          
+        
+          <div class="row">
+            <div class="col-sm-12 col-md-6 text-end text-md-start">
+              <div
+              class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+            >
+            <ul class="pagination">
+              <!-- Previous page link -->
+              <li class="page-item">
+                <a class="page-link" (click)="onUsersPreviousPageClick()" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+      
+              <!-- Display page numbers using ngFor loop -->
+              <ng-container *ngFor="let page of displayedPageNumbers()">
+                <li class="page-item" [class.active]="page === allUsersCurrentPage">
+                  <a class="page-link" (click)="onUsersPageNumberClick(page)">{{ page }}</a>
+                </li>
+              </ng-container>
+      
+              <!-- Next page link -->
+              <li class="page-item">
+                <a class="page-link" (click)="onUsersNextPageClick()" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 text-end">
+              <div class="dataTables_length d-sm-inline-block table-page-view">
+                <div class="col-sm-12 col-md-6  text-end">
+                  <div class="dataTables_length d-sm-inline-block table-page-view">
+                    <div class="d-flex align-items-center">
+                      <label class="white-nowrap per-page-style" >Per Page</label>
+                  
+                      <select
+                        class="custom-select custom-select-sm form-select form-control per-page-select-style form-control-sm"
+                        id="perPageSelect"
+                        [(ngModel)]="allUsersItemsPerPage"
+                        (change)="onUsersPageSizeChange()"
+                      >
+                        <option *ngFor="let option of perPageOptions" [value]="option">
+                          {{ option }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+            
+          </div>
+         
+        <!-- </div> -->
+       
+        <div class="modal-footer mt-3">
+          <div class="row">
+            <div class="col-12 d-flex gap-3 flex-wrap">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" 
+              (click)="confirmAction()" [disabled]="selectedPermissions.length == 0">Confirm</button>
+              
+              <button type="button" 
+              class="btn btn-secondary" (click)="backToTable()">Cancel</button>
+
+            </div>
+          </div>
+        </div>
+      <!-- </div> -->
+    
+  </div>
+
+  <div
+  *ngIf="backBtn && viewModal"
+    id="viewModel" 
+  >
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="d-flex mb-2 align-items-center">
+           
+              <i class="fas fa-arrow-left arrow-left-style"   (click)="backToTable()"
+              *ngIf="backBtn"></i>
+              <h5 class="modal-title" id="editModelLabel">Users Associated To <span>{{roleName}}</span></h5>
+          </div>
+        
+        </div>
+        <div class="modal-body">
+         
+        <div class="row mt-2">
+          <div class="col-md-12">
+            <div class="table-responsive" *ngIf="!loading; else spinner">
+                              <table class="table table-striped table-hover"
+                              matSort (matSortChange)="sortUserData($event)">
+                <thead>
+                  <tr class="bg-light th-ws-nowrap">
+                      <th mat-sort-header="activeDirectoryId">  Active Directory ID</th>
+                      <th mat-sort-header="firstName"> First Name</th>
+                      <th mat-sort-header="middleInitial"> Middle Initial</th>
+                      <th mat-sort-header="lastName"> Last Name</th>
+                      <th mat-sort-header="emailAddress"> Email Address</th>
+                   
+                   
+                  </tr>
+                  <tr>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.activeDirectoryId"
+                        (input)="
+                        onViewSearch(
+                            'ActiveDirectoryId',
+                            searchText.activeDirectoryId
+                          )
+                        "
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.firstName"
+                        (input)="onViewSearch('FirstName', searchText.firstName)"
+                        class="search-input"
+                      />
+                    </th>
+                    <th></th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.lastName"
+                        (input)="onViewSearch('LastName', searchText.lastName)"
+                        class="search-input"
+                      />
+                    </th>
+                    <th>
+                      <input
+                        type="text"
+                        [(ngModel)]="searchText.emailAddress"
+                        (input)="
+                        onViewSearch('EmailAddress', searchText.emailAddress)
+                        "
+                        class="search-input"
+                      />
+                    </th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                  <tr *ngIf="sortModalUsers.length === 0">
+                    <td colspan="5" class="text-center">No data available</td>
+                  </tr>
+                 
+                  <tr *ngFor="let user of sortModalUsers">
+                    <td>{{ user.activeDirectoryId }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.middleInitial }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.emailAddress }}</td>
+                   
+                    
+                    
+                 
+                  </tr>
+               
+                </tbody>
+               </table>
+              
+               
+           </div>
+            <ng-template #spinner>
+              <div class="py-3 text-center">
+                  <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+          </ng-template>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 text-end text-md-start">
+            <div
+              class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+            >
+              <ul class="pagination">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    (click)="onPreviousPageClick(true)"
+                    aria-label="Previous"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <ng-container *ngFor="let page of getPageNumbers(true)">
+                  <ng-container
+                    *ngIf="
+                      page <= 5 ||
+                      page > getPageNumbers(true).length - 5 ||
+                      (page >= roleListCurrentPage - 2 &&
+                        page <= roleListCurrentPage + 2)
+                    "
+                  >
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        (click)="onPageNumberClick(page, true)"
+                        [class.active]="page === roleListCurrentPage"
+                        >{{ page }}</a
+                      >
+                    </li>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="page === 5 && getPageNumbers(true).length > 10"
+                  >
+                    <li class="page-item disabled">
+                      <span class="page-link">...</span>
+                    </li>
+                  </ng-container>
+                </ng-container>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    (click)="onNextPageClick(true)"
+                    aria-label="Next"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6  text-end">
+            <div class="dataTables_length d-sm-inline-block table-page-view">
+              <div class="d-flex align-items-center">
+                <label class="white-nowrap per-page-style" >Per Page</label>
+            
+                <select
+                  class="custom-select custom-select-sm form-select form-control per-page-select-style form-control-sm"
+                  id="perPageSelect"
+                  [(ngModel)]="roleListItemsPerPage"
+                  (change)="onItemsPerPageChange()"
+                >
+                  <option *ngFor="let option of perPageOptions" [value]="option">
+                    {{ option }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div> 
+        
+     </div>
+        
+
+        <div class="modal-footer mt-3">
+          <div class="row">
+            <div class="col-12 d-flex gap-3 flex-wrap">
+              <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="CloseviewRoleModal()"
+            >
+              Close
+            </button>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+
+  <div
+  class="modal modal-bg"
+  id="deleteModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDeleteRoleModel()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <p>Are you sure to delete the role? </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="confirmDeleteRoleModel()"
+            >
+              Confirm
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="cancelDeleteRoleModel()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+class="modal modal-bg"
+id="deleteuserRoleModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deleteModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deleteModalLabel">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="cancelDeleteUsersToRolesModel()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Are you sure want to delete User from Role?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteUsersToRoles()"
+          >
+            Confirm
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            (click)="cancelDeleteUsersToRolesModel()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>

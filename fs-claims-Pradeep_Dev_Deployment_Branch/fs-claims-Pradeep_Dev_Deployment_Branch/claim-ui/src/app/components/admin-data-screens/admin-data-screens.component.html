@@ -1,0 +1,554 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mt-2 mb-2">
+              <div class="d-flex align-items-center justify-content-between">
+                <!-- Adding multiple headers for the same admin component, to be handled dynamically, remove d-none to see -->
+                <h4 class="d-none">Maintain Claims Area Types</h4>
+               <h4 class="d-none">Maintain Claims Area</h4>
+                <h4 class="d-none">Maintain Work Status Groups</h4>
+                <h4 class="d-none">Maintain Trace Types</h4>
+                <h4 class="">Maintain Disposition Types</h4>
+                <h4 class="d-none">Maintain Labor Rates</h4>
+              </div>
+
+              <!-- Maintain Claims Area Types, remove d-none  -->
+                <div class="col-12 mt-2 mb-3 d-none">
+                    <h6 class="mb-3">Edit Claim Area Types</h6>
+                    <div class="table-responsive">
+                      <table class="table table-striped table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col" class="text-center">Claim Area Type</th>
+                            <th scope="col" class="text-center">Claim Area Type Description</th>
+                            <th scope="col" class="text-center">Priority</th>
+                          </tr>
+                        </thead>
+                        <tbody >
+                       <tr>
+                          <td class="text-uppercase text-center">015</td>
+                          <td class="text-uppercase text-center"><input class="form-control" placeholder="Ecommerce Rug"></td>
+                        <td class="text-uppercase text-center"><input class="form-control" placeholder="10"> </td>
+                       </tr>
+                       <tr>
+                        <td class="text-uppercase text-center">013</td>
+                        <td class="text-uppercase text-center"><input class="form-control" placeholder="Promotional"></td>
+                      <td class="text-uppercase text-center"><input class="form-control" placeholder="20"></td>
+                     </tr>
+                     <tr>
+                      <td class="text-uppercase text-center">011</td>
+                      <td class="text-uppercase text-center"><input class="form-control" placeholder="Rug"></td>
+                    <td class="text-uppercase text-center"><input class="form-control" placeholder="30"></td>
+                   </tr>
+                   <tr>
+                    <td class="text-uppercase text-center">012</td>
+                    <td class="text-uppercase text-center"><input class="form-control" placeholder="Tuftext Rug"></td>
+                  <td class="text-uppercase text-center"><input class="form-control" placeholder="40"></td>
+                 </tr>
+                 <tr>
+                  <td class="text-uppercase text-center">014</td>
+                  <td class="text-uppercase text-center"><input class="form-control" placeholder="Shaw Grass"></td>
+                <td class="text-uppercase text-center"><input class="form-control" placeholder="50"></td>
+               </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-12 text-end">
+                      <button type="button" class="btn-primary" >Update</button>
+                    </div>
+</div>
+
+     <!-- Maintain Claims Areas, remove d-none  -->
+  <div class="row d-none">
+     <div class="col-12 mt-2 mb-3">
+      <h6 class="mb-3">Create Claim Area</h6>
+      <div class="row mb-3 mt-4">
+
+      <div class="col-12 mb-2">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label  py-0">Claim Area</label>
+            <div class="col-sm-3">
+              <input class="form-control" placeholder="001">
+            </div>
+            <div  class="col-sm-6">
+              <mat-form-field appearance="fill">
+                <mat-select>
+                  <mat-option >
+                   Option 1
+                  </mat-option>
+                  <mat-option >
+                    Option 2
+                   </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>                                       
+        </div>
+      </div>
+
+      <div class="col-12 mb-2">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label  py-0">Description</label>
+            <div class="col-sm-9">
+              <input class="form-control">
+            </div>                                  
+        </div>
+      </div>
+
+      <div class="col-12 mb-2">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label  py-0">Claim Area Type</label>
+            <div  class="col-sm-9">
+              <mat-form-field appearance="fill">
+                <mat-select>
+                  <mat-option >
+                   Option 1
+                  </mat-option>
+                  <mat-option >
+                    Option 2
+                   </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>                                       
+        </div>
+      </div>
+
+      <div class="col-12 mb-2">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label  py-0">User Group</label>
+            <div  class="col-sm-9">
+              <mat-form-field appearance="fill">
+                <mat-select>
+                  <mat-option >
+                   Option 1
+                  </mat-option>
+                  <mat-option >
+                    Option 2
+                   </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>                                       
+        </div>
+      </div>
+
+      <div class="col-12 mb-2">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label  py-0">User</label>
+            <div  class="col-sm-9">
+              <mat-form-field appearance="fill">
+                <mat-select>
+                  <mat-option >
+                   Option 1
+                  </mat-option>
+                  <mat-option >
+                    Option 2
+                   </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>                                       
+        </div>
+      </div>
+
+        <div class="col-12 text-end mt-3">
+          <button type="submit" class="btn btn-primary mx-2" >
+            Add
+          </button>
+          <button type="button" class="btn btn-secondary mx-2" >
+            Retrieve
+          </button>
+          <button type="button" class="btn btn-secondary " >
+            Update
+          </button>
+        </div>
+  </div>
+</div>
+
+     <div class="col-12 mt-2 mb-3 ">
+      <h6 class="mb-3">Claim Areas</h6>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Claim Area</th>
+              <th scope="col">Description</th>
+              <th scope="col">Claim Area Type</th>
+              <th scope="col">Current User</th>
+              <th scope="col">New User</th>
+            </tr>
+          </thead>
+          <tbody >
+         <tr>
+            <td class="text-uppercase">001</td>
+            <td class="text-uppercase"><input class="form-control" placeholder="Alabama"></td>
+            <td class="text-uppercase">001 - Residential</td>
+            <td class="text-uppercase">Leslie Mcdougle (lmcdoug)</td>
+          <td class="text-uppercase"> <mat-form-field appearance="fill">
+            <mat-select>
+              <mat-option >
+               Option 1
+              </mat-option>
+              <mat-option >
+                Option 2
+               </mat-option>
+            </mat-select>
+          </mat-form-field> </td>
+         </tr>
+         <tr>
+          <td class="text-uppercase ">001</td>
+          <td class="text-uppercase "><input class="form-control" placeholder="Alabama"></td>
+          <td class="text-uppercase ">002 - Commercial</td>
+          <td class="text-uppercase ">Emma Jenkins (ejenkin)</td>
+        <td class="text-uppercase "> <mat-form-field appearance="fill">
+          <mat-select>
+            <mat-option >
+             Option 1
+            </mat-option>
+            <mat-option >
+              Option 2
+             </mat-option>
+          </mat-select>
+        </mat-form-field> </td>
+       </tr>
+       <tr>
+        <td class="text-uppercase ">001</td>
+        <td class="text-uppercase "><input class="form-control" placeholder="Alabama"></td>
+        <td class="text-uppercase ">003 - Lowes</td>
+        <td class="text-uppercase ">Debble Ray (dray)</td>
+      <td class="text-uppercase "> <mat-form-field appearance="fill">
+        <mat-select>
+          <mat-option >
+           Option 1
+          </mat-option>
+          <mat-option >
+            Option 2
+           </mat-option>
+        </mat-select>
+      </mat-form-field> </td>
+     </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12 text-end">
+        <button type="button" class="btn-primary" >Update</button>
+      </div>
+</div>
+</div>
+
+  <!-- Maintain Work Statuses, remove d-none  -->
+  <div class="row d-none">
+       <div class="col-12 mt-2 mb-3 ">
+     <h6 class="mb-3">Edit Work Status</h6>
+     <div class="table-responsive">
+       <table class="table table-striped table-hover">
+         <thead>
+           <tr>
+             <th scope="col">Work Status Group Code</th>
+             <th scope="col">Work Status Group Description</th>
+             <th scope="col">Work Status Code</th>
+             <th scope="col">Work Status Description</th>
+             <th scope="col">Trace Type</th>
+             <th scope="col">Order Sequence</th>
+             <th scope="col">Status</th>
+           </tr>
+         </thead>
+         <tbody >
+        <tr>
+           <td class="text-uppercase">001</td>
+           <td class="text-uppercase">Initiated not worked</td>
+           <td class="text-uppercase"> <mat-form-field appearance="fill">
+            <mat-select>
+              <mat-option >
+               Option 1
+              </mat-option>
+              <mat-option >
+                Option 2
+               </mat-option>
+            </mat-select>
+          </mat-form-field> </td>
+          <td class="text-uppercase"> <mat-form-field appearance="fill">
+            <mat-select>
+              <mat-option >
+               Option 1
+              </mat-option>
+              <mat-option >
+                Option 2
+               </mat-option>
+            </mat-select>
+          </mat-form-field> </td>
+          <td class="text-uppercase"> <mat-form-field appearance="fill">
+            <mat-select>
+              <mat-option >
+               Option 1
+              </mat-option>
+              <mat-option >
+                Option 2
+               </mat-option>
+            </mat-select>
+          </mat-form-field> </td>
+          <td class="text-uppercase "><input class="form-control" placeholder="2"></td>
+           <td class="text-uppercase">
+            <div class="form-check form-switch">
+              <input type="checkbox" class="form-check-input mt-2">
+          </div>
+           </td>
+        </tr>
+        <tr>
+          <td class="text-uppercase">001</td>
+          <td class="text-uppercase">Initiated not worked</td>
+          <td class="text-uppercase"> <mat-form-field appearance="fill">
+           <mat-select>
+             <mat-option >
+              Option 1
+             </mat-option>
+             <mat-option >
+               Option 2
+              </mat-option>
+           </mat-select>
+         </mat-form-field> </td>
+         <td class="text-uppercase"> <mat-form-field appearance="fill">
+           <mat-select>
+             <mat-option >
+              Option 1
+             </mat-option>
+             <mat-option >
+               Option 2
+              </mat-option>
+           </mat-select>
+         </mat-form-field> </td>
+         <td class="text-uppercase"> <mat-form-field appearance="fill">
+           <mat-select>
+             <mat-option >
+              Option 1
+             </mat-option>
+             <mat-option >
+               Option 2
+              </mat-option>
+           </mat-select>
+         </mat-form-field> </td>
+         <td class="text-uppercase "><input class="form-control" placeholder="2"></td>
+          <td class="text-uppercase">
+           <div class="form-check form-switch">
+             <input type="checkbox" class="form-check-input mt-2">
+         </div>
+          </td>
+       </tr>
+       <tr>
+        <td class="text-uppercase">001</td>
+        <td class="text-uppercase">Initiated not worked</td>
+        <td class="text-uppercase"> <mat-form-field appearance="fill">
+         <mat-select>
+           <mat-option >
+            Option 1
+           </mat-option>
+           <mat-option >
+             Option 2
+            </mat-option>
+         </mat-select>
+       </mat-form-field> </td>
+       <td class="text-uppercase"> <mat-form-field appearance="fill">
+         <mat-select>
+           <mat-option >
+            Option 1
+           </mat-option>
+           <mat-option >
+             Option 2
+            </mat-option>
+         </mat-select>
+       </mat-form-field> </td>
+       <td class="text-uppercase"> <mat-form-field appearance="fill">
+         <mat-select>
+           <mat-option >
+            Option 1
+           </mat-option>
+           <mat-option >
+             Option 2
+            </mat-option>
+         </mat-select>
+       </mat-form-field> </td>
+       <td class="text-uppercase "><input class="form-control" placeholder="2"></td>
+        <td class="text-uppercase">
+         <div class="form-check form-switch">
+           <input type="checkbox" class="form-check-input mt-2">
+       </div>
+        </td>
+     </tr>
+         </tbody>
+       </table>
+     </div>
+     <div class="col-12 text-end">
+       <button type="button" class="btn-primary" >Update</button>
+     </div>
+</div>
+</div>
+
+  <!-- Maintain Trace Types, remove d-none  -->
+  <div class="row d-none">
+    <div class="col-12 mt-2 mb-3 ">
+  <h6 class="mb-3">Edit Trace Types</h6>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Code</th>
+          <th scope="col"> Description</th>
+          <th scope="col">Trace Days</th>
+          <!-- <th scope="col">Order Sequence</th> -->
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody >
+     <tr>
+        <td class="text-uppercase">001</td>
+        <td class="text-uppercase">Waiting Return</td>
+       <td class="text-uppercase "><input class="form-control" placeholder="0"></td>
+        <td class="text-uppercase">
+         <div class="form-check form-switch">
+           <input type="checkbox" class="form-check-input mt-2">
+       </div>
+        </td>
+     </tr>
+     <tr>
+      <td class="text-uppercase">002</td>
+      <td class="text-uppercase">Inspection</td>
+     <td class="text-uppercase "><input class="form-control" placeholder="5"></td>
+      <td class="text-uppercase">
+       <div class="form-check form-switch">
+         <input type="checkbox" class="form-check-input mt-2">
+     </div>
+      </td>
+   </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 text-end">
+    <button type="button" class="btn-primary" >Update</button>
+  </div>
+</div>
+</div>
+
+  <!-- Maintain Disposition Types, remove d-none  -->
+  <div class="row">
+    <div class="col-12 mt-2 mb-3 ">
+  <h6 class="mb-3">Maintain Disposition Types</h6>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Code</th>
+          <th scope="col"> Description</th>
+          <th scope="col">Pattern</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody >
+     <tr>
+        <td class="text-uppercase">001</td>
+        <td class="text-uppercase">Field Destroy</td>
+       <td class="text-uppercase "><input class="form-control" placeholder="Pending"></td>
+        <td class="text-uppercase">
+          Active
+        </td>
+     </tr>
+     <tr>
+        <td class="text-uppercase">002</td>
+        <td class="text-uppercase">RGA</td>
+       <td class="text-uppercase "><input class="form-control" placeholder="Sample"></td>
+        <td class="text-uppercase">
+        Active
+        </td>
+     </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 text-end">
+    <button type="button" class="btn-primary">Update</button>
+  </div>
+</div>
+</div>
+
+  <!-- Maintain Labor Rates, remove d-none  -->
+  <div class="row d-none ">
+    <div class="col-12 mt-2 mb-3 ">
+      <h6 class="mb-3">Add Labor Rates</h6>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col"> Code</th>
+              <th scope="col"> Description</th>
+              <th scope="col">Rate Days</th>
+              <th scope="col">Order Sequence</th> 
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody >
+         <tr>
+          <td class="text-uppercase "><input class="form-control w-auto" ></td>
+          <td class="text-uppercase "><input class="form-control" ></td>
+          <td class="text-uppercase "><input class="form-control" placeholder="0.0"></td>
+         <td class="text-uppercase "><input class="form-control" placeholder="0"></td>
+          <td class="text-uppercase">
+           <div class="form-check form-switch">
+             <input type="checkbox" class="form-check-input mt-2">
+         </div>
+          </td>
+       </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12 text-end">
+        <button type="button" class="btn-primary" >Add</button>
+      </div>
+    </div>
+    <div class="col-12 mt-2 mb-3 ">
+  <h6 class="mb-3">Edit Labor Rates</h6>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Code</th>
+          <th scope="col"> Description</th>
+          <th scope="col">Rate Days</th>
+          <th scope="col">Order Sequence</th> 
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody >
+     <tr>
+        <td class="text-uppercase">001</td>
+        <td class="text-uppercase">Hard Surface</td>
+        <td class="text-uppercase "><input class="form-control" placeholder="6.0"></td>
+       <td class="text-uppercase "><input class="form-control" placeholder="0"></td>
+        <td class="text-uppercase">
+         <div class="form-check form-switch">
+           <input type="checkbox" class="form-check-input mt-2">
+       </div>
+        </td>
+     </tr>
+     <tr>
+      <td class="text-uppercase">002</td>
+      <td class="text-uppercase">Inspection</td>
+      <td class="text-uppercase "><input class="form-control" placeholder="8.0"></td>
+     <td class="text-uppercase "><input class="form-control" placeholder="5"></td>
+      <td class="text-uppercase">
+       <div class="form-check form-switch">
+         <input type="checkbox" class="form-check-input mt-2">
+     </div>
+      </td>
+   </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 text-end">
+    <button type="button" class="btn-primary" >Update</button>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>
+

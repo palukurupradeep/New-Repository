@@ -1,0 +1,337 @@
+export interface ClimDetailsResponce {
+        createdByUserId: number,
+        modifiedByUserId: number,
+        createdDateTime: string,
+        modifiedDateTime: string,
+        claimId: number,
+        claimNumber: string,
+        customerNumber: string,
+        claimCategory: ClaimCategory,
+        claimUserId: number,
+        endUserClaim: true,
+        jobStopped: true,
+        priorityClaim: true,
+        claimStatusId: number,
+        workStatusId: number,
+        claimAmountUsd: number,
+        claimAmountForeign: number,
+        detailAmountUsd: number,
+        detailAmountForeign: number,
+        sellingCompany: string,
+        territory: string,
+        division: string,
+        region: string,
+        territoryManagerName: string,
+        claimAreaTypeId: number,
+        claimAreaId: number,
+        creditMemoApproved: true,
+        claimReopenUserId: number,
+        claimReopenDate: string,
+        claimCloseDate: string,
+        declineReasonId: number,
+        claimDeclineDate: string,
+        businessMarketIndicator: number,
+        returnLocation: string,
+        isClaimFromDebit: true,
+        endUserInformation: EndUserInformation,
+        claimDocuments: ClaimDocuments[],
+        claimDetails:ClaimDetails[],
+        claimAddresses:ClaimAddresses[],
+        claimReasonDefinition:ClaimReasonDefinition,
+        exchangeRate: number
+      
+    }
+
+export interface ClaimCategory {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    claimCategoryId: number,
+    claimCategoryCode: string,
+    claimCategoryName: string,
+    displaySequence: number
+}
+
+export interface EndUserInformation{
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    endUserInformationId: number,
+    firstName: string,
+    middleInitial: string,
+    lastName: string,
+    companyName: string,
+    countryId: number,
+    addressLine1: string,
+    addressLine2: string,
+    city: string,
+    stateId: number,
+    postalCode: string,
+    county: string,
+    businessPhoneDialCodeId: number,
+    businessPhoneNumber: string,
+    businessPhoneExtension: string,
+    homePhoneDialCodeId: number,
+    homePhoneNumber: string,
+    homePhoneExtension: string,
+    cellPhoneDialCodeId: number,
+    cellPhoneNumber: string,
+    cellPhoneExtension: string,
+    emailAddress: string,
+    statusId: number 
+}
+export interface ClaimDocuments {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    claimDocumentId: number,
+    documentType: DocumentType,
+    documentNumber: string,
+    claimReasonDefinition:ClaimReasonDefinition,
+    approvedByUserId: number,
+    approvedDateTime: string,
+    amountUsd: number,
+    amountForeign: number,
+    addAssociate: string,
+    miscellaneousReference: string,
+    statusId: number,
+    claimLineDetails:ClaimLineDetails[],
+    exchangeRate:number,
+    orderNumber: string,
+    masterBillofLading: string,
+    billofLading: string,
+    purchaseOrderNumber: string,
+           
+}  
+export interface DocumentType{
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    documentTypeId: number,
+    documentTypeCode: string,
+    documentTypeDescription: string,
+    displaySequence: number,
+    statusId: number
+             
+ } 
+ export interface  ClaimReasonDefinition {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    claimReasonId: number,
+    claimReasonCode: string,
+    visibilityScope: number,
+    reasonTypeGroup: number,
+    isDistributionCompliance: string,
+    sampleSizeRequirement: string,
+    definition: string,
+    cause: string,
+    testing: string,
+    claimReasonDescription: string
+  }
+  export interface  ClaimLineDetails {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    claimLineId: number,
+    lineNumber: number,
+    rollNumber: string,
+    styleNumber: string,
+    colorNumber: string,
+    widthInFeet: number,
+    widthInInches: number,
+    lengthInFeet: number,
+    lengthInInches: number,
+    rcsCodes: RcsCodes,
+    claimReasonId: number,
+    grade: string,
+    unitPrice: number,
+    lineAmount: number,
+    returnGoodAuthorizationId: number,
+    returnGoodAuthorizationNumbe: string,
+    returnGoodAuthorizationLineNumber: number,
+    creditMemoId: number,
+    creditMemoNumber: string,
+    creditMemoLineNumber: number,
+    creditMemoDate:string,
+    dyeLot: string,
+    quantity: number,
+    sellingCompany: string,
+    unitOfMeasure: UnitOfMeasure,
+    squareFeet: number,
+    productCode: string,
+    assignedToSalesId: string,
+    approvedBySalesId: string,
+    salesReviewStatus: SalesReviewStatus,
+    salesReviewDate: string,
+    invoiceQuantity: number,
+    claimedQuantity: number,
+    claimedUnitPrice: number,
+    approvedUnitPrice: number,
+    salesDiscount: number,
+    salesOriginId: string,
+    inventoryStyle: string,
+    inventoryColor: string,
+    manufacturingPlant: string,
+    detailTypeId: number,
+    lineSourceId: number,
+    lineSourceReference: string,
+    detailStatusTypeId: number,
+    lineAddReasonId: number,
+    vendorId: string,
+    statusId: number,
+    lineAmountUsd: number,
+    lineAmountForeign: number,
+    unitPriceUsd: number,
+    unitPriceForeign: number,
+    pricingCurrencyCode: string,
+    currencyCodeDesignation: string,
+    currencyCodeName: string,
+    exchangeRate: number
+
+             
+             
+
+  }
+  export interface  RcsCodes {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    rcsCodeId: number,
+    rcsCode: string,
+    rcsCodeDescription: string,
+    displaySequence: number,
+    statusId: number
+  }
+  export interface  UnitOfMeasure {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    unitOfMeasureId: number,
+    unitOfMeasureCode: string,
+    unitOfMeasureDescription: string,
+    displaySequence: number,
+    statusId: number
+  }
+  export interface SalesReviewStatus {
+    createdByUserId: number,
+    modifiedByUserId: number,
+    createdDateTime: string,
+    modifiedDateTime: string,
+    salesReviewStatusId: number,
+    salesReviewStatusCode: string,
+    salesReviewStatusDescription: string,
+    displaySequence: number,
+    statusId: number
+  }
+
+  export interface  ClaimDetails {
+      createdByUserId: number,
+      modifiedByUserId: number,
+      createdDateTime:string,
+      modifiedDateTime: string,
+      claimDetailId: number,
+      lineNumber: number,
+      styleName: string,
+      colorName: string,
+      squareYards: number,
+      debitNumber: string,
+      debitLine: number,
+      debitDate: string,
+      amountUsd: number,
+      amountForeign: number,
+      unitPriceUsd: number,
+      unitPriceForeign: number,
+      hardSurfaceUnitPriceUsd: number,
+      hardSurfaceUnitPriceForeign: number,
+      exchangeRate: number,
+      taxPercent: number,
+      isClaimed: true,
+      statusId: number,
+      claimDetailRecord:ClaimDetailRecord
+    }
+     export interface ClaimDetailRecord {
+        createdByUserId: number,
+        modifiedByUserId: number,
+        createdDateTime: string,
+        modifiedDateTime: string,
+        claimDetailRecordId: number,
+        widthInFeet: number,
+        widthInInches: number,
+        lengthInFeet: number,
+        lengthInInches: number,
+        quantity: number,
+        unitOfMeasure: string,
+        amountUsd: number,
+        amountForeign: number,
+        unitPriceUsd: number,
+        unitPriceForeign: number,
+        statusId: number,
+        exchangeRate: number,
+        detailRecordType:DetailRecordType
+      }
+      export interface  DetailRecordType {
+        createdByUserId: number,
+        modifiedByUserId: number,
+        createdDateTime: string,
+        modifiedDateTime: string,
+        detailRecordTypeId: number,
+        detailRecordTypeCode: string,
+        detailRecordTypeDescription: string,
+        displaySequence: number,
+        statusId: number
+      }
+      export interface  ClaimAddresses
+        {
+          createdByUserId: number,
+          modifiedByUserId: number,
+          createdDateTime: string,
+          modifiedDateTime: string,
+          claimAddressId: number,
+          addressTypeId: number,
+          firstName: string,
+          middleInitial: string,
+          lastName: string,
+          fullName: string,
+          addressLine1: string,
+          addressLine2: string,
+          city: string,
+          stateId: number,
+          countryId: number,
+          postalCode: string,
+          businessPhoneDialCodeId: number,
+          businessPhoneNumber: string,
+          businessPhoneExtension: string,
+          homePhoneDialCodeId: number,
+          homePhoneNumber: string,
+          homePhoneExtension: string,
+          cellPhoneDialCodeId: number,
+          cellPhoneNumber: string,
+          cellPhoneExtension: string,
+          emailAddress: string,
+          claimReference: string,
+          statusId: number,
+          phoneNumber: string
+        }
+     
+    
+  
+
+              
+              
+              
+             
+                 
+
+
+
+
+  

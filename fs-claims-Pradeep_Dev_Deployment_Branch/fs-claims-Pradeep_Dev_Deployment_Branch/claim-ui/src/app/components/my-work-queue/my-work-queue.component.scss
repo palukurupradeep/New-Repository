@@ -1,0 +1,388 @@
+button.close {
+  border: 0px;
+
+  background: none;
+
+  font-size: 22px;
+
+  line-height: 10px;
+
+  text-align: right;
+
+  float: right;
+}
+
+.modal .modal-footer,
+#editModel .modal-footer,
+#viewModel .modal-footer {
+  padding-bottom: 10px;
+
+  padding-top: 10px;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d1d1d1; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d1d1; 
+}
+
+.work-history-info {
+  overflow-x: scroll;
+}
+
+.recipe {
+  padding: 1em;
+}
+
+.recipe__title {
+  margin-top: 0;
+}
+
+.recipe__info {
+  vertical-align: top;
+
+  text-align: right;
+
+  padding: 0 1em 0 0;
+
+  margin: 0 1.3em 0 0;
+
+  font-weight: bold;
+
+  color: #454545;
+
+  border-right: 1px dotted #eee;
+
+  width: 300px;
+
+  float: left;
+}
+
+.recipe-table {
+  position: relative;
+
+  padding: 1em;
+
+  z-index: 10;
+
+  width: 100%;
+}
+
+.recipe-table__cell {
+  vertical-align: top;
+
+  padding: 3px 5px;
+}
+
+.recipe-table__add-row {
+  margin-top: 0;
+
+  z-index: 8;
+}
+
+.recipe-table__add-row-btn {
+  display: block;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  opacity: 1;
+
+  color: #000;
+
+  height: 1.5em;
+
+  line-height: 1.5em;
+
+  margin-top: 15px;
+}
+
+.recipe-table__add-row-btn:hover {
+  opacity: 1;
+}
+
+.recipe-table__del-row-btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0px;
+  font-size: 1.3em;
+  line-height: 1.4;
+  border: none;
+  color: #c70619;
+  text-decoration: none;
+  transition: all 0.3s;
+  text-align: center;
+  background-color: #fff;
+  margin: 0 0 0 10px;
+  font-weight: bold;
+}
+
+table th,
+table td {
+  white-space: nowrap;
+}
+
+.recipe-table__del-row-btn:hover {
+  background: transparent;
+
+  color: #c70619;
+}
+
+.drag-handler {
+  width: 1.4em;
+
+  position: relative;
+
+  background-color: #e4e6eb;
+
+  background-image: linear-gradient(
+    45deg,
+    #e4e6eb,
+    #e4e6eb 2px,
+    #fff 2px,
+    #fff 4px,
+    #e4e6eb 4px,
+    #e4e6eb 9px,
+    #fff 9px,
+    #fff 11px,
+    #e4e6eb 11px,
+    #e4e6eb 16px,
+    #fff 16px,
+    #fff 18px,
+    #e4e6eb 18px,
+    #e4e6eb 22px
+  );
+
+  background-size: 10px 20px;
+
+  cursor: move;
+
+  border-top: 2px solid #fff;
+
+  border-bottom: 2px solid #fff;
+}
+
+.drag-handler:active {
+  background-image: linear-gradient(
+    45deg,
+    #bab86c,
+    #bab86c 2px,
+    #fff 2px,
+    #fff 4px,
+    #bab86c 4px,
+    #bab86c 9px,
+    #fff 9px,
+    #fff 11px,
+    #bab86c 11px,
+    #bab86c 16px,
+    #fff 16px,
+    #fff 18px,
+    #bab86c 18px,
+    #bab86c 22px
+  );
+
+  background-size: 10px 20px;
+}
+
+.header-icon {
+  /* Add your styles for the icon, e.g., font-size, color, etc. */
+  font-size: 18px;
+  color: #333;
+  /* Add any additional styling as needed */
+}
+
+/* In your component's CSS or in an external stylesheet */
+.move-left {
+ 
+  margin-right: 138px;
+}
+.work-queue-info{
+  overflow-x: scroll;
+}
+.table-page-view .per-page-style{
+  width: 100px;
+}
+.table-page-view .form-select{
+  width: 100px;
+  margin-left: 5px;
+}
+// table thead tr th:first-child .search-input{
+//   display: none;
+// }
+
+.example-list {
+  max-width: 100%;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.drag-icon {
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.delete-icon {
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.drag-icon i {
+  cursor: move;
+  vertical-align: middle;
+  color: #A9A9A9;
+}
+
+i.disable {
+  position: absolute;
+  cursor: not-allowed !important;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: transparent;
+}
+
+.example-box {
+  border: none;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: white;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.selected-field{
+  border: 1px solid #5D87FF;
+    width: 100%;
+    padding: 0 5px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+/* Add this CSS to your component's CSS file or styles.scss/styles.css */
+.recipe-table__add-row-btn {
+  cursor: pointer;
+}
+
+.recipe-table__add-row-btn:hover {
+  text-decoration: underline;
+}
+
+.recipe-table__add-row select {
+  height: 30px; /* Set the desired height */
+  width: 200px; /* Set the desired width */
+  font-size: 14px; /* Set the desired font size */
+  padding: 5px; /* Adjust the padding as needed */
+}
+
+/* Add this CSS to your component's CSS file or styles.scss/styles.css */
+.recipe-table__add-row-btn {
+  cursor: pointer;
+  padding: 5px 10px; /* Add padding for better visual appearance */
+}
+
+.recipe-table__add-row-btn:hover {
+  text-decoration: underline;
+}
+
+.recipe-table__add-row-btn.disabled {
+  background-color: #ccc; /* Add a background color for disabled state */
+  color: #666; /* Adjust the text color for disabled state */
+  cursor: not-allowed;
+}
+
+.icon-warning,.icon-hand{
+  background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    justify-content: center;
+    margin: 1px;
+}
+.icon-warning{
+  padding: 2px 3px 3px 3px;
+}
+.icon-hand{
+  padding: 1px 4px 3px 4px;
+}
+.icon-warning img{
+  height: 11px !important;
+}
+.icon-hand img{
+  height: 11px !important;
+}
+.page-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+table tbody tr td a{
+  text-decoration: none;
+  font-weight: bold;
+}
+table td, table th {
+  border: none !important;
+}
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-color-type: none;
+  --bs-table-bg-type: none;
+}
+.new-drag-value{
+  width: 82%;
+  margin: 0px auto;
+  padding: 0 0 20px;
+}
+.align-right{
+  text-align: right;
+}
+
+.table-sorting thead th:first-child span {
+  display: none;
+}

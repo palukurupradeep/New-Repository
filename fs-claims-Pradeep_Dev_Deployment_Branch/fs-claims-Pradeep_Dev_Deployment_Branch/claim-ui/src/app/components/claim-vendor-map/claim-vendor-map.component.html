@@ -1,0 +1,188 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mt-2 mb-2">
+                <h4>Claim Vendor Map</h4>
+                <div class="col-12 mt-2 mb-2">
+                    <p class="fw-medium mb-3">Quick Search</p>
+                    <div class="form-group row mb-2">
+                        <label for="" class="col w-7 col-form-label fw-semibold">N</label>
+                        <div  class="col-sm-3 row">
+                            <div class="form-group mb-2">
+                                <div  class="col-12">
+                                  <input class="form-control" type="text">
+                                </div>                                       
+                            </div>
+                        </div> 
+                        <label for="" class="col w-7 col-form-label fw-semibold text-center ">A</label>
+                        <div  class="col-sm-2 row">
+                            <div class="form-group mb-2">
+                                <div  class="col-12">
+                                    <input class="form-control" type="text">
+                                </div>                                       
+                            </div>
+                        </div>     
+                        <label for="" class="col w-7 col-form-label fw-semibold text-center">S</label>
+                        <div  class="col-sm-2 row">
+                            <div class="form-group mb-2">
+                                <div  class="col-12">
+                                    <input class="form-control" type="text">
+                                </div>                                       
+                            </div>
+                        </div>  
+                        <label for="" class="col w-7 col-form-label fw-semibold text-center">P</label>
+                        <div  class="col-sm-2 row">
+                            <div class="form-group mb-2">
+                                <div  class="col-12">
+                                    <input class="form-control" type="text">  
+                                </div>                                       
+                            </div>
+                        </div> 
+                        <div class="w-7 mb-2 px-3">
+                            <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary mx-2">Submit</button>
+                          </div>                                   
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <p class="fw-semibold mb-2"> Location</p>
+                  <label for="endUSer1" class="col-1 col-form-label py-0">End User</label>
+                  <div  class="col-sm-2">
+                      <div class="form-check form-inline">
+                          <input type="radio" 
+                          name="endUSer" id="endUSer1"
+                          class="form-check-input mt-1">
+                          <p>Jess Arrington</p>
+                      </div>
+                  </div> 
+                  <label for="shipTO1" class="col-1 col-form-label py-0">Ship to</label>
+                  <div  class="col-sm-3">
+                      <div class="form-check form-inline">
+                          <input type="radio" 
+                          name="endUSer" id="shipTO1"
+                          class="form-check-input mt-1">
+                          <p>284 N 1000 E<br>
+                        Spanish Fork, UT 84660<br> US</p>
+                        <p>(Home) +1 (801) 616-7823</p>
+                      </div>
+                  </div> 
+                <label for="custsoldTO1" class="col-2 col-form-label py-0">Customer Sold-to (Physical)</label>
+                <div  class="col-sm-1">
+                    <div class="form-check form-inline">
+                        <input type="radio" 
+                        name="endUSer" id="custsoldTO1"
+                        class="form-check-input mt-1">
+                    </div>
+                </div> 
+                <label for="Other1" class="col-1 col-form-label py-0">Other</label>
+                <div  class="col-sm-1">
+                    <div class="form-check form-inline">
+                        <input type="radio" id="Other1"
+                        name="endUSer" 
+                        class="form-check-input mt-1">
+                        
+                    </div>
+                </div> 
+                <label for="" class="col-1 col-form-label py-0">Geocode Quality</label>
+                <div  class="col-sm-2">
+                   <p class="text-danger mb-0"> Geography</p>
+                </div> 
+                <label for="" class="col-1 col-form-label py-0">Miles</label>
+                <div  class="col-sm-2">
+                   <input class="form-control" type="text" placeholder="100.00">
+                </div> 
+                </div>
+                <div class="col-12 mt-3 mb-3">
+                    <!-- <img src="../../../assets/images/map.png" style="width: 100%; height: 400px;"> -->
+                    <img src="../../../assets/images/first-map.jpg" style="width: 100%; height: 400px;">
+                 </div>
+                <div class="text-end mt-2 mb-2 col-12 px-3">
+                    <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary mx-2">Submit</button>
+                    <button type="button"  class="d-sm-inline-block btn btn-sm btn-secondary mx-2">Filter</button>
+                    <button type="button"  class="d-sm-inline-block btn btn-sm btn-secondary mx-2">Reset</button>
+                  </div>   
+                  <div class="row mb-3 mt-3 pr-0">
+                    <div class="table-responsive mb-3">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th> #</th>
+                                    <th> Claims Vendor </th>
+                                    <th> Services </th>
+                                    <th>Distance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1 <input type="radio" name="VendorName" class="form-check-input mt-1"></td>
+                                <td><p class="text-uppercase"><a href="">Flooristics llc</a><br>
+                                9487 South heather Dale Circle<br>
+                            South Jordan, UT 84095<br>
+                        (801) 574-0387<br>
+                    Robert (rob) Mcnealy</p></td>
+                                <td><p class="text-uppercase">[<a href="">r c hw lam re bam </a>]<br>
+                                    [<a href="">ci rp int </a>]</p></td>
+                                <td>40.32</td>
+                            </tr>  
+                            <tr>
+                                <td>2 <input type="radio" name="VendorName" class="form-check-input mt-1"></td>
+                                <td><p class="text-uppercase"><a href="">Flooristics llc</a><br>
+                                9487 South heather Dale Circle<br>
+                            South Jordan, UT 84095<br>
+                        (801) 574-0387<br>
+                    Robert (rob) Mcnealy</p></td>
+                                <td><p class="text-uppercase">[<a href="">r c hw lam re bam </a>]<br>
+                                    [<a href="">ci rp int </a>]</p></td>
+                                <td>40.32</td>
+                            </tr>  
+                            <tr>
+                                <td>3 <input type="radio" name="VendorName" class="form-check-input mt-1"></td>
+                                <td><p class="text-uppercase"><a href="">Flooristics llc</a><br>
+                                9487 South heather Dale Circle<br>
+                            South Jordan, UT 84095<br>
+                        (801) 574-0387<br>
+                    Robert (rob) Mcnealy</p></td>
+                                <td><p class="text-uppercase">[<a href="">r c hw lam re bam </a>]<br>
+                                    [<a href="">ci rp int </a>]</p></td>
+                                <td>40.32</td>
+                            </tr>                
+                            </tbody>
+                        </table>
+                        <div class="text-end mt-2 mb-2 col-12 px-3">
+                            <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary mx-2" (click)="openVendorScreenView()">Continue</button>
+                            <button type="button"  class="d-sm-inline-block btn btn-sm btn-secondary mx-2" (click)="openCancelModal()">Cancel</button>
+                          </div>   
+                    </div>
+                  </div>
+                </div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>
+
+<!-- cancel modal -->
+<div
+class="modal modal-bg modal-md" id="cancel-vendor-map">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"> Cancel Action</h5>
+      <button
+        type="button" class="btn-close" (click)="closeModal('cancel-vendor-map')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p class="fw-semibold mb-2"> Please Choose your request type:</p> 
+     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary mx-2" (click)="navToClaimDeatail()">
+        Confirm
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal('cancel-vendor-map')">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+</div>

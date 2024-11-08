@@ -1,0 +1,16 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /claim/batch
+
+spring:
+  mvc:
+    problemdeatils:
+      enabled: true
+
+  datasource:
+    url: jdbc:sqlserver://sz-ue2-fintechclaimworx-d-sql-01.database.windows.net;databaseName=FS_CLAIMS_DEV
+    username: fs_claims_app_np
+    password: QTrCjeUosrNPk7rV
+
+

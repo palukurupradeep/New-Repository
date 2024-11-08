@@ -1,0 +1,31 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /claim/security
+
+spring:
+  mvc:
+    problemdeatils:
+      enabled: true
+
+  datasource:
+    url: jdbc:sqlserver://sz-ue2-fintechclaimworx-d-sql-01.database.windows.net;databaseName=FS_CLAIMS_DEV
+    username: fs_claims_app_np
+    password: QTrCjeUosrNPk7rV
+ad:
+  token-uri: https://login.microsoftonline.com/9407f998-df4c-49e1-bb48-b181e9e3f8dc/oauth2/v2.0/token
+  graph-uri: https://graph.microsoft.com/v1.0
+  grant-type: client_credentials
+  client-id: 27efd66c-7944-4e2d-b7da-72e5dd3582eb
+  client-secret: --f3u8Q~-ZAwvTPfxG1QH_vqc.f7unRhHGRwmCva_B--
+  scope: https://graph.microsoft.com/.default
+  graph-select: "&$select=id,jobTitle,department,country,city,employeeId,givenName,userPrincipalName,displayName,surname,onPremisesSamAccountName"
+
+azure:
+  maps:
+    subscription-key: FXdhU7CTXj-tOCqJGoDVifYnT8bECkOsQ0QUIXnfJuY
+    base-url: https://atlas.microsoft.com
+
+logging:
+  config: classpath:log4j2.xml
+

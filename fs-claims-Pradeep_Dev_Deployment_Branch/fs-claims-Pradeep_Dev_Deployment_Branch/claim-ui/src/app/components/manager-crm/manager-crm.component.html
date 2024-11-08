@@ -1,0 +1,251 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+      <div class="container-fluid">
+<div class="p-3">
+  <h4>Issue Credit Memo</h4>
+  <div class="row" *ngIf="crmDetails">
+              <div class="col-12 mt-2">
+                  <div class="table-responsive">
+                      <table class="table table-striped table-hover">
+                          <thead>
+                              <tr>
+                                  <th scope="col">Credit Memo Date</th>
+                                  <th scope="col">Claim Number</th>
+                                  <th scope="col">Claims Name</th>
+                                  <th scope="col">Claim Area Type</th>
+                                  <th scope="col">User Name</th>
+                                  <th scope="col">Customer Number</th>
+                                  <th scope="col">Customer Order Number</th>
+                                  <th scope="col">Cust. Dept.</th>
+                                  <th scope="col">Invoice Number</th>
+                                  <th scope="col">Invoice Date</th>
+                                  <th scope="col">Div</th>
+                                  <th scope="col">Sales Person</th>
+                                  <th scope="col">Credit Memo Number</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td></td>
+                                  <td>685140</td>
+                                  <td>061</td>
+                                  <td>001</td>
+                                  <td>Scott, John</td>
+                                  <td>0224631</td>
+                                  <td>755814</td>
+                                  <td></td>
+                                  <td>2104984</td>
+                                  <td>12/23/2023</td>
+                                  <td>08</td>
+                                  <td>0951</td>
+                                  <td>562156</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              <div class="row mt-2 mb-3">
+                <div class="col-6">
+                  <div class="form-group row mb-2">
+                      <label for="" class="col-sm-3 col-form-label fw-semibold py-0">Sold to:</label>
+                      <div  class="col-sm-9 row">
+                          <div class="form-group mb-2">
+                              <div  class="col-sm-9 text-uppercase">
+                                  <p>COLORATA DECORACOES LTDA<br>
+                                  DBA COLORATA<br>
+                                AV MARINGA 1354<br>
+                                83324-442 - PINHAIS - PR<br>
+                                BRAZIL, 80310100
+                              </p>
+                              </div>                                       
+                          </div>
+                      </div>                                       
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group row mb-2">
+                    <label for="" class="col-sm-3 col-form-label fw-semibold py-0">Ship to:</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase">
+                                <p>
+                              ATLANTA, GA 30337
+                            </p>
+                              </div>                                       
+                          </div>
+                      </div>                                       
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Line No.</th>
+                        <th scope="col">Style Name</th>
+                        <th scope="col">Style Number</th>
+                        <th scope="col">Color Number</th>
+                        <th scope="col">Roll No.</th>
+                        <th scope="col">Width</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Square Yards</th>
+                        <th scope="col">Reason Code</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let line of crmLineDetails; let i = index">
+                        
+                       
+                        <td>{{ '00' + line.crmLineNumber}}</td>
+                        <td>{{ line.styleName }}</td>
+                        <td>{{ line.styleNumber }}</td>
+                        <td>{{ line.colorNumber }}</td>
+                        <td>{{ line.rollNumber }}</td>
+                        <td>{{ line.widthInFeet }}' {{ line.widthInInches }}"</td>
+                        <td>{{ line.lengthInFeet }}' {{ line.lengthInInches }}"</td>
+                        <td>{{ line.squareYards }}</td>
+                        <td>{{ crmDetailsByClaimIdAndCrmNumber[0].claimReasonCode }}</td>
+                        <td>{{ line.grade  }}</td>
+                        <td class="text-end">${{ line.amountUsd | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold text-end" colspan="10">Total</td>
+                       <td class="fw-semibold text-end">
+                          ${{ getTotalAmount() | number: '1.2-2' }}
+                        </td> 
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-6">
+                  <div class="form-group row mb-2">
+                      <label for="" class="col-sm-6 col-form-label fw-semibold py-0">***Application Instructions***</label>
+                      <div  class="col-sm-6 row">
+                          <div class="form-group mb-2">
+                              <div  class="col-sm-9 text-uppercase">
+                                  <p></p>
+                              </div>                                       
+                          </div>
+                      </div>                                       
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group row mb-2">
+                    <label for="" class="col-sm-6 col-form-label fw-semibold py-0">***Special Instructions***</label>
+                    <div  class="col-sm-6 row">
+                        <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase">
+                                <p>
+                              INVORD - Y<br>
+                              END USER - N
+                            </p>
+                              </div>                                       
+                          </div>
+                      </div>                                       
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group row mb-2">
+                    <label for="" class="col-sm-5 col-form-label fw-semibold py-0">***Comments***</label>
+                    <div  class="col-sm-7 row">
+                        <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase">
+                                <p></p>
+                              </div>                                       
+                          </div>
+                      </div>                                       
+                  </div>
+                </div>
+              </div>
+      </div>
+      <div class="row">
+          <div class="col-12 text-end">
+            <button type="button" class="btn btn-primary" (click)="crmIssuedmodal()">Issue</button>
+            
+              <button type="button" class="btn btn-secondary mx-2" (click)="declineCreditMemo('Decline')" >Decline</button>   
+              <button type="button" class="btn btn-secondary mx-2" (click)="navigateToClaimDetail()">Close</button>          
+              
+          </div>
+      </div>
+      </div>
+      </div>
+  </div>
+    <!-- CRM issued pop up -->
+<div
+class="modal modal-bg modal-xl" id="CRM-issued">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"> Credit Memo Issued</h5>
+      <button
+        type="button" class="btn-close" (click)="closeModal('CRM-issued')"
+      ></button>
+    </div>
+  <div class="modal-body">
+    <p>Credit memo <span class="fw-semibold fs-18">547476</span> has been issued in the amount $201.82</p>
+   <br>
+    <p class="text-uppercase">this credit was not applied.</p>
+  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary mx-2" (click)="openPrepareDisposition()" *ngIf="sellingCompanyData[0]?.companyType == 'H' " >
+        Prepare Disposition
+      </button>
+      <!-- <button type="button" class="btn btn-primary mx-2" (click)="openPrepareDisposition()">
+        Prepare Disposition
+      </button> -->
+      <button type="button" class="btn btn-secondary" (click)="closeModal('CRM-issued')">
+        Done
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<app-footer></app-footer>
+    </div>
+    <div class="modal modal-bg" id="modalEnterClaim" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="staticBackdropLabel">
+          Enter {{crmStatusAction}} Notes
+</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="CloseModalEnterClaim()"></button>
+</div>
+<div class="modal-body">
+<div class="row">
+<div class="col-lg-12">
+<div class="mb-4">
+<h6>Confidential Note <span class="text-danger">*</span></h6>
+ 
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="noteTextArea"
+                [disable]="noteTextDisable"></textarea>
+</div>
+</div>
+ 
+        </div>
+</div>
+<div class="modal-footer">
+<div class="row">
+<div class="col-12 d-flex gap-3 flex-wrap">
+<button type="button" class="btn btn-primary" (click)="CloseModalEnterClaim()">Cancel</button>
+ 
+            <button type="button" class="btn btn-primary" (click)="updateCrmDetailsByAction()"
+              [disabled]="!noteTextArea || noteTextArea.trim() === '' || isButtonDisabled">
+              Confirm
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

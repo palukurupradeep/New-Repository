@@ -1,0 +1,81 @@
+.mb-new-5{margin-bottom: 5px;}
+
+.pb-40{padding-bottom: 40px;}
+
+.right-border{border-right: 1px solid #00314680;}
+
+.ml-5vw{margin-left: 5vw;}
+
+.fs-20 {font-size: 20px;}
+
+.fs-17 {font-size: 17px;}
+
+.p-10{padding: 10px;}
+
+.per-page-select-style{margin-right: 20px; min-width: 80px;}
+
+.arrow-left-style{font-size: 24px; margin-right: 15px; color: #0b5ed7;cursor: pointer;}
+
+.pagination-top{border-bottom: 1px solid var(--primary);margin-bottom: 20px;padding-bottom: 12px;}
+
+.fs-1rem{font-size: 1rem;}
+
+.per-page-style{padding-right: 10px; margin-right: 10px;}
+
+.back-btn-border{border-bottom: 1px solid var(--primary); padding-bottom: 10px;}
+
+.color-red{color: red;}
+
+.matrix-table td, .matrix-table th {
+    padding: 10px;
+}
+.matrix-table input {
+    
+    text-align: center;
+}
+
+.stepper-body {
+    height: 100vh;
+}
+.mat-mdc-form-field-subscript-wrapper
+    {
+        display: none !important;
+    }
+
+    .permission-container {
+        display: flex;
+        flex-wrap: nowrap; /* Prevent wrapping to the next line */
+      }
+      
+      mat-chip {
+        margin-right: 10px; margin-bottom: 2px; margin-top: 2px;/* Add spacing between elements */
+      }
+      .search-input {
+        max-width: none;
+        width:100%;
+        outline: none;
+        border: 1px solid var(--primary);
+        border-radius: 5px;
+        font-size: 15px;
+        padding: 5px 6px;
+        /* You can adjust this value as needed */
+      }
+      .btn-view
+      {
+        background-color: #fff;
+    color: rgb(93, 135, 255);
+    display: inline-block;
+    border-radius: 16px;
+    font-family: Roboto, sans-serif;
+    line-height: 32px;
+    padding: 0 15px;
+    border: 1px solid rgb(93, 135, 255);
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 12px !important;
+      }
+
+ #editModelLabel span{
+  text-transform: uppercase !important;
+ }   
+      

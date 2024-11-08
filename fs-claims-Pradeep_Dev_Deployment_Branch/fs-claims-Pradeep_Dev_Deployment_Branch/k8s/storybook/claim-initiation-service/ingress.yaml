@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claim-initiation-ingress
+  namespace: claim-apps
+  # annotations:
+  #   # ingress.kubernetes.io/ssl-redirect: "true"
+  #   kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - fs-claims-dev.shawinc.com
+      secretName: shawinc-wildcard-2024
+  rules:
+  - host: fs-claims-dev.shawinc.com
+    http:
+      paths:
+      - path: /claim/initiation
+        pathType: Prefix
+        backend:
+          service:
+            name: claim-initiation-service
+            port:
+              number: 8082

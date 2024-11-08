@@ -1,0 +1,536 @@
+<div class="sidenav" [ngClass]="collapsed ? 'sidebar-collapsed' : ''">
+  <div class="logo-container">
+  <button class="logo">
+  <img src="../../assets/images/SHAW_CRP_LOGO_S.png" alt="" />
+  </button>
+  <div class="logo-text" @fadeInOut *ngIf="collapsed">
+  <img src="../../assets/images/SHAW_CRP_LOGO.png" alt="" />
+  </div>
+  <button class="btn-close" (click)="toggleCollapse()">
+  <i class="fa-solid fa-angles-right close-icon"></i>
+  </button>
+  </div>
+   
+   
+   
+    <div class="mt-1">
+   
+      <nav id="vertical-menu">
+  <ul class="main-menu sidenav-nav" >
+
+    <!-- Dashboard -->
+    <li class="sidenav-nav-item">
+      <ng-template #popTemplate1>
+      <p class="mb-0">
+                    Dashboard
+      </p>
+      </ng-template>
+      <a
+                containerClass="customClassTooltip"
+                [popover]="popTemplate1"
+                triggers="mouseenter:mouseleave"
+                class="sidenav-nav-link"
+       
+                routerLink="/dashboard"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-chart-area sidenav-link-icon"></i>
+      <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+      >Dashboard</span>
+      </a>
+      <span></span>
+      </li>
+
+      <!-- Work Queue -->
+      <li class="sidenav-nav-item">
+        <ng-template #popTemplate4>
+        <p class="mb-0">
+                      Work Queue
+        </p>
+        </ng-template>
+        <a
+                  containerClass="customClassTooltip"
+                  [popover]="popTemplate4"
+                  triggers="mouseenter:mouseleave"
+                    class="sidenav-nav-link"
+                    routerLink="/workQueue"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+        >
+        <i class="fas fa-briefcase sidenav-link-icon"></i>
+        <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+        >Work Queue</span
+        >
+        </a>
+        </li> 
+
+       <!-- Initiate Claim -->
+              <li class="sidenav-nav-item">
+      <ng-template #popTemplate2>
+      <p class="mb-0">
+                    Initiate Claim
+      </p>
+      </ng-template>
+      <a
+                containerClass="customClassTooltip"
+                [popover]="popTemplate2"
+                triggers="mouseenter:mouseleave"
+                  class="sidenav-nav-link"
+                  routerLink="/initiateClaim"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  *ngIf="authService.hasPermission('INITIATECLAIM')"
+      >
+      <i class="fas fa-book sidenav-link-icon"></i>
+      <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+      >Initiate Claim</span
+      >
+      </a>
+      </li>
+
+<!-- Resources menu -->
+
+      <li class="contain-submenu first-menu sidenav-nav-item" id="resource-top-menu">
+        <a class="sidenav-nav-link">
+        <i class="fa-solid fa-users-viewfinder sidenav-link-icon"></i>
+        <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed" (click)="toggleSubMenu()"
+        >Resources </span>
+        </a>
+        <ul class="submenu-1" >
+          <app-menu-items *ngFor="let item of resourceMenu" [menuItem]="item"></app-menu-items>
+        </ul>
+        <!-- <ul class="submenu-1">
+              <li class="contain-submenu" *ngFor="let item of resourceMenu">
+                      <a [href]="item.linkUrl ? item.linkUrl : '#'" target="_blank">{{ item.menuName }}</a>
+                      <ul class="submenu-2 " *ngIf="item.subMenu != null " >
+                        <li *ngFor="let subItem of item.subMenu">
+                          <a  [href]="subItem.linkUrl ? subItem.linkUrl : '#'" target="_blank">{{ subItem.menuName }}</a>
+                          <ul class="submenu-3 " *ngIf="subItem.subMenu != null " >
+                            <li *ngFor="let subchildItem of subItem.subMenu">
+                              <a  [href]="subchildItem.linkUrl ? subchildItem.linkUrl : '#'" target="_blank">{{ subchildItem.menuName }}</a>
+                              <ul class="submenu-3 " *ngIf="subchildItem.subMenu != null " >
+                                <li *ngFor="let subchildDataItem of subchildItem.subMenu">
+                                  <a  [href]="subchildDataItem.linkUrl ? subchildDataItem.linkUrl : '#'" target="_blank">{{ subchildDataItem.menuName }}</a>
+                                  <ul class="submenu-3 " *ngIf="subchildDataItem.subMenu != null " >
+                                    <li *ngFor="let childDataItem of subchildDataItem.subMenu">
+                                      <a  [href]="childDataItem.linkUrl ? childDataItem.linkUrl : '#'" target="_blank">{{ childDataItem.menuName }}</a>
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                          <ul class="submenu-3 " *ngIf="subItem.subMenu != null " >
+                            <li *ngFor="let subchildDataItem of subItem.subMenu">
+                              <a  [href]="subchildDataItem.linkUrl ? subchildDataItem.linkUrl : '#'" target="_blank">{{ subchildDataItem.menuName }}</a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+        </ul> -->
+      
+      
+      </li>
+
+
+      <!-- Claim Code mgt menu -->
+      <li class="contain-submenu sidenav-nav-item first-menu" >   
+   
+        <a href="#" class="sidenav-nav-link">
+<i class="fa-solid fa-code sidenav-link-icon"></i>
+<span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+>Claim Code Management</span>
+</a>
+<ul class="submenu-1">
+<li>
+<a 
+          routerLink="/claim-code-management"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">Reason Code Definition</a></li>
+<li>
+<a routerLink="/resolution-maintenance"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">Resolution Maintenance</a></li>
+<li>
+<a routerLink="/photo-maintenance"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">Photo Maintenance</a></li>
+<li><a 
+          routerLink="/view-export-rules"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">View & Export Rules</a></li>
+          <li><a 
+            routerLink="/resources-menu-config"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">Manage Resource Links</a></li>
+            <li><a 
+              routerLink="/view-note-template"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">Manage Note Templates</a></li>
+</ul>
+</li>
+ 
+<!-- Admin -> Roles and permission menu -->
+<li class="contain-submenu sidenav-nav-item first-menu" >   
+ 
+  <a href="#" class="sidenav-nav-link">
+<i class="fa-solid fa-lock sidenav-link-icon"></i>
+<span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Admin</span></a>
+
+<!-- <ul class="submenu-1 admin-menu">
+<li class="contain-submenu"><a>User Management  <i class="fa fa-caret-right icon-right"></i></a>
+<ul class="submenu-2">
+<li>
+  <a routerLink="/admin/users"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }">
+                Users
+  </a>
+  </li>
+  <li tooltip="Roles">
+  <a routerLink="/admin/roles"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" >
+                   Roles
+  </a>
+  </li>
+  <li>
+  <a tooltip="Permissions" routerLink="/admin/permissions"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }">
+                 Permissions
+  </a>
+  </li>
+  <li>
+  <a  tooltip="PermissionsSet" routerLink="/admin/permissions/createpermissionset"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">            
+              Permissions set
+  </a>
+  </li>
+</ul>
+</li>
+<li class="contain-submenu"><a>Lookup/Master Data Maintanance <i class="fa fa-caret-right icon-right"></i></a>
+<ul class="submenu-2">
+
+<li> <a>Claim Area Type </a></li>
+
+<li><a>Claims Areas</a></li>
+
+<li><a >Department</a></li>
+
+<li><a >System Properties</a></li>
+
+<li><a >System Notes</a></li>
+
+<li><a >Work Statuses</a></li>
+
+<li><a >Trace Types</a></li>
+
+<li><a >Disposition Types</a></li>
+
+<li><a >Return Address</a></li>
+
+<li><a >Home Depot Return</a></li>
+
+<li><a >Audit Codes</a></li>
+
+<li><a >Labor Rates</a></li>
+
+<li><a >Claims Vendors</a></li>
+
+<li><a >Claims Vendor Properties</a></li>
+
+<li><a >Invoice Form</a></li>
+
+<li><a > Mass Claims Vendor Email</a></li>
+
+<li><a >Vendor Load</a></li>
+</ul>
+</li>
+
+</ul> -->
+<ul class="submenu-1 admin-menu">
+  <!-- User Management Menu Item -->
+  <li class="contain-submenu">
+    <a (click)="toggleMenu('userManagement')">User Management <i class="fa fa-caret-right icon-right"></i></a>
+    
+    <!-- User Management Submenu -->
+    <ul class="submenu-2" [ngClass]="{'submenu-2': true, 'openAll': openMenus['userManagement']}">
+      <li>
+        <a routerLink="/admin/users"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Users
+        </a>
+      </li>
+      <li tooltip="Roles">
+        <a routerLink="/admin/roles"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Roles
+        </a>
+      </li>
+      <li>
+        <a tooltip="Permissions"
+           routerLink="/admin/permissions"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Permissions
+        </a>
+      </li>
+      <li>
+        <a tooltip="PermissionsSet"
+           routerLink="/admin/permissions/createpermissionset"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Permissions set
+        </a>
+      </li>
+      <li>
+        <a tooltip="JobConfiguration"
+           routerLink="/admin/jobconfiguration"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Job Configuration
+        </a>
+      </li>
+    </ul>
+  </li>
+
+  <!-- Lookup/Master Data Maintenance Menu Item -->
+  <li class="contain-submenu">
+    <a (click)="toggleMenu('lookupMaintenance')">Lookup/Master Data Maintenance <i class="fa fa-caret-right icon-right"></i></a>
+    
+    <!-- Lookup/Master Data Maintenance Submenu -->
+    <ul class="submenu-2" [ngClass]="{'submenu-2': true, 'openAll': openMenus['lookupMaintenance']}">
+      <li><a>Claim Area Type</a></li>
+      <li><a>Claims Areas</a></li>
+      <li><a>Department</a></li>
+      <li><a>System Properties</a></li>
+      <li><a>System Notes</a></li>
+      <li><a>Work Statuses</a></li>
+      <li><a>Trace Types</a></li>
+      <li><a>Disposition Types</a></li>
+      <li><a>Return Address</a></li>
+      <li><a>Home Depot Return</a></li>
+      <li><a>Audit Codes</a></li>
+      <li><a>Labor Rates</a></li>
+      <li><a>Claims Vendors</a></li>
+      <li><a>Claims Vendor Properties</a></li>
+      <li><a>Invoice Form</a></li>
+      <li><a>Mass Claims Vendor Email</a></li>
+      <li><a>Vendor Load</a></li>
+    </ul>
+  </li>
+</ul>
+
+</li>
+
+<!-- Search menu -->
+<li class="contain-submenu sidenav-nav-item first-menu" >   
+   
+  <a href="#" class="sidenav-nav-link">
+<i class="fa-solid fa-magnifying-glass sidenav-link-icon"></i>
+<span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Search</span></a>
+
+<ul class="submenu-1 admin-menu">
+<li class="contain-submenu"><a routerLink="/search-claim-history"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }">Claim Search</a>
+  <li class="contain-submenu">
+    <a routerLink="/claim-vendor-profile"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }">
+    Claims Vendor Search
+ </a>
+    <li class="contain-submenu"><a>Invoice Search</a>
+</li>
+</ul>
+</li>
+
+<!-- Claim Data Import menu -->
+<!-- <li class="sidenav-nav-item">
+  <ng-template #popTemplate7>
+  <p class="mb-0">
+    Claim Data Import
+  </p>
+  </ng-template>
+  <a
+            containerClass="customClassTooltip"
+            [popover]="popTemplate7"
+            triggers="mouseenter:mouseleave"
+              class="sidenav-nav-link"
+  >
+  <i class="fas fa-file-import sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+  >Claim Data Import</span
+  >
+  </a>
+  </li>  -->
+  <li class="sidenav-nav-item">
+    <ng-template #popBulkUploadTemplate>
+    <p class="mb-0">
+      Claim Data Import
+    </p>
+    </ng-template>
+    <a
+              containerClass="customClassTooltip"
+              [popover]="popBulkUploadTemplate"
+              triggers="mouseenter:mouseleave"
+                class="sidenav-nav-link"
+                routerLink="/bulk-upload"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+    >
+    <i class="fas fa-upload sidenav-link-icon"></i>
+    <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+    >Bulk Upload</span
+    >
+    </a>
+    </li> 
+
+<!-- Help menu -->
+<li class="contain-submenu sidenav-nav-item first-menu" >   
+   
+  <a href="#" class="sidenav-nav-link">
+<i class="fa-solid fa-circle-info sidenav-link-icon"></i>
+<span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Help</span></a>
+
+<ul class="submenu-1 admin-menu">
+  <li class="contain-submenu"><a>Version</a></li>
+<li class="contain-submenu"><a>Research Procedures</a></li>
+</ul>
+</li>
+  
+
+   
+          <!-- <li class="sidenav-nav-item">
+  <ng-template #popTemplate3>
+  <p class="mb-0">
+                Reports
+  </p>
+  </ng-template>
+  <a
+            containerClass="customClassTooltip"
+            [popover]="popTemplate3"
+            triggers="mouseenter:mouseleave"
+              class="sidenav-nav-link"
+              routerLink="/reports"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+  >
+  <i class="far fa-clipboard sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+  >Reports</span
+  >
+  </a>
+  </li> -->
+   
+          <li class="sidenav-nav-item" style="display: none;">
+  <ng-template #popTemplate5>
+  <p class="mb-0">
+                Claim details 
+  </p>
+  </ng-template>
+  <a
+            containerClass="customClassTooltip"
+            [popover]="popTemplate5"
+            triggers="mouseenter:mouseleave"
+              class="sidenav-nav-link"
+              routerLink="/claim-detail"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+  >
+  <i class="fas fa-briefcase sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+  >Claim details</span
+  >
+  </a>
+  </li>
+   
+          
+   
+          <li class="contain-submenu sidenav-nav-item first-menu d-none" >  
+  <a href="#" class="sidenav-nav-link">
+  <i class="fa-solid fa-users-gear sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+  >Admin</span
+  >
+  </a>
+  <ul class="submenu-1">
+  <li>
+  <a routerLink="/admin/users"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }">
+                Users
+  </a>
+  </li>
+  <li tooltip="Roles">
+  <a routerLink="/admin/roles"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" >
+                   Roles
+  </a>
+  </li>
+  <li>
+  <a tooltip="Permissions" routerLink="/admin/permissions"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }">
+                 Permissions
+  </a>
+  </li>
+  <li>
+  <a  tooltip="PermissionsSet" routerLink="/admin/permissions/createpermissionset"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">            
+              Permissions set
+  </a>
+  </li>
+  </ul>
+  </li>
+   
+   
+        </ul>
+  </nav>
+   
+    </div>
+  <!-- <ul class="sidenav-nav setting-btn">
+  <li class="sidenav-nav-item">
+  <a class="sidenav-nav-link" routerLink="/settings" routerLinkActive="active"
+                      [routerLinkActiveOptions]="{exact:true}">
+  <i class="fas fa-cog sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Settings</span>
+  </a>
+  </li>
+  </ul> -->
+  <!-- <ul class="sidenav-nav setting-btn">
+  <li class="sidenav-nav-item">
+  <a class="sidenav-nav-link" routerLink="/roles-permissions" routerLinkActive="active"
+                      [routerLinkActiveOptions]="{exact:true}">
+  <i class="fas fa-cog sidenav-link-icon"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Roles Permissions</span>
+  </a>
+  </li>
+  </ul> -->
+  <div class="bottom-section-sidenav">
+  <div class="row">
+  <div class="col-12">
+  <div class="px-3">
+  <hr class="my-2" />
+  </div>
+  </div>
+  </div>
+  <ul class="sidenav-nav logout-btn">
+  <li class="sidenav-nav-item">
+  <a class="sidenav-nav-link">
+  <i class="sidenav-link-icon fas fa-power-off"></i>
+  <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed"
+  >Logout</span
+  >
+  </a>
+  </li>
+  </ul>
+  </div>
+  </div>

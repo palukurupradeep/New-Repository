@@ -1,0 +1,217 @@
+# # Claim Deployment Pipeline
+# # This workflow handles the CI/CD process for the claim services
+
+# name: Claim Deployment Pipeline
+
+# # Trigger the workflow on push to main, develop, or pull requests to main, develop
+# on:
+#   push:
+#     branches:
+#       - Demo_Deployment_Branch
+#   pull_request:
+#     branches: [main]
+
+# # Environment variables
+# env:
+#   NAMESPACE: dev
+#   HELM_CHART_PATH: ./claim-services
+
+# jobs:
+#   # Linting job
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Run linters
+#       run: |
+#         # Add specific linting commands for your project
+#         echo "Running linters..."
+#         # Example: npm run lint
+
+#   # Testing job
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Set up JDK 17
+#       uses: actions/setup-java@v3
+#       with:
+#         distribution: 'temurin'
+#         java-version: '17'
+#     # TODO: Uncomment and configure test step
+#     # - name: Run tests
+#     #   run: ./gradlew test
+
+#   # Build job
+#   build:
+#     needs: [lint]
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         include:
+#           - name: claim-initiation-service
+#           - name: claim-integration-service
+#           - name: claim-security-service
+#           - name: claim-ui
+#           - name: claim-notification-service
+#           - name: claim-batch-service
+#     steps:
+#     - uses: actions/checkout@v3
+    
+#     - name: Set up Docker Buildx
+#       uses: docker/setup-buildx-action@v2
+
+#     - name: Login to JFrog
+#       uses: docker/login-action@v2
+#       with:
+#         registry: ${{ vars.JF_HOST }}
+#         username: ${{ secrets.JF_USER }}
+#         password: ${{ secrets.JF_PASSWORD }}
+    
+#     - name: Build and push Docker image
+#       uses: docker/build-push-action@v4
+#       with:
+#         context: ${{ matrix.name }}
+#         file: ${{ matrix.name }}/Dockerfile
+#         push: true
+#         tags: |
+#           ${{ vars.JF_HOST }}/docker-local/${{ matrix.name }}:${{ github.sha }}
+#           ${{ vars.JF_HOST }}/docker-local/${{ matrix.name }}:${{ github.ref_name }}
+#         cache-from: type=registry,ref=${{ vars.JF_HOST }}/docker-local/${{ matrix.name }}:buildcache
+#         cache-to: type=registry,ref=${{ vars.JF_HOST }}/docker-local/${{ matrix.name }}:buildcache,mode=max
+
+#   # Security scan job
+#   # security-scan:
+#   #   needs: build
+#   #   runs-on: ubuntu-latest
+#   #   steps:
+#   #   - name: Run Trivy vulnerability scanner
+#   #     uses: aquasecurity/trivy-action@master
+#   #     with:
+#   #       image-ref: '${{ vars.JF_HOST }}/docker-local/${{ matrix.name }}:${{ github.sha }}'
+#   #       format: 'table'
+#   #       exit-code: '1'
+#   #       ignore-unfixed: true
+#   #       vuln-type: 'os,library'
+#   #       severity: 'CRITICAL,HIGH'
+
+#   # Deployment job
+#   deploy:
+#     needs: [build]
+#     runs-on: [self-hosted, linux]
+#     environment: 
+#       name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+#     steps:
+#     - uses: actions/checkout@v3
+
+#     - name: Set up kubectl
+#       uses: azure/setup-kubectl@v3
+#       with:
+#         version: 'v1.25.0'
+    
+#     - uses: azure/use-kubelogin@v1
+#       with:
+#         kubelogin-version: 'v0.0.24' 
+
+#     - name: Get AKS Credentials
+#       run: |  
+#         az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+#         az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#         az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+#         kubelogin convert-kubeconfig -l azurecli
+
+#     - name: Create namespace if not exists
+#       run: |
+#         if ! kubectl get namespace ${{ env.NAMESPACE }} &> /dev/null; then
+#           echo "Namespace ${{ env.NAMESPACE }} does not exist. Creating it..."
+#           kubectl create namespace ${{ env.NAMESPACE }}
+#         else
+#           echo "Namespace ${{ env.NAMESPACE }} already exists."
+#         fi
+
+#     - name: Verify JFrog secret
+#       run: |
+#         if kubectl get secret jfrog-registry-secret -n ${{ env.NAMESPACE }} &> /dev/null; then
+#           echo "Secret 'jfrog-registry-secret' exists in namespace ${{ env.NAMESPACE }}"
+#         else
+#           echo "Creating secret 'jfrog-registry-secret' in namespace ${{ env.NAMESPACE }}"
+#           kubectl create secret docker-registry jfrog-registry-secret \
+#           --docker-server=${{ vars.JF_HOST }} \
+#           --docker-username=${{ secrets.JF_USER }} \
+#           --docker-password=${{ secrets.JF_PASSWORD }} \
+#           --namespace=${{ env.NAMESPACE }} \
+#           --dry-run=client -o yaml | kubectl apply -f -
+#         fi
+
+#     - name: Install Helm
+#       uses: azure/setup-helm@v3
+#       with:
+#         version: v3.8.1
+
+#     - name: Debug Helm chart
+#       run: |
+#         echo "Helm chart contents:"
+#         ls -R ${{ env.HELM_CHART_PATH }}
+#         echo "values.yaml content:"
+#         cat ${{ env.HELM_CHART_PATH }}/values.yaml
+#         echo "ingress.yaml content:"
+#         cat ${{ env.HELM_CHART_PATH }}/templates/ingress.yaml
+
+#     - name: Validate Helm chart
+#       run: |
+#         helm lint ${{ env.HELM_CHART_PATH }}
+#         helm template claim-services ${{ env.HELM_CHART_PATH }}
+
+#     - name: Deploy services using Helm
+#       run: |
+#        helm upgrade --install claim-services ./claim-services \
+#           --namespace dev \
+#           --set global.imagePullSecrets[0].name=jfrog-registry-secret \
+#           --set global.environment=staging \
+#           --set ingress.enabled=true \
+#           --set ingress.host=fs-claims-dev.shawinc.com \
+#           --set-string services.claim-batch-service.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --set-string services.claim-initiation-service.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --set-string services.claim-integration-service.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --set-string services.claim-notification-service.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --set-string services.claim-security-service.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --set-string services.claim-ui.image.tag=94801a6c1182ee2c9ec3c07f4a619b11b342f6b4 \
+#           --force \
+#           --atomic \
+#           --cleanup-on-fail \
+#           --debug \
+#           --wait \
+#           --timeout 10m
+
+#         echo "Helm release status:"
+#         helm status claim-services -n ${{ env.NAMESPACE }}
+
+#     - name: Verify deployment
+#       run: |
+#         kubectl get all -n ${{ env.NAMESPACE }} -l app.kubernetes.io/instance=claim-services
+
+#   # Post-deployment job
+#   post-deploy:
+#     needs: deploy
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Run integration tests
+#       run: |
+#         # Add your integration test commands here
+#         echo "Running integration tests..."
+
+#     - name: Monitor deployment
+#       run: |
+#         # Add monitoring and alerting setup here
+#         echo "Setting up monitoring and alerting..."
+
+#     # TODO: Implement team notification
+#     # - name: Notify team
+#     #   if: always()
+#     #   uses: 8398a7/action-slack@v3
+#     #   with:
+#     #     status: ${{ job.status }}
+#     #     text: Deployment to production completed with status ${{ job.status }}
+#     #   env:
+#     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#     #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

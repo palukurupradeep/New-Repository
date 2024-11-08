@@ -1,0 +1,30 @@
+import org.example.model.CustomerRequest;
+import org.example.model.ProductCategory;
+import org.example.model.CustomerCategory;
+global org.example.model.CustomerType customerType;
+
+dialect "mvel"
+
+rule "Normal Customer with carpet size range 100-200"
+    when
+        $cr : CustomerRequest(cusType == CustomerCategory.NORMAL.getValue()
+            && prodType == ProductCategory.CARPET.getValue()
+                && (size > carpetStartRange && size < carpetEndRange)
+                    && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 30)
+    then
+        System.out.println("Normal Customer with carpet size range "+$cr.getCarpetStartRange()+"-"+$cr.getCarpetEndRange());
+        customerType.setProductCategory(ProductCategory.CARPET);
+        customerType.setCustomerType(CustomerCategory.NORMAL);
+        customerType.setDiscount($cr.getDiscount());
+end
+
+rule "Check Customer Type and Product Type and invoice date for Premium Customer"
+    when
+        CustomerRequest(cusType == CustomerCategory.PREMIUM.getValue()
+            && prodType == ProductCategory.HARD_SURFACE.getValue()
+                && ((todaysDate.getTime() - invoiceDate.getTime()) / 1000 / 60 / 60 / 24) < 45)
+    then
+        customerType.setProductCategory(ProductCategory.HARD_SURFACE);
+        customerType.setCustomerType(CustomerCategory.PREMIUM);
+        customerType.setDiscount(20);
+end

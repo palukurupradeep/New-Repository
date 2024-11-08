@@ -1,0 +1,467 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header></app-header>
+  <div class="main pb-4">
+    <div class="container-fluid p-0">
+
+      <div class="row mb-3">
+        <div class="col-lg-12">
+          <div class="page-head">
+            <div *ngIf="backBtn" class="d-flex align-items-center">
+              <i class="fas fa-arrow-left arrow-left-style" (click)="goBack()"></i>
+               <h3 *ngIf="editAndView" class="modal-title py-0" id="editModelLabel">
+                 Permissions Associated to <span>{{ permissionDescriptionName }}</span>
+               </h3>
+             </div>
+ 
+             <h1 *ngIf="!editAndView">Permissions Set</h1>
+          </div>         
+        </div>
+
+        
+      </div>
+
+
+      <div class="card claim-info p-4">
+        <div class="row">
+       
+          <div class="row mt-0 pe-0" >
+            <div class="col-md-12 pe-0" >
+              <div *ngIf="loading; else content">
+                <div class="py-3 text-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+
+              <ng-template #content>
+                <div *ngIf="currentView === 'table'" class="table-responsive">
+                  <table class="table table-striped table-hover table-sorting">
+                    <thead>
+                      <tr class="bg-light th-ws-nowrap">
+                        <th colspan="3" class="text-center">Actions</th>
+                        <th>Permissions</th>
+                        <th>Permission Set</th>
+                      </tr>
+                      <tr>
+                        <th colspan="3"></th>
+                        <th>
+                          <input
+                            type="text"
+                            [(ngModel)]="searchText.permissionDescription"
+                            (input)="onSearch()"
+                            class="search-input"
+                          />
+                        </th>
+                        <th>
+                          <input
+                            type="text"
+                            [(ngModel)]="searchText.objectDescription"
+                            (input)="onSearch()"
+                            class="search-input"
+                          />
+                        </th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Display "No data available" if there are no matching results -->
+                      <tr *ngIf="permissions.length === 0">
+                        <td colspan="3" class="text-center">
+                          No data available
+                        </td>
+                      </tr>
+                      <tr *ngFor="let permission of permissions">
+                        <td colspan="3" class="text-center">
+                          <a
+                            class="text-primary model-click"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editModel"
+                          >
+                            <i
+                              class="fa-solid fa-pencil"
+                              (click)="
+                                editPermissions(
+                                  permission.applicationObjects,
+                                  permission
+                                )
+                              "
+                            ></i>
+                          </a>&nbsp;
+                          <a  class="text-danger" (click)="onDeletePermission(permission)"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+                        <td>{{ permission.permissionDescription }}</td>
+
+                        <td>
+
+                          <ng-container
+                            *ngFor="
+                              let applicationObject of getPermissionApplicationObject(
+                                permission.permissionId
+                              )
+                            "
+                          >
+                            <mat-chip
+                              [ngStyle]="{
+                                'background-color': '#5d87ff',
+                                color: 'white',
+                                'margin-bottom': '5px'
+                              }"
+                            >
+                              {{ applicationObject.objectDescription }}
+                            </mat-chip>
+                          </ng-container>
+
+                          <ng-container
+                            *ngIf="
+                              permissions &&
+                              permissions.length > 0 &&
+                              permissions[0].applicationObjects.length > 4
+                            "
+                          >
+                            <span
+                              class="btn-view mb-new"
+                              (click)="
+                                viewMore(
+                                  permission.applicationObjects,
+                                  permission
+                                )
+                              "
+                              >View More</span
+                            >
+                          </ng-container>
+                        </td>
+                      </tr>
+
+                      <!-- Add more rows as needed -->
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          <div *ngIf="currentView === 'table'" class="row">
+            <div class="col-sm-12 col-md-6 text-end text-md-start">
+              <div
+                class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+              >
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a
+                      class="page-link"
+                      (click)="onPreviousPageClick()"
+                      aria-label="Previous"
+                    >
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getPageNumbers()">
+                    <a
+                      class="page-link"
+                      (click)="onPageNumberClick(page)"
+                      [class.active]="page === allPermissionsCurrentPage"
+                      >{{ page }}</a
+                    >
+                  </li>
+                  <li class="page-item">
+                    <a
+                      class="page-link"
+                      (click)="onNextPageClick()"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mt-2 text-end">
+              <div class="dataTables_length d-sm-inline-block table-page-view">
+                <div class="d-flex align-items-center">
+                  <label class="per-page-style">Per Page</label>
+              
+                  <select
+                    class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                    id="perPageSelect"
+                    [(ngModel)]="itemsPerPage"
+                    (change)="onItemsPerPageChange()">
+                    <option *ngFor="let option of perPageOptions" [value]="option">
+                      {{ option }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="currentView === 'editModel'" class="table-responsive">
+            <ng-container *ngIf="modalPermissions && modalPermissions.length > 0">
+              <div *ngFor="let permission of modalPermissions" class="mb-3">
+                <div class="name-of-top">
+                  <label class="mdc-label">
+                    <div>
+                      <mat-checkbox
+                        [(ngModel)]="permission.objectSelected"
+                        [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="onObjectSelected(permission)"
+                      ></mat-checkbox>
+                      Application Object: {{ permission.objectDescription }}
+                    </div>
+                  </label>
+                </div>
+            
+                <!-- Functions -->
+                <ng-container *ngIf="permission.applicationFunctions && permission.applicationFunctions.length > 0">
+
+                  <span class="fs-new1 d-flex align-items-center" (click)="permission.functionsExpanded = !permission.functionsExpanded">
+                    Functions:
+<!--                     <span [ngClass]="{'toggle-icon': true, 'expanded': permission.functionsExpanded, 'collapsed': !permission.functionsExpanded}">
+                      {{ permission.functionsExpanded ? "expand_more" : "keyboard_arrow_right"  }}
+                    </span> -->
+                    <mat-icon [ngClass]="{'toggle-icon': true, 'expanded': permission.functionsExpanded, 'collapsed': !permission.functionsExpanded}">
+                      {{ permission.functionsExpanded ? "expand_more" : "keyboard_arrow_right"  }}</mat-icon>
+                    
+                  </span>
+                  <ul *ngIf="permission.functionsExpanded" class="margin-change-bottom">
+                    <div *ngFor="let func of permission.applicationFunctions">
+                      <!-- Checkbox for Functions -->
+                      <div class="form-check p-0 new-margin1 d-flex align-items-center">
+                        <mat-checkbox 
+                          [(ngModel)]="func.selected"
+                          (ngModelChange)="onFunctionSelected(permission, func)"
+                        ></mat-checkbox>
+                        <label class="form-check-label mdc-label" for="{{ func.functionDescription }}">
+                          Function: {{ func.functionDescription }}
+                        </label>
+                      </div>
+                    </div>
+                  </ul>
+                </ng-container>
+                <br>
+                <!-- Actions -->
+                <ng-container *ngIf="permission.applicationActions && permission.applicationActions.length > 0">
+
+                  <span class="fs-new1 margin-change d-flex align-items-center" (click)="permission.actionsExpanded = !permission.actionsExpanded">
+                    Actions:
+                  <!--   <span [ngClass]="{'toggle-icon': true, 'expanded': permission.actionsExpanded, 'collapsed': !permission.actionsExpanded}">
+                      {{ permission.actionsExpanded ? "expand_more" : "keyboard_arrow_right"  }}
+                    </span> -->
+                    <mat-icon [ngClass]="{'toggle-icon': true, 'expanded': permission.actionsExpanded, 'collapsed': !permission.actionsExpanded}">
+                      {{ permission.actionsExpanded ? "expand_more" : "keyboard_arrow_right"  }}</mat-icon>
+                    
+                  </span>
+                  <ul *ngIf="permission.actionsExpanded">
+                    <div *ngFor="let action of permission.applicationActions">
+                      <!-- Checkbox for Actions -->
+                      <div class="form-check p-0 new-margin1 d-flex align-items-center">
+                        <mat-checkbox 
+                          [(ngModel)]="action.selected"
+                          (ngModelChange)="onActionSelected(permission, action)"
+                        ></mat-checkbox>
+                        <label class="form-check-label mdc-label" for="{{ action.actionDescription }}">
+                          Action: {{ action.actionDescription }}
+                        </label>
+                      </div>
+                    </div>
+                  </ul>
+                </ng-container>
+              </div>
+            </ng-container><br>
+            
+
+            <div class="row new-border-style">
+              <div class="col-sm-12 col-md-6 text-end text-md-start">
+                <div
+                  class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+                >
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        (click)="onPreviousPageClick()"
+                        aria-label="Previous"
+                      >
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of getPageNumbers()">
+                      <a
+                        class="page-link"
+                        (click)="onPageNumberClick(page)"
+                        [class.active]="page === allPermissionsCurrentPage"
+                        >{{ page }}</a
+                      >
+                    </li>
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        (click)="onNextPageClick()"
+                        aria-label="Next"
+                      >
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-sm-12 col-md-6 mt-2 text-end">
+                <div class="dataTables_length d-sm-inline-block table-page-view">
+                  <div class="d-flex align-items-center">
+                    <label class="per-page-style">Per Page</label>
+                
+                    <select
+                      class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                      id="perPageSelect"
+                      [(ngModel)]="itemsPerPage"
+                      (change)="onItemsPerPageChange()"
+                    >
+                      <option *ngFor="let option of perPageOptions" [value]="option">
+                        {{ option }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex justify-content-end gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="confirmAction()"
+                >
+                  Confirm
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="switchToTable()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="currentView === 'viewModel'" class="table-responsive">
+            <ng-container
+              *ngIf="modalPermissions && modalPermissions.length > 0"
+            >
+              <div *ngFor="let permission of modalPermissions">
+
+                <h4 class="fw-semibold">Application Object: {{ permission.objectDescription }}</h4>
+
+
+                <!-- Functions -->
+                <ng-container
+                  *ngIf="
+                    permission.applicationFunctions &&
+                    permission.applicationFunctions.length > 0
+                  "
+                >
+
+                  <h6>Functions:</h6>
+
+                  <ul>
+                    <li *ngFor="let func of permission.applicationFunctions">
+                      {{ functionLabel }}: {{ func.functionDescription }}
+                    </li>
+                  </ul>
+                </ng-container>
+
+                <!-- Actions -->
+                <ng-container
+                  *ngIf="
+                    permission.applicationActions &&
+                    permission.applicationActions.length > 0
+                  "
+                >
+
+                  <h6>Actions:</h6>
+
+                  <ul>
+                    <li *ngFor="let action of permission.applicationActions">
+                      {{ actionLabel }}: {{ action.actionDescription }}
+                    </li>
+                  </ul>
+                </ng-container>
+              </div>
+            </ng-container>
+
+            <div class="row mt-2">
+              <div class="col-12 d-flex justify-content-end gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="switchToTable()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-footer></app-footer>
+    </div>
+
+    
+   
+  </div>
+  <div
+  class="modal modal-bg"
+  id="deleteModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDeletePermissionModel()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <p>Are you sure to delete the permission?</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="confirmDeletePermissionModel()"
+            >
+              Confirm
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="cancelDeletePermissionModel()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

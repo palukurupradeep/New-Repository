@@ -1,0 +1,376 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mt-2 mb-2">
+                <h4>Claims Vendor Search</h4>
+                <div class="col-12 mt-2 mb-3">
+                    <div class="row">
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-3 col-form-label py-0 ">Claims Vendor Number</label>
+                                  <div  class="col-sm-9 row">
+                                      <div class="form-group mb-2 position-relative">
+                                          <div  class="col-sm-12 text-uppercase">
+                                            <!-- <i  class="fa fa-search disabled"></i> -->
+                                             <input type="text" class="form-control">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Name</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                     <input type="text" class="form-control"> 
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Trade/DBA Name</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                     <input type="text" class="form-control"> 
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-3 col-form-label py-0 ">Phone Number</label>
+                          <div  class="col-9 ">
+                              <div class="form-group row mb-2">
+                                  <div class="col-2">
+                                      <div class="form-input mb-lg-0 mb-2">
+                                        <select
+                                          class="form-select form-control"
+                                          aria-label="Default select example"
+                                          formControlName="phoneHome"
+                                          id="phone-business">
+                                          <option>+1</option>
+                                        </select>
+                                       </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="form-input">                       
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="phone-business"
+                                        formControlName="home"
+                                        maxlength="12"
+                                        minlength="10"
+                                      />
+                                      
+                                      </div>
+                                    </div>
+                                    <div class="col-1 w-auto">
+                                      <div class="form-input">
+                                        <p class="mb-0 mt-2">Ext.</p>
+                                      </div>
+                                    </div>
+                                    <div class="col-3">
+                                      <div class="form-input">
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          id="phone-home"
+                                          maxlength="8"
+                                          formControlName="extHome"
+                                        />
+                                      </div>
+                                    </div>                                    
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Contact</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                     <input type="text" class="form-control"> 
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-3 col-form-label py-0 ">Email <span class="text-danger">*</span></label>
+                          <div  class="col-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                    </div>
+                    <hr class="mt-2">
+                    <div class="row">
+                          <label for="" class="col col-form-label py-3 fw-semibold top-label">Physical Address</label>
+                          <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-3 col-form-label py-0 ">Country <span class="text-danger">*</span></label>
+                                  <div  class="col-sm-9 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-12 text-uppercase">
+                                            <mat-form-field appearance="fill">
+                                                <mat-select>
+                                                  <mat-option >
+                                                   Option 1
+                                                  </mat-option>
+                                                  <mat-option >
+                                                    Option 2
+                                                   </mat-option>
+                                                </mat-select>
+                                              </mat-form-field>
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group row mb-2">
+                                  <label for="" class="col-sm-3 col-form-label py-0 ">Address</label>
+                                  <div  class="col-sm-9 row">
+                                      <div class="form-group mb-2">
+                                          <div  class="col-sm-12 text-uppercase">
+                                            <input type="text" class="form-control" placeholder="Address Line1"><br>
+                                            <input type="text" class="form-control" placeholder="Address Line2"><br>
+                                            <input type="text" class="form-control" placeholder="Address Line3">
+                                            </div>                                       
+                                        </div>
+                                    </div>                                       
+                                </div>
+                              </div>
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">City <span class="text-danger">*</span></label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">State <span class="text-danger">*</span></label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <mat-form-field appearance="fill">
+                                        <mat-select>
+                                          <mat-option >
+                                           Option 1
+                                          </mat-option>
+                                          <mat-option >
+                                            Option 2
+                                           </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Postal Code <span class="text-danger">*</span></label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">County</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Certifying Agency</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <mat-form-field appearance="fill">
+                                        <mat-select>
+                                          <mat-option >
+                                           Option 1
+                                          </mat-option>
+                                          <mat-option >
+                                            Option 2
+                                           </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Certificate Nbr</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Certificate Expiration Date</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                <div  class="col-sm-12 text-uppercase position-relative">
+                                    <input type="text" class="form-control">
+                                    <span  class="datepicker"><i  class="fa-regular fa-calendar-days"></i></span>                                     
+                                </div>                                      
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">Service Charge</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <mat-form-field appearance="fill">
+                                        <mat-select>
+                                          <mat-option >
+                                           Option 1
+                                          </mat-option>
+                                          <mat-option >
+                                            Option 2
+                                           </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">From Price</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control" placeholder="0.0">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">To Price</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <input type="text" class="form-control" placeholder="0.0">
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-3 col-form-label py-0 ">UOM</label>
+                          <div  class="col-sm-9 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-12 text-uppercase">
+                                    <mat-form-field appearance="fill">
+                                        <mat-select>
+                                          <mat-option >
+                                           Option 1
+                                          </mat-option>
+                                          <mat-option >
+                                            Option 2
+                                           </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-2 mb-3">
+                    <p class="fs-15 fw-semibold mb-3">Services</p>
+                    <div class="row">
+                        <div class="col-3">
+                            <p class="fw-semibold mb-3">Service Type</p>  
+                            <div class="form-group row mb-3">
+                              <div class="d-flex">
+                                  <label for="" class="col-sm-6 col-form-label">Residential</label>
+                                  <div  class="col-sm-2">
+                                      <div class="form-check form-inline">
+                                          <input type="checkbox" 
+                                           class="form-check-input mt-2">
+                                      </div>
+                                  </div> 
+                              </div>
+                                                              
+                          </div>
+                            <p class="text-danger fs-12 d-none">*Please choose atleast one type</p>
+                        </div>
+                        <div class="col-1 border-left-1">
+                        </div>
+                        <div class="col-8">
+                            <p class="fw-semibold mb-3">Services Offered</p>  
+                            <div class="form-group row mb-3">
+                              <div class="d-flex">
+                                  <label for="" class="col-sm-3 col-form-label">Inspector</label>
+                                  <div  class="col-sm-1">
+                                      <div class="form-check form-inline">
+                                          <input type="checkbox"   
+                                           class="form-check-input mt-2">
+                                      </div>
+                                  </div> 
+                              </div>
+                           </div>  
+                            <p class="text-danger fs-12 d-none">*Please choose atleast one service</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-end mb-3">
+                    <button type="button" class="btn-primary mx-2" >Search</button>
+                    <button type="button" class="btn-secondary" >Close</button>
+                  </div>
+            </div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>

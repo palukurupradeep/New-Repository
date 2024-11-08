@@ -1,0 +1,1396 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row mb-3 align-items-center">
+                <div class="col-12 col-lg-6">
+                    <h1 class="mb-0">Claim Details</h1>
+                </div>
+      </div>
+      <div class="row mb-1 align-items-center">
+        <div class="col-12 col-lg-6 mt-4 mt-lg-0">
+          <div class="status-active-in--section float-start">
+            <a class="inactive new-svg">
+              <img src="../../../assets/images/avatar_10288799.svg" alt="" />
+            </a>
+          <!--   <a class="inactive new-svg">
+              <img src="../../../assets/images/search_4687318.svg" alt="" />
+            </a> -->
+            <a class="inactive new-svg">
+              <img src="../../../assets/images/upload_new.svg" alt="" />
+            </a>
+          <!--   <a  class="inactive new-svg">
+              <img src="../../../assets/images/folder_8842997.svg" alt="" />
+            </a> -->
+          </div>
+        </div>
+        <!-- <div *ngIf="mergedClaimNumbers && mergedClaimNumbers.length > 0" class="other-claims">
+          <div class="row">
+            <div class="form-group row mb-3">
+              <label for="" class="col-sm-4 col-form-label">Merged Claims</label>
+              <div class="col-sm-8">
+                
+                <mat-form-field>
+                <mat-select [(ngModel)]="selectedDropDownMerge">
+                  <mat-option *ngFor="let claim of mergedClaimNumbers" [value]="claim.claimNumber">{{ claim.claimNumber }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+                <button type="button" class="btn-view" (click)="navigateToClaimDetail()">
+                  <i class="fa fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+            
+            
+        
+           
+            <div class="row">
+              <div class="merged-claim" *ngIf="selectedDropDownMerge">
+                This Claim Merged into <a [href]="getClaimDetailUrl()" target="_blank" >{{ selectedDropDownMerge }}</a>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="col-12 col-lg-6 mt-4 mt-lg-0">
+          <div class="status-active-in--section float-lg-end float-start">
+            <ng-template #jobStopTemplate>
+              <p class="mb-0">
+                  JOB STOP
+              </p>
+            </ng-template>
+              <a containerClass="customClassTooltip" id="jobStop"
+              [popover]="jobStopTemplate"
+              triggers="mouseenter:mouseleave" [class]="jobStop?'active':'inactive'" (click)="jobStopClaim()">
+                  <img src="../../../assets/images/ic_hand.svg" alt="" />
+              </a>
+              <ng-template #watchListTemplate>
+                <p class="mb-0">
+                   WATCHLIST
+                </p>
+              </ng-template>
+  <a
+  containerClass="customClassTooltip"
+              [popover]="watchListTemplate"
+              triggers="mouseenter:mouseleave"
+    [class]="watchListToggle ? 'active' : 'inactive'"
+    (click)="watchListClaim()"
+  >
+    <img src="../../../assets/images/ic_view_status.svg" alt="" />
+  </a>
+  <ng-template #PriorityTemplate>
+    <p class="mb-0">
+        PRIORITY CLAIM
+    </p>
+  </ng-template>
+  <a
+  containerClass="customClassTooltip" id="priorityClaim"
+  [popover]="PriorityTemplate"
+  triggers="mouseenter:mouseleave"
+    [class]="priorityclaimtoggle ? 'active' : 'inactive'"
+   (click)="openPriorityNoteModal()"
+
+  >
+  <!-- (click)="priorityClaimToggle()" -->
+    <img src="../../../assets/images/ic_warning.svg" alt="" />
+  </a>
+  <ng-template #TaskTemplate>
+    <p class="mb-0">
+       TASKS
+    </p>
+  </ng-template>
+  <a
+  containerClass="customClassTooltip"
+  [popover]="TaskTemplate"
+  triggers="mouseenter:mouseleave"
+   href="#">
+    <img src="../../../assets/images/ic_todo_list.svg" alt="" />
+  </a>
+</div>
+</div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-8">
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-4 mt-20">
+              <div
+                class="card-box-10 py-20 px-20 d-flex flex-wrap align-items-center inactive-card"
+              >
+                <div>
+                  <h4>#{{ claimDetails.claimNumber }}</h4>
+                  <p class="text-black-color">
+                    Opened:
+                    {{ claimDetails.createdDateTime | date : "MM/dd/yyyy" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-4 mt-20">
+              <div
+                class="card-box-10 py-20 px-20 d-flex justify-content-start align-items-center inactive-card"
+              >
+                <!-- <div class="card-box-ic">
+                                    <span>
+                                        <img src="../../../assets/images/ic_dollar_white.svg" />
+                                    </span>
+                                </div> -->
+                <div>
+                  <!-- <h4>Amount</h4> -->
+                  <h4 class="text-black-color mb-4">
+                   USD {{ claimDetails.claimAmountUsd | number:'1.2-2'}}
+                  </h4>
+                  <!-- <p class="text-black-color" placement="top" containerClass="customClassTooltip"
+                  [popover]="{{ claimDetails.claimAmountForeign }}">
+                    {{ claimDetails.claimAmountUsd }}
+                  </p> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-4 col-lg-12 col-xl-4 mt-20">
+              <div
+                class="card-box-10 py-20 px-20 d-flex justify-content-start align-items-center inactive-card"
+              >
+                <!-- <div class="card-box-ic">
+                                    <span>
+                                        <img src="../../../assets/images/ic_status.svg" />
+                                    </span>
+                                </div> -->
+                <div>
+                  <h4>{{ claimStatusDescription }}</h4>
+                  <p class="text-black-color">
+                    {{ workStatusDescription }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-4 mt-20">
+              <div class="card-box-10 text-center py-2 px-20">
+                <ng-template #popTemplate1>
+                  <p class="mb-0">
+                    {{ userDetails.title ||  'NA' }}
+                  </p>
+                </ng-template>
+                <h5 containerClass="customClassTooltip"
+                [popover]="userDetails.title ? popTemplate1 : undefined"
+                triggers="mouseenter:mouseleave" class="text-primary-color">
+                {{ (userDetails.userId !== 0) ? ((userDetails.firstName !== undefined ? userDetails.firstName : 'NA') + " " + (userDetails.lastName !== undefined ? userDetails.lastName : '')) || 'NA' : 'NA' }}
+
+
+              </h5>
+
+                <!-- <ng-template #popTemplate1>
+                <p class="mb-0 text-white">
+                  4567
+                </p>
+              </ng-template>
+              <button type="button" class="btn btn-none border-0 p-0 text-end" containerClass="customClassTooltip"
+                [popover]="popTemplate1" triggers="mouseenter:mouseleave">
+                
+              </button> -->
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-8 mt-20">
+              <mat-form-field>
+              
+                <mat-select  [disabled]="claimsIsVoid"
+                 (selectionChange)="changeReasoncode($event)" [(ngModel)]="drpDwRreasonCode">
+                 <mat-option *ngFor="let claim of claimList" [value]="claim.claimReasonCode">
+                    {{ claim?.claimReasonCode + ' - ' + claim?.claimReasonDescription }}
+                  </mat-option>
+                 
+                 </mat-select> 
+                 <!-- <mat-select  [disabled]="claimsIsVoid"
+                 (selectionChange)="validateSelection($event)" [(ngModel)]="drpDwRreasonCode">
+                 <mat-option *ngFor="let claim of claimList" [value]="claim.claimReasonCode">
+                    {{ claim?.claimReasonCode + ' - ' + claim?.claimReasonDescription }}
+                  </mat-option>
+                  
+                </mat-select> -->
+              </mat-form-field>
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-4 mb-4 mb-lg-0 mt-20">
+              <div class="card-box-10 text-center py-2 px-20">
+                <ng-template #popTemplate2>
+                  <p class="mb-0">
+                    {{ managerDetails.title ||  'NA' }}
+                  </p>
+                </ng-template>
+                <button
+                  type="button"
+                  class="btn btn-none border-0 p-0 text-end"
+                  containerClass="customClassTooltip"
+                  
+                  [popover]="managerDetails.title ? popTemplate2 : undefined"
+                  triggers="mouseenter:mouseleave"
+                >
+                <h5 class="text-primary-color">
+                  {{ managerDetails?.firstName || 'NA' }} {{ managerDetails?.middleInitial || '' }} {{ managerDetails?.lastName || '' }}
+                </h5>
+                </button>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-8 mt-20">
+               <!-- <mat-form-field>
+              
+                <mat-select  [(value)]="companyValue" [disabled]="claimsIsVoid" 
+                (selectionChange)="updateReasonCodeAndSellingCom($event,'sellingcompanyCode')">
+                  <mat-option [value]="sellingCompanyvalue">{{ sellingCompanyvalue }}</mat-option> 
+                  <mat-option *ngFor="let company of sellingCompanyData" [value]="company.sellingCompanyCode">
+                    {{ company.sellingCompanyCode + ' - ' + company.sellingCompanyName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>  -->
+              <mat-form-field>
+              
+                <mat-select  [(value)]="companyValue" [disabled]="claimsIsVoid" 
+                (selectionChange)="updateReasonCodeAndSellingCom($event,'sellingcompanyCode')">
+                  <!-- <mat-option [value]="sellingCompanyvalue">{{ sellingCompanyvalue }}</mat-option> -->
+                  <mat-option *ngFor="let company of sellingCompanyData" [value]="company.sellingCompanyCode">
+                    {{ company.sellingCompanyCode + ' - ' + company.sellingCompanyName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            
+          </div>
+        </div>
+        <div class="col-12 col-xl-4 mt-20">
+          <app-claim-detail-activities [claimDetails]="claimCustomerDetails" 
+          (customEvent)="openBtnStatus($event)"  (voidEvent)="claimVoid($event)" 
+           (fetchClaimNotesData)="fetchClaimNotesData()" (mergedClaimNumbersArray)="mergedClaimNumbersArray($event)"></app-claim-detail-activities>
+        </div>
+            </div>
+            <div class="row mt-20">
+                <div class="col-12 col-xl-8">
+                    <div class="row h-100">
+                        <div class="col-12 col-lg-6 mt-0">
+                           
+                            <div class="claim-detail--search-section h-100">
+                                <div>
+                                    <app-claim-customer-details [claimDetails]="claimCustomerDetails"
+                                     [claimIsVoid]="claimsIsVoid" 
+                                     (customerDetailsData)="customerDetailsData($event)"
+                                     (updatingCustomerDetailsData)="updatingCustomerDetailsData($event)"  ></app-claim-customer-details>
+                                </div>
+                                 
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 mt-4 mt-lg-0">
+                            <div class="claim-contact--section">
+                                <div class="row h-100">
+                                    <div class="col-12">
+                                      <div *ngIf="contactHeaderData()">
+                                        <h4>
+                                            Claim Contact
+                                            <a (click)="openClaimContactModal()" class="claim-contact-link" [disabled]="authService.hasPermission('VIEWCLAIMCONTACT')">
+                                                <img src="../../../assets/images/ic_edit.svg" />
+                                            </a>
+                                        </h4> 
+                                        <p class="mb-0"  *ngIf="filteredClaimAddresses">
+                                          {{ filteredClaimAddresses.firstName.toUpperCase() + " " + filteredClaimAddresses.lastName.toUpperCase() }}<br />
+                                          <!-- <a [href]="'tel:' + filteredClaimAddresses.phoneNumber">
+                                            {{ filteredClaimAddresses.phoneNumber | phoneNumberFormatter }}
+                                          </a> <br /> -->
+                                          <a href="tel:(555) 444 - 1234"  class="hyper-highlight">{{ filteredClaimAddresses.phoneNumber }}</a><br>
+                                          
+                                            {{filteredClaimAddresses.emailAddress.toUpperCase() }}
+                                        </p>
+                                        <p class="mb-0" *ngIf="contactInfo">
+                                          No Records Found
+                                        </p>
+                                      </div>
+                                      <div class="border-bottom mt-20 mb-20"></div>
+                                      <div class="mt-4">
+                                          <h4>
+                                              End User
+                                              <a class="claim-contact-link">
+                                              <!-- <a [ngClass]="claimsIsVoid ? 'text-danger': 'claim-contact-link'"> -->
+                                                  <img src="../../../assets/images/ic_edit.svg" (click)="openEndUserDetails()" />
+                                                  <!-- <i class="fa-solid fa-pencil" (click)="openEndUserDetails()"></i> -->
+                                              </a>
+                                          </h4>
+                                          <p *ngIf= "endUserInfo" class="mb-0">
+                                              {{endUserInfo.endUserInformation.firstName.toUpperCase()}} 
+                                              {{endUserInfo.endUserInformation.middleInitial.toUpperCase()}}
+                                              {{endUserInfo.endUserInformation.lastName.toUpperCase()}} <br />
+                                              <!-- {{endUserInfo.endUserInformation.companyName}} <br /> -->
+                                              {{endUserInfo.endUserInformation.addressLine1.toUpperCase()}} <br/>
+                                              <ng-container *ngIf="endUserInfo.endUserInformation.addressLine2">
+                                                {{endUserInfo.endUserInformation.addressLine2}} <br />
+                                            </ng-container>
+                                            {{endUserInfo.endUserInformation.city.toUpperCase()}}
+                                            <!-- {{countryName()}} -->
+                                            {{stateName()}}
+                                            {{endUserInfo.endUserInformation.postalCode}} <br />
+                                            <ng-container *ngIf="endUserInfo.endUserInformation.businessPhoneNumber">
+                                              <a href="tel:(555) 444 - 1234"  class="hyper-highlight">
+                                                {{ getPrimaryPhoneNumber(endUserInfo.endUserInformation.businessPhoneNumber,endUserInfo.endUserInformation.businessPhoneDialCodeId) }}<br/>
+                                              </a>
+                                            </ng-container>
+                                            <ng-container *ngIf="endUserInfo.endUserInformation.homePhoneNumber">
+                                              <a href="tel:(555) 444 - 1234"  class="hyper-highlight">
+                                                {{ getPrimaryPhoneNumber(endUserInfo.endUserInformation.homePhoneNumber,endUserInfo.endUserInformation.homePhoneDialCodeId) }}<br/>
+                                              </a>
+                                            </ng-container>
+                                            <ng-container *ngIf="endUserInfo.endUserInformation.cellPhoneNumber">
+                                              <a href="tel:(555) 444 - 1234"  class="hyper-highlight">
+                                                {{ getPrimaryPhoneNumber(endUserInfo.endUserInformation.cellPhoneNumber,endUserInfo.endUserInformation.cellPhoneDialCodeId) }}<br/>
+                                              </a>
+                                            </ng-container>
+                                            
+                                      
+                                            <!-- <a href="tel:212-456-7890">{{endUserInfo.endUserInformation.homePhoneNumber}}</a><br/> -->
+                                          {{endUserInfo.endUserInformation.emailAddress.toUpperCase()}}
+                                          </p>
+                                          <!-- <p>{{claimDetails.lookup.lookupDescription}}</p> -->
+                                     
+                                      </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="w-100 mt-20 text-center mt-5">
+                                            <button class="btn btn-secondary" (click)="claimratedetailModal()">
+                                                Claim Rate Detail
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="d-flex gap-3 flex-wrap flex-lg-nowrap justify-content-start">
+                                <button class="btn btn-secondary" (click)="openAuditHistory()">Full Audit History</button>
+                                <button class="btn btn-secondary" (click)="openReceipts()">Receipts</button>
+                                <button class="btn btn-secondary" (click)="openInspections()">Inspections</button>
+                                <button class="btn btn-secondary" (click)="openTotalItemizedCost()">Total Itemized Cost</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-4 mt-0 mt-xl-70">
+                   <app-claim-task-view [claimDetails]="claimDetails"  [claimIsVoid]="claimsIsVoid"
+                    [fetchClaimNoteToDetails]="fetchNote"></app-claim-task-view>
+                </div>
+            </div>
+            <app-claim-detail-invoice [claimDetails]="claimDetails" 
+            (refreshClaimDetails)="refreshClaimDetails()" 
+            [totalSquareFeet]="getTotalSquareFeet()"
+             [claimedTotalSquareFeet]="getClaimedTotalSquareFeet()"
+             [claimIsVoid]="claimsIsVoid"
+             [customerdata]="customerdata"
+             [claimId]="claimId"></app-claim-detail-invoice>
+          </div>
+    <div class="modal modal-bg" id="claimratedetail">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addinvoiceLabel">Claim Rate Detail</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="closeModal('claimratedetail')"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <app-claim-rate-detail [custNum]="claimDetails"
+            [claimIsVoid]="claimsIsVoid"></app-claim-rate-detail>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      
+     
+      class="modal  modal-bg"
+      id="modalClaimContact"
+      tabindex="-1"
+      role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">Claim Contact</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="closeClaimContactModal()"></button>
+          </div>
+        
+          <form [formGroup]="claimContactForm">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-12 col-lg-6">
+                  <div class="mb-20">
+                    <label class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" 
+                    formControlName="firstName" 
+                    (input)="validation($event)"  />
+                    <div *ngIf="claimContactForm.get('firstName')?.hasError('required') && claimContactForm.get('firstName')?.touched">
+                      <small class="text-danger">First Name is required</small>
+                    </div>
+                    <!-- <div *ngIf="claimContactForm.get('firstName')?.hasError('minlength') && claimContactForm.get('firstName')?.touched">
+                      <small class="text-danger">Minimum length is 4 characters</small>
+                    </div>
+                    <div *ngIf="claimContactForm.get('firstName')?.hasError('maxlength') && claimContactForm.get('firstName')?.touched">
+                      <small class="text-danger">Maximum length is 20 characters</small>
+                    </div> -->
+                    <div *ngIf="claimContactForm.get('firstName')?.hasError('firstCharacterIsLetter') && claimContactForm.get('firstName')?.touched">
+                      <small class="text-danger">First character cannot be a number</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                <div class="mb-20">
+                  <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" formControlName="lastName" 
+                  (input)="validation($event)"/>
+                
+                  <!-- Validation messages for lastName -->
+                  <div *ngIf="claimContactForm.get('lastName')?.hasError('required') && claimContactForm.get('lastName')?.touched">
+                    <small class="text-danger">Last Name is required</small>
+                  </div>
+                  <!-- <div *ngIf="claimContactForm.get('lastName')?.hasError('maxlength') && claimContactForm.get('lastName')?.touched">
+                    <small class="text-danger">Maximum length is 20 characters</small>
+                  </div> -->
+                  <div *ngIf="claimContactForm.get('lastName')?.hasError('firstCharacterIsLetter') && claimContactForm.get('lastName')?.touched">
+                    <small class="text-danger">First character cannot be a number</small>
+                  </div>
+                </div>
+                </div>
+               <div class="col-12 col-lg-6">
+                  <div class="mb-20">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control"  formControlName="email"
+                    (input)="trimEmail($event)"  />
+                    
+                   
+                    <div *ngIf="claimContactForm.get('email')?.hasError('required') && claimContactForm.get('email')?.touched">
+                      <small class="text-danger">Email is required</small>
+                    </div>
+                    <div *ngIf="claimContactForm.get('email')?.hasError('pattern') && claimContactForm.get('email')?.touched">
+                      <small class="text-danger">Invalid email format</small>
+                    </div>
+                  </div>
+                </div> 
+                
+                <div class="col-12 col-lg-6">
+                  <div class="mb-20">
+                    <label class="form-label">Phone <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="phone"
+                     minlength="10" maxlength=10/>
+                    
+                 
+                    <div *ngIf="claimContactForm.get('phone')?.hasError('required') && claimContactForm.get('phone')?.touched">
+                      <small class="text-danger">Phone number is required</small>
+                    </div>
+                    <!-- <div *ngIf="claimContactForm.get('phone')?.hasError('pattern') && claimContactForm.get('phone')?.touched">
+                      <small class="text-danger">Invalid phone number format</small>
+                    </div> -->
+                    
+                  </div>
+                </div>
+                
+                <div class="clearfix"></div>
+              </div>
+            </div>
+            <div class="modal-footer mt-4">
+              <div class="row">
+                <div class="col-12 text-end">
+                  <button type="button" class="btn btn-secondary me-3" (click)="closeClaimContactModal()">Cancel</button>
+                  <button type="button" class="btn btn-primary" (click)="updateContact()"
+                   [disabled]="contactUpdateValidation()">Update</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="modal modal-bg fade" bsModal #endUserModal="bs-modal">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">End User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="endUserModal.hide()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >First Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter the first name"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Last Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter the last name"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Email <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="eg: your@mail.com"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Phone <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="eg: 212-456-7890"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Address Line 1 <span class="text-danger">*</span></label
+                  >
+                  <input type="text" class="form-control" placeholder="" />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label">Address Line 2 </label>
+                  <input type="text" class="form-control" placeholder="" />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >City <span class="text-danger">*</span></label
+                  >
+                  <input type="text" class="form-control" placeholder="" />
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >City <span class="text-danger">*</span></label
+                  >
+                  <select class="form-control form-select">
+                    <option>WI</option>
+                    <option>WI</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Country <span class="text-danger">*</span></label
+                  >
+                  <select class="form-control form-select">
+                    <option>United States (US)</option>
+                    <option>WI</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="mb-20">
+                  <label class="form-label"
+                    >Postal Code <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="123456"
+                  />
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+              <div class="col-12 text-end mt-3">
+                <button type="button" class="btn btn-secondary me-3">
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal modal-bg fade" bsModal #addInvoive="bs-modal">
+      <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">Add Invoice</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="addInvoive.hide()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-4 justify-content-end justify-content-lg-start">
+              <label
+                for="Store"
+                class="col-12 col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                >Doc Type/Number/Date</label
+              >
+              <div
+                class="col-12 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12"
+              >
+                <div class="row">
+                  <div
+                    class="col-12 col-xl-3 col-lg-3 col-md-12 col-sm-3 mb-4 mb-lg-0"
+                  >
+                    <select
+                      class="form-select form-control"
+                      aria-label="Default select example"
+                    >
+                      <option>Inv</option>
+                    </select>
+                  </div>
+                  <div
+                    class="col-12 col-xl-5 col-lg-5 col-md-12 col-sm-4 mb-4 mb-lg-0"
+                  >
+                    <div class="search w-100">
+                      <input type="text" class="form-control" />
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-12 col-xl-4 col-lg-4 col-md-12 col-sm-4 mb-0 mb-lg-0"
+                  >
+                    <div class="position-relative">
+                      <input
+                        type="text"
+                        class="form-control"
+                        readonly
+                        triggers="dbllclick:click"
+                      />
+                      <span class="datepicker">
+                        <i class="fa-regular fa-calendar-days"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 position-relative top-25 mt-3 mt-lg-0"
+              >
+                <button
+                  type="button"
+                  class="d-sm-inline-block btn btn-sm btn-primary w-100"
+                  (click)="retrieveInvoiceModal.show()"
+                >
+                  Retrieve Invoice
+                </button>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                for="Store"
+                class="col-12 col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                >Roll Number</label
+              >
+              <div
+                class="col-12 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12"
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Store"
+                  formControlName="rollNumber"
+                />
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+          </div>
+          <div class="modal-footer mt-4">
+            <div class="row">
+              <div class="col-12 text-end">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="addInvoive.hide()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-bg fade" bsModal #retrieveInvoiceModal="bs-modal">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addinvoiceLabel">Retrieve Invoice</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="retrieveInvoiceModal.hide()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12 mb-4">
+                <h5>
+                  004069 Invoice #7577923 - 06/11/2019 (Order #504762) [OPEN
+                  A/R]
+                </h5>
+                <div class="table-responsive table-summary">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-12"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-12"></label>
+                          </div>
+                        </th>
+                        <th scope="col" class="text-uppercase">Line</th>
+                        <th scope="col" class="text-uppercase">Roll</th>
+                        <th scope="col" class="text-uppercase">Style</th>
+                        <th scope="col" class="text-uppercase">Color</th>
+                        <th scope="col" class="text-uppercase">LOT</th>
+                        <th scope="col" class="text-uppercase">Type</th>
+                        <th scope="col" class="text-uppercase">Grade</th>
+                        <th scope="col" class="text-uppercase">Width</th>
+                        <th scope="col" class="text-uppercase">Length</th>
+                        <th scope="col" class="text-uppercase">QTY</th>
+                        <th scope="col" class="text-uppercase">UOM</th>
+                        <th scope="col" class="text-uppercase text-end">Price $</th>
+                        <th scope="col" class="text-uppercase text-end">Amount $</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-12"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-12"></label>
+                          </div>
+                        </td>
+                        <td>001</td>
+                        <td></td>
+                        <td>DR667</td>
+                        <td>07011</td>
+                        <td>1S05715254T000</td>
+                        <td>H</td>
+                        <td>A</td>
+                        <td class="text-end">0'00"</td>
+                        <td class="text-end">0'0"</td>
+                        <td class="text-end">1180.0</td>
+                        <td>SF</td>
+                        <td class="text-end">$124.00</td>
+                        <td class="text-end">$2,482.00</td>
+                      </tr>
+                      <tr>
+                        <td colspan="14" class="text-end">$2,482.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer mt-4">
+            <div class="row">
+              <div class="col-12 text-end">
+                <button
+                  type="button"
+                  class="btn btn-secondary me-3"
+                  (click)="retrieveInvoiceModal.hide()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="retrieveInvoiceModal.hide()"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-bg fade" bsModal #changeCustomerModal="bs-modal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">Change Customer Number</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="changeCustomerModal.hide()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-4 justify-content-end justify-content-lg-start">
+              <label
+                for="change"
+                class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-sm-12 col-form-label"
+                >Customer Number</label
+              >
+              <div
+                class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-12 col-sm-12"
+              >
+                <div class="changeCustomer">
+                  <i class="fa fa-search"></i>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="change"
+                    formControlName="changeCustomer"
+                  />
+                  <p class="mt-3">
+                    <strong> Dedering's Diamand Floor, </strong><br />
+                    DBA Carpet's Plus of America <br />
+                    2719 Calumet Avenue<br />
+                    Manatiowoc, QI54220<br />(920) 686-0600
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="modal-footer mt-4">
+            <div class="row">
+              <div class="col-12 text-end">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="changeCustomerModal.hide()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-bg fade" bsModal #addMoreLinesModal="bs-modal">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addmorelines">Add More Lines</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="addMoreLinesModal.hide()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h5>
+                  004069
+                  <span class="ps-4">Invoice: #7577923 - 06/11/2019</span>
+                  <span class="ps-4">Order: #732231</span>
+                </h5>
+                <div class="table-responsive table-summary">
+                  <table class="table table-striped table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-12"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-12"></label>
+                          </div>
+                        </th>
+                        <th scope="col" class="text-uppercase">Line</th>
+                        <th scope="col" class="text-uppercase">Roll</th>
+                        <th scope="col" class="text-uppercase">Style</th>
+                        <th scope="col" class="text-uppercase">Color</th>
+                        <th scope="col" class="text-uppercase">DyeLOT</th>
+                        <th scope="col" class="text-uppercase">Type</th>
+                        <th scope="col" class="text-uppercase">Grade</th>
+                        <th scope="col" class="text-uppercase">Width</th>
+                        <th scope="col" class="text-uppercase">Length</th>
+                        <th scope="col" class="text-uppercase">QTY</th>
+                        <th scope="col" class="text-uppercase">UOM</th>
+                        <th scope="col" class="text-uppercase">Price $</th>
+                        <th scope="col" class="text-uppercase">Amount $</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-12"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-12"></label>
+                          </div>
+                        </td>
+                        <td>001</td>
+                        <td>
+                          <a href="#" class="text-primary-color">ZB79491</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">DR667</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">07011</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">Z36251#1</a>
+                        </td>
+                        <td>H</td>
+                        <td>A</td>
+                        <td class="text-end">0'00"</td>
+                        <td class="text-end">0'0"</td>
+                        <td class="text-end">1180.0</td>
+                        <td>SF</td>
+                        <td class="text-end">$124.00</td>
+                        <td class="text-end">$2,482.00</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+                        <td>002</td>
+                        <td>
+                          <a href="#" class="text-primary-color">ZB79491</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">DR667</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">07011</a>
+                        </td>
+                        <td>
+                          <a href="#" class="text-primary-color">Z36251#1</a>
+                        </td>
+                        <td>H</td>
+                        <td>A</td>
+                        <td>0'00"</td>
+                        <td>0'0"</td>
+                        <td>1180.0</td>
+                        <td>SF</td>
+                        <td class="text-end">$124.00</td>
+                        <td class="text-end">$2,482.00</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+
+                        <td
+                          colspan="12"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Tax
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+
+                        <td
+                          colspan="12"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Freight
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+                        <td>001</td>
+                        <td
+                          colspan="11"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Care SurCharge
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+                        <td>002</td>
+                        <td
+                          colspan="11"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Care SurCharge
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+                        <td>003</td>
+                        <td
+                          colspan="11"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Care SurCharge
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cd-check-item">
+                            <input
+                              id="styled-checkbox-121"
+                              type="checkbox"
+                              class="styled-checkbox"
+                            /><label for="styled-checkbox-121"></label>
+                          </div>
+                        </td>
+                        <td>004</td>
+                        <td
+                          colspan="11"
+                          class="text-primary-color text-end text-uppercase"
+                        >
+                          Care SurCharge
+                        </td>
+                        <td class="text-end">$813.18</td>
+                      </tr>
+
+                      <tr>
+                        <td
+                          colspan="14"
+                          class="text-end text-uppercase fs-18 fw-semibold"
+                        >
+                          $12,190.96
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer mt-4">
+            <div class="row">
+              <div class="col-12 text-end">
+                <button
+                  type="button"
+                  class="btn btn-secondary me-3"
+                  (click)="addMoreLinesModal.hide()"
+                >
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-end-user-claim-detail 
+  [endUserData]="endUserInfo?.endUserInformation"
+   [claimId]="claimId" (refreshClaimDetails)="refreshClaimDetails()"
+   [claimIsVoid]="claimsIsVoid"
+></app-end-user-claim-detail>
+
+<div class="modal modal-bg " id="audithistory">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title">Full Audit History</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('audithistory')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- <app-audit-history></app-audit-history> -->
+        
+        <div class="container">
+         
+          <div *ngFor="let entry of auditHistroyData" class="row mb-3 audit-history-main px-2 py-3">
+            <div class="top-section d-flex justify-content-between">
+           
+              <span class="badge-task">{{ entry.userName }}</span>
+              <div class="right-side">
+               
+                <span class="date-of-note">{{ entry.createdDate | date: 'MM/dd/yyyy' }}</span>
+                &nbsp;&nbsp;
+                
+                <span class="timestamp-note">{{ entry.createdDate | date: 'HH:mm' }}</span>
+              </div>
+            </div>
+            <div class="notes-section">
+            
+              <p class="my-2">{{ entry.auditHistoryText }}</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Changed with new inspections screen, sprint 16 item -->
+<div class="modal modal-bg " id="inspections">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title">Inspections</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('inspections')"
+        ></button>
+      </div>
+      <div class="modal-body">
+       <app-inspections></app-inspections>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div
+class="modal modal-bg"
+id="priorityclaim"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">
+        Enter Priority Claim Notes
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="closeModal('priorityclaim')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <h6>confidential  Priority Claim Notes<span class="text-danger">* </span></h6>
+          <div class="mb-4">
+            <textarea
+              class="form-control"
+              id="exampleFormControlTextarea1"
+              rows="3"
+              [(ngModel)]="noteTextArea"
+              (input)="inputValidator($event)" 
+             
+            ></textarea>
+            <!-- [disabled]="priorityNoteDisable" -->
+          </div>
+        </div>
+        <!-- <div class="col-lg-12 mt-2 mb-4">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+             
+            />
+            <label class="form-check-label" 
+              >Spell Check</label
+            >
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="priorityClaimToggle()"
+            [disabled]="noteTextArea == '' ">
+           Insert Notes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div> 
+
+<!-- modal for update reason codes -->
+<div
+  class="modal modal-bg modal-md" id="reasoncodeModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Reason Code</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('reasoncodeModal')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+       <p>Are you sure to change the reason code?</p>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal('reasoncodeModal')">
+         Cancel
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="confirmClaimReasonCode()">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2ndmodal for update reason codes -->
+<div
+  class="modal modal-bg modal-md" id="reasoncode2Modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Smart Code Validation</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('reasoncode2Modal')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+       <p>{{overRideErrMsg}}</p>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal('reasoncode2Modal')">
+         Cancel
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="updateClaimReason()">
+          OverRide
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3rdmodal for update reason codes -->
+<div
+  class="modal modal-bg modal-md" id="overRideModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reason code</h5>
+        <button
+          type="button" class="btn-close" (click)="closeReasonCodeModal('overRideModal')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+       <p>Reason code at claim level has changed. Do you want to change the reason code for line items?</p>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeReasonCodeModal('overRideModal')">
+         Cancel
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="updateReasonCode()">
+         Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

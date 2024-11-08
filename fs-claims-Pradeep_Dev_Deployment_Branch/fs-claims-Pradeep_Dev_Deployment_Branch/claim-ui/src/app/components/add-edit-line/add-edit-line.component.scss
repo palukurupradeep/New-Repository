@@ -1,0 +1,30 @@
+.add-edit-table .fa-search{position: absolute; right: 17px;}
+
+.reasoncode-select select{
+    width: 75px;
+}
+
+@media (max-width:1440px){
+    .width-feet{
+        width: 75px !important;
+    }
+}
+
+@media (min-width:1301px){
+    .add-edit-table th{
+        width: auto !important;
+    }
+    .add-edit-table th.new-100-wd{
+        width: 100px !important;
+    }
+}
+
+@media (min-width:1441px){
+    .width-feet{
+        width: 100px !important;
+    }
+
+    #reasonCode .mdc-text-field--filled:not(.mdc-text-field--disabled){
+        width: 90px;
+    }
+}

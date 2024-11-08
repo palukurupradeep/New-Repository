@@ -1,0 +1,17 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /onbase
+
+spring:
+  datasource:
+    url: jdbc:sqlserver://spwwdob23dbdev;databaseName=OnBase_DEV;encrypt=true;trustServerCertificate=true;
+    username: VIEWER
+    password: cprt_hsi
+
+onbase:
+  query:
+    claimcount: SELECT COUNT(*) AS CLAIM_COUNT FROM HSI.ITEMDATA A, HSI.KEYITEM229 B WHERE A.ITEMNUM = B.ITEMNUM AND B.KEYVALUECHAR = ? AND A.ITEMTYPENUM = 167
+
+logging:
+  config: classpath:log4j2.xml

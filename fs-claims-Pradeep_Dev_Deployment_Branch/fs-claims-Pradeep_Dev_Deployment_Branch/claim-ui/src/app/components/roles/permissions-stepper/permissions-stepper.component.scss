@@ -1,0 +1,26 @@
+// /* Styles for the rotating icon */
+// .expanded {
+//     //transform: rotate(90deg);
+//     transform: rotate(0deg);
+//   }
+  
+//   .collapsed {
+//    // transform: rotate(0deg);
+//     transform: rotate(90deg);
+//   }
+  // Add these styles to your component's SCSS file
+
+// .nested-visible {
+//     margin-left: 5%; // Apply 5% margin for the functions div
+//   }
+  
+//   .actions-visible {
+//     margin-left: 10%; // Apply 10% margin for the actions div
+//   }
+.fs-1rem{font-size: 1rem;}
+.div-margin-new{margin-left: 70px!important; margin-top:-5px;margin-bottom: 7px;}
+.tree-btn{position: relative; top: 10px;height: 24px;width: 24px;padding: 0;}
+.tree-btn-new{position: relative; top: 6px;height: 24px;width: 24px;padding: 0;}
+.fs-new{font-size: 15px !important; font-family: 'Roboto';}
+.new-margin{margin-left: -10px;margin-top: 7px;}
+.new-padding .mdc-checkbox{padding-left: 7px; padding-right: 7px;}

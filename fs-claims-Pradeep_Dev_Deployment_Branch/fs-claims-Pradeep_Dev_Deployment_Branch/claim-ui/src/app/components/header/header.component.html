@@ -1,0 +1,100 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+      <!--   <div class="col-md-4">
+            <div class="search mb-3">
+                <i class="fa fa-search"></i>
+                <input type="text" class="form-control" placeholder="Search">
+            </div>
+        </div> -->
+        <div class="col-12 ">
+            <div class="top-nav text-start text-md-end d-flex justify-content-md-end align-items-center">
+                
+                <!-- <div class="search-phone">
+                    <input type="text" class="form-control" placeholder="Phone Search By Name"  (input)="inputValidator($event)"
+                    #searchPhonenumber>
+                    <button class="btn btn-primary phone-search" (click)="searchByname(searchPhonenumber.value)">Find</button>
+                </div> &nbsp;  -->
+        
+                <!-- <div class="search-phone">
+                    <input type="text" class="form-control" placeholder="Claim No." [(ngModel)]="claimNumber" (keyup.enter)="fetchClaimDetail()">
+                    <button class="btn btn-primary phone-search" (click)="fetchClaimDetail()">Go</button>
+                </div>
+                 -->
+                 <div class="search-phone">
+                    <input type="text" class="form-control"
+                           placeholder="Claim No." [(ngModel)]="claimNumber" 
+                           (input)="onInputChange()" (keyup.enter)="fetchClaimDetail()">
+                    <button class="btn btn-primary phone-search" (click)="fetchClaimDetail()">Go</button>
+                </div>
+                
+                
+                  
+                <ul class="m-0 mb-3 mb-md-0 p-0">
+                   
+                    <!-- <li class="nav-item dropdown no-arrow mx-2 mx-md-3">
+                        <a class="nav-link dropdown-toggle" routerLink="/work-history" id="alertsDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-list-ul" aria-hidden="true"></i>
+                        </a>
+                    </li> -->
+                    <ng-template #WorkHistoryTemplate>
+                        <p class="mb-0">
+                            WORK HISTORY
+                        </p>
+                      </ng-template>
+                        
+                      <li class="nav-item dropdown no-arrow mx-2 mx-md-3">
+                        <a class="nav-link dropdown-toggle" routerLink="/work-history" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           [popover]="WorkHistoryTemplate" triggers="mouseenter:mouseleave">
+                            <i class="fa fa-list-ul" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    
+                      
+                    <li class="nav-item dropdown no-arrow mx-2 mx-md-3">
+                        <!-- <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-regular fa-bell"></i>
+                            <span class="badge badge-counter">3 </span>
+                        </a> -->
+                        <a class="nav-link dropdown-toggle" id="alertsDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge badge-counter">3 </span>
+                    </a>
+                    </li>
+                    <!-- <li class="nav-item dropdown no-arrow mx-2">
+                        <a class="nav-link dropdown-toggle" routerLink="/widget-config" id="alertsDropdown" role="button"
+                       
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-user-gear"></i>
+                            
+                            <img src="../../../assets/images/Vector.pngDONT USE THIS IMG -->
+                        <!-- </a>
+                    </li> --> 
+                    <ng-template #UserPreferenceTemplate>
+                        <p class="mb-0">
+                            USER PREFERENCE
+                        </p>
+                      </ng-template>
+                    <li class="nav-item dropdown no-arrow mx-2">
+                        <a class="nav-link dropdown-toggle" routerLink="/widget-config" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           [popover]="UserPreferenceTemplate" triggers="mouseenter:mouseleave">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <!-- <img src="../../../assets/images/Vector.png"> -->
+                        </a>
+                    </li>
+                </ul>
+                <ul class="m-0 mb-3 mb-md-0 p-0 ms-md-3">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle user-name" href="#" id="alertsDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Welcome {{name}}&nbsp;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

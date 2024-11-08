@@ -1,0 +1,52 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: claim-notification-service-deployment
+    namespace: claim-apps
+  spec:
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    replicas: 1
+    selector:
+      matchLabels:
+        app: claim-notification-service
+    template:
+      metadata:
+        labels:
+          app: claim-notification-service
+      spec:
+        imagePullSecrets:
+          - name: jfrog-registry-secret     
+        containers:
+          - name: claim-notification-service-container
+            image: jfrog.shawinc.io/docker-local/claim-notification-service:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 8084
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "150m"
+              limits:
+                memory: "1500Mi"
+                cpu: "500m"
+            # livenessProbe:
+            #   httpGet:
+            #     path: /claim/notification/actuator/health  # Adjusted path for liveness probe
+            #     port: 8083
+            #   initialDelaySeconds: 30
+            #   periodSeconds: 10
+            #   timeoutSeconds: 5
+            #   failureThreshold: 3
+            # readinessProbe:
+            #   httpGet:
+            #     path: /claim/notification/actuator/health  # Adjusted path for readiness probe
+            #     port: 8083
+              # initialDelaySeconds: 5
+              # periodSeconds: 10
+              # timeoutSeconds: 5
+              # failureThreshold: 3
+        

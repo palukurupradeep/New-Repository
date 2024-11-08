@@ -1,0 +1,95 @@
+<div class="row mt-2">
+  <div class="col-lg-2 col-md-6 mb-2 mb-lg-0" *ngFor="let widget of dashBoardWidgetsList"
+    (click)="navigateToWorkqueues(widget.dashboardWidgetName)" style="cursor:pointer">
+    <div class="status-card text-center">
+      <div class="card-group-data margin_top" [ngClass]="{ 'widget-six': widget.dashboardWidgetId === 6 }">
+        <h3>
+          <!-- {{ getWidgetValue(widget) }}  -->
+          <!-- open claims spinner -->
+          <span *ngIf="!dashboardWidgetsSpinner && widget.dashboardWidgetId === 1 ">{{totalOpenClaims}}</span>
+          <span *ngIf="dashboardWidgetsSpinner && widget.dashboardWidgetId ===1 ">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+
+          <!-- Aged claims -->
+          <span *ngIf="!agedClaimsSpinner && widget.dashboardWidgetId === 2 ">{{agedDaysLenght}}</span>
+          <span *ngIf="agedClaimsSpinner && widget.dashboardWidgetId === 2">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+
+          <!-- Priority Claims -->
+          <span *ngIf="!priorityClaimsSpinner && widget.dashboardWidgetId === 3 ">{{priorityLenght}}</span>
+          <span *ngIf="priorityClaimsSpinner && widget.dashboardWidgetId === 3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+
+          <!-- Debit Claims -->
+          <span *ngIf="!debitSpinner && widget.dashboardWidgetId === 4 ">{{debtLength}}</span>
+          <span *ngIf="debitSpinner && widget.dashboardWidgetId === 4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+
+          <!-- Last activity Claims -->
+          <span *ngIf="!lastActivitySpinner && widget.dashboardWidgetId === 5 ">{{lastActivityLenght}}</span>
+          <span *ngIf="lastActivitySpinner && widget.dashboardWidgetId === 5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+
+          <!-- previous days Claims -->
+          <span *ngIf="!previousDaysSpinner && widget.dashboardWidgetId === 6 ">{{recievedLenght}}</span>
+          <span *ngIf="previousDaysSpinner && widget.dashboardWidgetId === 6">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+          <span *ngIf="widget.dashboardWidgetId === 2">
+            ({{ agedDaysPercentage | number: '1.0-0' }}%)
+          </span>
+          <span *ngIf="widget.dashboardWidgetId === 5">
+            ({{ lastActivityPercentage | number: '1.0-0' }}%)
+          </span>
+        </h3>
+        <p *ngIf="widget.dashboardWidgetId == 2">
+          {{ widget.dashboardWidgetName }}
+          <input [(ngModel)]="claimAge" (change)="getAgedClaims()" (click)="$event.stopPropagation()" type="text"
+            class="form-control" (keyup.enter)="getAgedClaims()"> days
+        </p>
+
+        <p *ngIf="widget.dashboardWidgetId === 5">
+          {{ widget.dashboardWidgetName }}
+          <input [(ngModel)]="lastActivity" type="text" class="form-control" (change)="lastActivityClaims()"
+            (click)="$event.stopPropagation()" (keyup.enter)="lastActivityClaims()"> days
+        </p>
+        <div *ngIf="widget.dashboardWidgetId === 6">
+          <p *ngIf="previousDayClaimsData">
+            {{ previousDayClaimsData.prevDayStatusClaims || 0 }}/{{ previousDayClaimsData.prevDayAllClaims || 0 }} <br>
+            ({{ previousDayClaimsData.percentage || 0 }})%
+          </p>
+          <p *ngIf="!previousDayClaimsData">0%</p>
+        </div>
+        <p *ngIf="widget.dashboardWidgetId !== 2 && widget.dashboardWidgetId !== 5 ">
+          {{ widget.dashboardWidgetName }}
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <!-- <div *ngIf="dashBoardWidgetsList.length == 0">
+       
+        <div class="text-center">
+           <div class="spinner-border text-primary" role="status">
+             <span class="visually-hidden">Loading...</span>
+           </div>
+         </div>
+       </div> -->
+</div>

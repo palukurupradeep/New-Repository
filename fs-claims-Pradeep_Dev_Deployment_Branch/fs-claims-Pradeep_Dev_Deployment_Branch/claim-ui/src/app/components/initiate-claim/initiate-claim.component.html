@@ -1,0 +1,2222 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header></app-header>
+  <div class="main">
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-lg-12">
+          <h1 class="mb-0">Initiate Claim</h1>
+        </div>
+      </div>
+
+      <div class="card claim-info p-4">
+        <div class="row mt-2">
+          <div class="col-lg-12">
+            <h4>Enter claim Information</h4>
+          </div>
+        </div>
+
+        <form [formGroup]="recentClaimForm" class="mt-4">
+          <div class="row mb-3">
+            <label
+              for="Customer"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+            >
+              Customer #</label
+            >
+            <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <div class="search cursor-pointer mb-2">
+                <i
+                *ngIf="true"
+                class="fa fa-search"
+                [class.disabled]="!customerNumber.value || isSearchIconClicked"
+                (click)="isSearchIconClicked = true; getCustomerDetails(customerNumber.value)"
+              ></i>
+              
+              
+           
+<input
+  type="text"
+  appInputRestriction
+  [inputType]="'numeric'"
+  (input)="onCustomerNumberChange(customerNumber.value)"
+  (keydown)="setCustomerNumber(customerNumber.value)"
+  (keydown.enter)="onEnterKeyPress($event)"
+  (keyup.enter)="isSearchIconClicked = true; getCustomerDetails(customerNumber.value)"
+  (click)="showWarning()"
+  #customerNumber
+  class="form-control hide-spin-buttons"
+  [ngClass]="{ 'is-danger': displayMessage.customer }"
+  [ngClass]="{
+    'is-danger':
+      recentClaimForm.controls.customer.touched &&
+      !recentClaimForm.controls.customer.value
+  }"
+  formControlName="customer"
+/>
+
+                              <div
+                  class="fail-style"
+                  *ngIf="
+                    !hasStoreNumber &&
+                    (displayMessageRec.customer ||
+                      (recentClaimForm.get('customer')?.touched &&
+                        recentClaimForm.get('customer')?.dirty))
+                  "
+                >
+                  {{ displayMessageRec.customer }}
+                </div>  
+                <p *ngIf="showErrorMessage" class="fail-style">
+                  Customer number must be prefixed with '000'
+                </p>
+                <!-- Display error message for 404 response -->
+               <p *ngIf="showCustomerNotFoundError" class="fail-style">
+                 Customer Number is invalid.Please provide a valid number
+               </p>
+              </div>
+            </div>
+            <div class="col-12"></div>
+            <div
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12"
+            ></div>
+            <div class="col-12 col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+              <div class="customer-details" *ngIf="customerData && !recentClaimForm.value.endUser">
+                <!-- Customer  Number and Name -->
+                <div>
+                  <span>
+                    {{ customerData.customerNumber }}{{ customerData.customerNumber && customerData.customerName ? ' - ' : '' }}{{ customerData.customerName }}
+                  </span>
+                </div>
+              
+                <!-- Address Details -->
+                <ng-container *ngFor="let address of customerData.address">
+                  <ng-container *ngIf="address.addressType === 'MAILING'">
+                    <div>
+                      <span>{{ address.addressLine1 }}</span>
+                    </div> <br>
+                    <div>
+                      <span>
+                        {{ address.city }}{{ address.city && address.stateCode ? ', ' : '' }}{{ address.stateCode }} {{ address.zipCode }}
+                      </span>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              
+                <!-- Email -->
+                <div>
+                  <span>{{ customerData.customerEmail }}</span>
+                </div>
+              
+                <!-- Phone Number -->
+                <div>
+                  <span *ngIf="customerData.phoneCountryCode != undefined && customerData.phoneNumber != undefined">
+                    {{ '+' + customerData.phoneCountryCode + customerData.phoneNumber }} Ext.{{customerData.phoneExtension}}
+                  </span>
+                 <br/>
+                 <span *ngIf="customerData.storeType !== undefined">
+                  Store Type: {{ customerData.storeType }}
+                </span><br/>
+                
+                <span *ngIf="customerData.groupAccount !== undefined">
+                  Group Account: {{ customerData.groupAccount }}
+                </span>                
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        
+          <div class="row mb-3">
+            <label
+              for="Store"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+            >
+              Store #</label
+            >
+            <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <div class="search">
+                <span class="cursor-pointer">
+                  <i
+                    *ngIf="!storeValue.value"
+                    class="fa fa-search disabled"
+                  ></i>
+                  <i
+                    *ngIf="storeValue.value"
+                    class="fa fa-search"
+                    (click)="openModalModalStoreInvoice()"
+                  ></i>
+                </span>
+               
+                <input
+                  type="text" 
+                  appInputRestriction
+                  [inputType]="'alphanumeric'"
+                  #storeValue
+                  (input)="clearCustomerNoValidation()"
+                  class="form-control"
+                  formControlName="store"
+                  (keyup.enter)="openModalModalStoreInvoice()"
+                  (keydown.enter)="onEnterKeyPress($event)"
+                />
+              </div>
+                   <!-- Display error message for 404 response -->
+                 <p *ngIf="showStoreNumberInvalidError " class="fail-style">
+                         Store number is invalid
+                   </p>
+            </div>
+          </div>
+          <div class="w-100">
+            <hr />
+          </div>
+
+          <div class="row mb-3">
+            <label
+              for="flexSwitchCheckDefault"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-form-label"
+              >Invoice Not Available</label
+            >
+            <div class="col-12 col-xl-2 col-lg-3 col-md-6 col-sm-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input mt-2"
+                  type="checkbox"
+                  id="flexSwitchCheckDefault"
+                  (change)="toggleAltInvoice()"
+                  formControlName="altInvoice"
+                />
+              </div>
+            </div>
+          </div>
+          <div [class.form-disabled]="altInvoiceToggle">
+            <div class="row mb-4 justify-content-end justify-content-lg-start">
+              <label
+                for="Store"
+                class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                >Doc Type/Number/Date</label
+              >
+              <div
+                class="col-12 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12" id="invoice-id-new">
+                <div class="row">
+                  <div class="col-12 col-xl-3 col-lg-3 col-md-12 col-sm-3 mb-4 mb-lg-0">
+                    <mat-form-field appearance="fill">
+                      <mat-select 
+                        [(value)]="selectedDocType" 
+                        formControlName="docType" 
+                        (selectionChange)="onassociatedtoGlobalaccountChange('docType')">
+                        <mat-option *ngFor="let item of docTypeData" [value]="item.docTypeId">
+                          {{ item.lookupCode }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div
+                    class="col-12 col-xl-5 col-lg-5 col-md-12 col-sm-4 mb-4 mb-lg-0"
+                  >
+                    <div class="search">
+                      <input (keypress)="removeE($event)"
+                      appInputRestriction
+                      [inputType]="'alphanumeric'"
+                        class="form-control"
+                        [ngClass]="{
+                          'is-danger':
+                            recentClaimForm.controls.docNumber.touched &&
+                            !recentClaimForm.controls.docNumber.value
+                        }"
+                        formControlName="docNumber"
+                        (keyup.enter)="openModalAddInvoice()"
+                        (keydown.enter)="onEnterKeyPress($event)"
+                      />
+                    </div>
+                    
+                  
+                  </div>
+                  
+                  <div
+                    class="col-12 col-xl-4 col-lg-4 col-md-12 col-sm-4 mb-0 mb-lg-0"
+                  >
+                  <div class="position-relative">
+                    <input
+                      [class.form-disabled]="altInvoiceToggle"
+                      type="text"
+                      formControlName="invoiceDate"
+                      class="form-control"
+                      #dp="bsDatepicker"
+                      [bsConfig]="bsConfig"
+                      readonly
+                      bsDatepicker
+                      triggers="dbllclick:click"
+                      (input)="onInput($event)"
+                      placeholder="MM/DD/YYYY"
+                    />
+                    <span class="datepicker"
+                     
+                      (click)="dp.toggle()"
+                    >
+                      <i class="fa-regular fa-calendar-days"></i>
+                    </span>
+                    </div>
+                    <div class="fail-style" *ngIf="futureDateError">Future dates are restricted.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 position-relative top-25 mt-3 mt-lg-0"
+              >
+                <button
+                  type="button"
+                  class="d-sm-inline-block btn btn-sm btn-primary"
+                  (click)="openModalAddInvoice()"
+                  [disabled]="!isRetrieveButtonEnabled() && !authService.hasPermission('VIEWINVOICEAMTS')" 
+                >
+                  Retrieve Invoice
+                </button>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                for="Store"
+                class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+              >Roll Number</label
+              >
+              <div
+                class="col-12 col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12"
+              >
+                <input
+                type="text"
+                appInputRestriction
+                [inputType]="'alphanumeric'"
+                  class="form-control"
+                  id="Store"
+                  formControlName="rollNumber"
+                  (keydown.enter)="onEnterKeyPress($event)"
+                  (keyup.enter)="openModalAddInvoice()"
+                />
+                <!-- <p *ngIf="displayMessageRec.rollNumber" class="fail-style">
+                  {{ displayMessageRec.rollNumber }}
+                </p> -->
+                 <!-- Display error message for 404 response -->
+                      
+              </div>
+
+            </div>
+            <p *ngIf="showRollNumberError || show404ErrorMessage" class="fail-style">
+              Customer number or Roll number is invalid
+            </p>
+            <!-- <p *ngIf="noDataAvailable" class="fail-style">
+              No Records Found
+            </p> -->
+          </div>
+
+          <div class="w-100">
+            <hr />
+          </div>
+          <div class="row mb-3">
+            <label
+              for="Store"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+              >Claim Category</label
+            >
+            <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <mat-form-field appearance="fill" class="w-100">
+
+                <mat-select [(ngModel)]="selectedclaimCategoryName" formControlName="claimCategory" (selectionChange)="onclaimCategoryChange()">
+                  <mat-option *ngFor="let item of claimCategories" [value]="item.claimCategoryId">
+                    {{ item.claimCategoryName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="row mb-3">
+            <label for="Store" class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label">Reason Code</label>
+           
+            <div class="col-12 col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+              <div class="dropdown">
+                <div (click)="toggleDropdown(); $event.stopPropagation();">
+                  <span class="dropdownIcon"></span>
+                <input
+                  type="text"
+                  formControlName="reasonCode"
+                  placeholder="Search Reason Code"
+                  (input)="filterOptions($event)"
+                  class="form-control pr-33"
+                >
+                </div>
+                <ul #elRef1 id="dropdownList" *ngIf="showDropdown">
+                  <ng-container *ngIf="filteredOptions.length > 0; else noDataMessage">
+                    <li (click)="selectOption(option)" *ngFor="let option of filteredOptions">
+                      {{ option.claimReasonCode }} - {{ option.claimReasonDescription }}
+                    </li>
+                  </ng-container>
+                  <ng-template #noDataMessage>
+                    <li class="no-dataFound">No data Found</li>
+                  </ng-template>
+                </ul>
+                
+              </div>
+            </div>
+          </div> -->
+       <div class="row mb-3">
+<label for="Store" class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label">Reason
+              Code</label>
+<div class="col-12 col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+<div class="input-container">
+<input  #reasonInput [matAutocomplete]="auto" matInput type="text" matInput placeholder="Search Reason Code"
+                  formControlName="reasonCode" (input)="filterOptions($event)"
+                   class="form-control pr-33"
+                   (keydown.enter)="onEnter($event)">
+<mat-icon matSuffix class="dropdown-icon" (click)="reasonInput.focus()">arrow_drop_down</mat-icon>
+</div>
+<mat-autocomplete #auto="matAutocomplete">
+<ng-container *ngIf="filteredOptions.length > 0; else noDataMessage">
+<mat-option (click)="selectOption(option)" *ngFor="let option of filteredOptions"
+                    [value]="option.claimReasonCode">
+                    {{ option.claimReasonCode }} - {{ option.claimReasonDescription }}
+</mat-option>
+</ng-container>
+<ng-template #noDataMessage>
+<mat-option disabled>No data Found</mat-option>
+</ng-template>
+</mat-autocomplete>
+</div>
+</div>
+          <div class="row mb-3 align-items-center">
+            <label
+              for="endUserSwitch"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+              >End User Claim or Customer Number Not Available?</label
+            >
+            <div class="col-12 col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+              <div
+                class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap"
+              >
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input mt-2"
+                    type="checkbox"
+                    (change)="toggleEndUser()"
+                    id="endUserSwitch"
+                    #endUserSwitch
+                    formControlName="endUser"
+                    *ngIf="authService.hasPermission('INITCONSUMER')"
+                     />
+                </div>
+                <div class="ms-0 ms-md-2">
+                  <button
+                    type="button"
+                    class="d-sm-inline-block btn btn-sm btn-primary"
+                    (click)="openModalEndUserInfo()"
+                  >
+                    Add/Edit End User Information
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+          <!-- <div class="row mb-3 align-items-center">
+            <label
+              for="flexSwitchCheckDefault"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+              >Associated to Global Account?</label
+            >
+            <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+             
+              <mat-form-field appearance="fill" class="w-100">
+
+                <mat-select [(ngModel)]="selectedclaimassociatedtoGlobalaccount" formControlName="associatedtoGlobalaccount" (ngModelChange)="onassociatedtoGlobalaccountChange('globalAcc')">
+                  <mat-option *ngFor="let item of associatedtoGlobalAccountData" [value]="item.lookupId">
+                    {{ item.lookupDescription }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div> -->
+        <div class="row mb-3 align-items-center">
+  <label
+    for="flexSwitchCheckDefault"
+    class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+    >Associated to Global Account?</label
+  >
+  <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-select
+        [(ngModel)]="selectedclaimassociatedtoGlobalaccount"
+        formControlName="associatedtoGlobalaccount"
+        (ngModelChange)="onassociatedtoGlobalaccountChange('globalAcc')"
+        class="uppercase"
+      >
+        <mat-option *ngFor="let item of associatedtoGlobalAccountData" [value]="item.lookupCode">
+          {{ item.lookupDescription }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+        
+          <div class="row mb-3">
+            <label
+              for="flexSwitchCheckDefault"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-form-label"
+              >Job stopped?</label
+            >
+            <div class="col-12 col-xl-2 col-lg-3 col-md-6 col-sm-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input mt-2"
+                  type="checkbox"
+                  id="flexSwitchCheckDefault"
+                  formControlName="isjobStopped"
+                  (change)="jobStopped()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label
+              for="flexSwitchCheckDefault"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-form-label"
+              >Priority Claim</label
+            >
+            <div class="col-12 col-xl-2 col-lg-3 col-md-6 col-sm-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input mt-2"
+                  type="checkbox"
+                  id="flexSwitchCheckDefault"
+                  formControlName="priorityClaim"
+                  (click)="checkPriorityClaim()"
+                />
+              </div>
+            </div>
+          </div>
+ <div *ngIf="authService.hasPermission('INITIATECLAIM')"  class="row mb-3">
+                    <label
+              for="flexSwitchCheckDefault"
+              class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-6 col-form-label"
+              >Add to Watch List</label
+            >
+            <div class="col-12 col-xl-2 col-lg-3 col-md-6 col-sm-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input mt-2"
+                  type="checkbox"  [ngModel]="isWatchListClaim"
+                  formControlName="watchList"
+                  (change)="changeWatchListClaim(isWatchListClaim)"
+                />
+              </div>
+            </div>
+          </div>
+         
+          <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                              <table class="table table-striped table-hover" id="associateDocument">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col" colspan="4" class="text-center">Document</th>
+                                        <th scope="col" colspan="3" class="text-center">Associated Invoice</th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col" *ngFor="let headerTitle of tableHeaders">{{ headerTitle }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="associateAddInvoiceData.length === 0">
+                                        <td class="text-center" [attr.colspan]="tableHeaders.length + 1">
+                                            <p class="mb-0 py-2">Records not found</p>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let item of associateAddInvoiceData; let i = index">
+                                      
+                                      <!-- <td><a href="" class="text-danger"><i class="fa-solid fa-trash-can"></i></a></td> -->
+                                      <td><a  class="text-danger" (click)="deleteRow(i)"><i class="fa-solid fa-trash-can"></i></a></td>
+                                      <!-- <td>{{ item.docType === 16 ? 'INV' : item.docType === '17' ? 'BOL' : item.docType === '18' ? 'ORD' : 'PON' }}</td> -->
+                                      <td>{{ item.docType === 11 || item.docType === 'INV' ? 'INV' : item.docType === 5 ? 'BOL' : item.docType === 14 ? 'ORD' : 'PON' }}</td>
+                                      <td>{{ item.docType === 11 || item.docType === '11' || item.docType === 'INV'? item.invoiceNumber : item.docType === 5 ? item.bolNumber : item.docType === 14 ? item.orderNumber : item.poNumber }}</td>
+                                      <!-- <td>{{ item.docDate | date:'MM-dd-yyyy' }}</td>  -->
+                                      <td>{{ today | date:'MM-dd-yyyy' }}</td><!-- Use double curly braces for docDate -->
+                                      <td>{{ item.invoiceNumber }}</td>
+                                      <td>{{ item.invoiceDate | date:'MM-dd-yyyy'  }}</td>
+                                      <!-- <td>{{ item.netAmount | currency:'USD':'symbol':'1.2-2' }}</td> -->
+                                      <td class="text-end">${{ item.netAmount | number:'1.2-2' }}</td>
+
+                                  </tr>
+                                  
+                                </tbody> 
+                            </table>
+                            
+                            </div>
+
+                        </div>
+                    </div>
+          <div class="row mt-2">
+            <div
+              class="col-lg-12 mt-2 text-end d-flex gap-3 justify-content-end flex-wrap"
+            >
+              <button class="d-sm-inline-block btn btn-sm btn-secondary"
+                (click)="openModalStopInitiate()">Stop Initiate</button>
+                <button
+                class="d-sm-inline-block btn btn-sm btn-primary"
+                [disabled]="!isContinueInitiationDisabled && !(customerData && recentClaimForm.value.altInvoice == true)"
+                (click)="openModalEnterClaim()">
+                Continue Initiation
+              </button>
+
+              <!-- <a class="d-sm-inline-block btn btn-sm btn-primary" (click)="submitForm()">Continue
+                                    Initiation</a> -->
+
+              <!-- <a
+                class="d-sm-inline-block btn btn-sm btn-primary"
+                (click)="openModalWarning()"
+                >Warning Popup</a
+              >
+
+              <a
+                class="d-sm-inline-block btn btn-sm btn-primary"
+                (click)="openModalInfo()"
+                >Info Popup</a
+              >
+
+              <a
+                class="d-sm-inline-block btn btn-sm btn-primary"
+                (click)="openModalError()"
+                >Error Popup</a
+              > -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Enter Claim Notes -->
+    <div class="modal modal-bg" id="modalPriorClaimSummary" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Prior Claim Summary
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModalPriorSummary()"></button>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="py-3" *ngIf="loading; else tableContent">
+              <!-- Show spinner while loading data -->
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+            <!-- <app-table [data]="priorClaimTableData" [headers]="priorClaimTableHeaders"></app-table> -->
+            <ng-template #tableContent>
+              <!-- <div class="table-container"> -->
+                <table class="table table-striped table-hover table-nowrap table-fixed">
+                  <thead>
+                    <tr>
+                      <th>ORIGIN</th>
+                      <th>STATUS</th>
+                      <th>CLAIM#</th>
+                      <th>CLAIM DATE</th>
+                      <th>CUSTOMER#</th>
+                      <th>NAME</th>
+                      <th>INVOICE #</th>
+                      <th>INVOICE DATE</th>
+                      <th>CRM</th>
+                      <th>CRM DATE</th>
+                      <th>DBT#</th>
+                      <th>DBT DATE</th>
+                      <th>REASON CODE</th>
+                      <th>TOTAL AMOUNT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="priorClaimTableData.length === 0">
+                      <td class="text-center" colspan="14">
+                        <!-- <p class="mb-0 py-2">Record Not Found</p> -->
+                        <p class="mb-0 py-2">No Prior Claim Is Available</p>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let claim of priorClaimTableData; let i = index">
+                      <td></td> <!-- ORIGIN -->
+                      <td>{{ claim?.status }}</td> <!-- STATUS -->
+                      <td><a [routerLink]="['/claim-detail',claim.claimNumber]">{{ claim?.claimNumber }}</a></td> <!-- CLAIM# -->
+                      <td>{{ claim?.claimDate | date:'yyyy-MM-dd' }}</td> <!-- DATE -->
+                      <td>{{ claim?.customerNumber }}</td> <!-- CUSTOMER# -->
+                      <td>{{ claim.name }}</td> <!-- NAME -->
+                      <td>{{ claim.invoiceData?.[0]?.invoiceNumber }}</td> <!-- INVOICE # -->
+                      <td>{{ claim.invoiceData?.[0]?.invoiceDate | date:'yyyy-MM-dd' }}</td> <!-- DATE -->
+                      <td></td> <!-- CRM -->
+                      <td></td> <!-- DATE -->
+                      <td></td> <!-- DBT# -->
+                      <td></td> <!-- DATE -->
+                      <td>{{ claim?.reasonCode }}</td> <!-- REASON CODE -->
+                      <td>{{ claim?.totalAmount }}</td> <!-- TOTAL AMOUNT -->
+                    </tr>
+                  </tbody>
+                </table>
+              <!-- </div> -->
+            </ng-template>
+          </div>
+          <div class="modal-footer border-top-0">
+            <div class="text-end mt-3">
+              <button class="d-sm-inline-block btn btn-sm btn-primary" (click)="initiateClaimModal()" [disabled]="loading">Continue Initiation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div
+      class="modal modal-bg"
+      id="modalEnterClaim"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Enter Claim Notes
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="CloseModalEnterClaim()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <!-- <h6>confidential Claim Notes</h6> -->
+                <div class="mb-4">
+                  <h6>confidential Claim Notes <span class="text-danger">*</span></h6> 
+                 
+                  <textarea
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows="3"
+                    [(ngModel)]="noteTextArea"
+                    [disable]="noteTextDisable"
+                  ></textarea>
+                </div>
+              </div>
+              <!-- <div class="col-lg-12 mt-2 mb-4"> // future implementation purpose this one hided//
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckDefault"
+                  />
+                  <label class="form-check-label" for="flexSwitchCheckDefault"
+                    >Spell Check</label
+                  >
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="initiateModal()"
+                  [disabled]="!noteTextArea || noteTextArea.trim() === '' || isButtonDisabled"
+                >
+                  Initiate Claim
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <!-- Modal Stop Initiate -->
+    <div
+      class="modal modal-bg"
+      id="stopinitiate-Modal-action"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="stopinitiateLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="stopinitiateLabel">
+              Stop Initiate?
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalStopInitiate()"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <p class="mb-0">
+                  <i class="fas fa-question-circle"></i> 
+                  Are you sure to stop the initiation process?
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="stopInitiate()"
+                >
+                  Yes
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="CloseModalStopInitiate()"
+                >
+                  Cancel
+                </button>
+              
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Warning -->
+    <div
+      class="modal modal-bg"
+      id="modalWarning"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalWarningLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-warning" id="modalWarningLabel">
+              <i class="fa-solid fa-triangle-exclamation"></i> Warning
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalWarning()"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <p>
+                  <!-- Lorem ipsum dolor sit amet. Non iste numquam ut explicabo
+                  dolore qui voluptas! -->
+                  Some invoice(s) are already selected for this claim. Are you sure to proceed?
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="resetInvoice()"
+                >
+                  OK
+                </button>
+                <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="CloseModalWarning()"
+              >
+              Cancel
+              </button>
+                <!-- <button type="button" class="btn btn-primary">Ok</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Info -->
+    <div
+      class="modal modal-bg"
+      id="modalInfo"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalInfoLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalInfoLabel">
+              <i class="fa-solid fa-circle-exclamation"></i> Info
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalInfo()"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <p>
+                  Lorem ipsum dolor sit amet. Non iste numquam ut explicabo
+                  dolore qui voluptas!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="CloseModalInfo()"
+                >
+                  Quit
+                </button>
+                <!-- <button type="button" class="btn btn-primary">Ok</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Error -->
+    <div
+      class="modal modal-bg"
+      id="modalError"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalErrorLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="modalInfoLabel">
+              <i class="fa-solid fa-circle-xmark"></i>
+              Error
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalError()"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <p>
+                  Lorem ipsum dolor sit amet. Non iste numquam ut explicabo
+                  dolore qui voluptas!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="CloseModalError()"
+                >
+                  Quit
+                </button>
+                <!-- <button type="button" class="btn btn-primary">Ok</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Claim has been initiated -->
+    <div
+      class="modal modal-bg"
+      id="initiateclaim"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="initiateclaimLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header txt-green">
+            <h5 class="modal-title text-success" id="initiateclaimLabel">
+              <i class="fa-check-circle fas"></i> Claim has been initiated
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalInitiateClaim()"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body pb-0">
+            <div class="row">
+              <div class="col-lg-12">
+             
+                <table  *ngIf="initiateClaimDetails" class="table table table-borderless claim-success-table">
+                  <thead>
+                    <tr>
+                      <th scope="col" width="40%" class="fs-20 font-weight-900">
+                        Claim Number
+                      </th>
+                      <th scope="col" class="fs-20 font-weight-900">
+                        <a href="#" (click)="automaticAssigClaimDetail(); $event.preventDefault()">
+                          {{initiateClaimDetails.claimNumber}}
+                        </a>
+                      </th>
+                      
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="fs-16 font-weight-900">Customer number</td>
+                      <td class="fs-16 font-weight-900">{{initiateClaimDetails.customerNumber ? initiateClaimDetails.customerNumber : '--' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="fs-16 font-weight-900">Claim Category</td>
+                      <td class="fs-16 font-weight-900">{{initiateClaimDetails.claimCategoryName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="fs-16 font-weight-900">Reason Code</td>
+                      <td class="fs-16 font-weight-900">{{ initiateClaimDetails.reasonCode }} - {{ initiateClaimDetails.reasonDescription }}</td>
+                    </tr>
+                    <tr>
+                      <td class="fs-16 font-weight-900">Claim Amount</td>
+                      <td class="fs-16 font-weight-900">$ {{initiateClaimDetails.claimAmount | number:'1.2-2'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <div class="d-flex justify-content-center flex-wrap">
+                  <button
+                    type="button"
+                    class="btn btn-primary me-md-2 mb-4 mb-lg-0"
+                    (click)="claimSelfAssignment()"
+                  >
+                    Work this Claim
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary ms-md-2 mb-4 mb-lg-0"
+                    (click)="navigateToInitiateClaim()"
+                  >
+                    Initiate a New Claim?
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal End User Information -->
+    <div
+      class="modal modal-bg"
+      id="enduserinfo"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="enduserinfoLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-fullscreen-all modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="enduserinfoLabel">
+              Enter End User Information
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalEndUserInfo()"
+            ></button>
+          </div>
+
+          <form class="needs-validation" novalidate [formGroup]="addEndUserForm">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="first-name"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >First Name <span class="text-danger">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          [ngClass]="{ 'is-danger': displayMessage.firstName }"
+                          formControlName="firstName"
+                          class="form-control"
+                          id="first-name"
+                          (input) = "trimAndUpdate('firstName')" (keypress)="restrict_specialChars($event)"
+                          
+                        />                 
+                        <p *ngIf="displayMessage.firstName" class="fail-style">
+                          {{ displayMessage.firstName }}
+                        </p>
+                      </div>
+                      <div class="valid-feedback">Looks good!</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="middle-initial"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >Middle Initial</label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="middle-initial"
+                        formControlName="middleInitial"
+                        (input) = "trimAndUpdate('middleInitial')"
+                         (keypress)="restrict_specialChars($event)"
+                         maxlength="1"
+                      />
+                      <p *ngIf="displayMessage.middleInitial" class="fail-style">
+                        {{ displayMessage.middleInitial }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="last-name"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >Last Name <span class="text-danger">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          [ngClass]="{ 'is-danger': displayMessage.lastName }"
+                          class="form-control"
+                          id="last-name"
+                          formControlName="lastName"
+                          (input) = "trimAndUpdate('lastName')" (keypress)="omit_special_char($event)"
+                        />
+                        <p *ngIf="displayMessage.lastName" class="fail-style">
+                          {{ displayMessage.lastName }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="company-name"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >Company Name</label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          [ngClass]="{'is-danger': displayMessage.companyName }"
+                          class="form-control"
+                          id="company-name" 
+                          formControlName="companyName"
+                          (keypress)="restrictSpecialCharsCompany($event, $event.keyCode)"
+                            />
+                       
+                        <p *ngIf="displayMessage.companyName" class="fail-style">
+                          {{ displayMessage.companyName }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-8 col-xxl-8">
+                  <div class="row mb-4">
+                    <label
+                      for="Store"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-2 col-xxl-2 col-form-label"
+                      >Email</label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-10 col-xxl-10">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="Store"
+                          formControlName="email"
+                          placeholder=""
+                          [ngClass]="{ 'is-danger': displayMessage.email }"
+                          (input) = "trimAndUpdate('email')"
+                        />
+                        <p *ngIf="displayMessage.email" class="fail-style">
+                          {{ displayMessage.email }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 col-xl-12 col-xxl-12">
+                  <div class="row mb-4 justify-content-end justify-content-lg-start">
+                    <label
+                      for="address"
+                      class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 col-xxl-2 col-form-label w-custome-11"
+                      >Address <span class="text-danger">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-5 w-custome-44">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          [ngClass]="{ 'is-danger': displayMessage.address }"
+                          class="form-control"
+                          id="address"
+                          formControlName="address"
+                          placeholder=""
+                        />
+                        <p *ngIf="displayMessage.address" class="fail-style">
+                          {{ displayMessage.address }}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-5 mt-3 mt-lg-0 w-custome-44"
+                    >
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="address-name"
+                          formControlName="addressName"
+                          placeholder=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-12 col-xl-8 col-xxl-8">
+                  <div class="row mb-4">
+                    <label
+                      for="country"
+                      class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 col-xxl-2 col-form-label white-nowrap"
+                      >Country <span class="text-danger">*</span></label
+                    >
+                    <div
+                      class="col-12 col-sm-12 col-md-8 col-lg-10 col-xxl-10"
+                    >
+                      <div class="form-input">
+                        <select
+                          class="form-select form-control"
+                          aria-label="Default select example"
+                          id="country"
+                          formControlName="country"
+                          (change)="getCountryCodeByStates()"
+                          [ngClass]="{ 'is-danger': displayMessage.country }"
+                        >
+                          <option
+                            *ngFor="let country of countries"
+                            [value]="country.isoCountryId"
+                          >
+                            {{ country.isoCountryName }}
+                          </option>
+                        </select>
+                        <p *ngIf="displayMessage.country" class="fail-style">
+                          {{ displayMessage.country }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
+                
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="state"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >State <span class="text-danger" *ngIf="selectedCountryHasStates">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
+                      <div class="form-input">
+                        <select
+                          class="form-select form-control"
+                          aria-label="Default select example"
+                          formControlName="state"
+                          id="state"
+                          [ngClass]="{ 'is-danger': displayMessage.state }"
+                        >
+                          <option
+                            *ngFor="let state of filteredStates"
+                            [value]="state.isoStateId"
+                          >
+                            {{ state.isoStateName }}
+                          </option>
+                        </select>
+                        <p *ngIf="displayMessage.state" class="fail-style">
+                          {{ displayMessage.state }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="city"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >City <span class="text-danger">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          [ngClass]="{ 'is-danger': displayMessage.city }"
+                          class="form-control"
+                          id="city"
+                          formControlName="city" (keypress)="omit_special_char($event)"
+                        />
+                        <p *ngIf="displayMessage.city" class="fail-style">
+                          {{ displayMessage.city }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
+
+                
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="country"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label"
+                      >County</label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="country"
+                          formControlName="county"
+                          (input) = "trimAndUpdate('county')" (keypress)="omit_special_char($event)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-4">
+                    <label
+                      for="postal-code"
+                      class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-form-label white-nowrap"
+                      >Postal Code <span class="text-danger">*</span></label
+                    >
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          appInputRestriction
+                          [inputType]="'alphanumeric'"
+                          [ngClass]="{ 'is-danger': displayMessage.postalCode }"
+                          class="form-control"
+                          id="postal-code"
+                          formControlName="postalCode"
+                          (input) = "trimAndUpdate('postalCode')"(keypress)="omit_special_char($event)"
+                        />
+                        <p *ngIf="displayMessage.postalCode" class="fail-style">
+                          {{ displayMessage.postalCode }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="clearfix"></div>
+                
+           
+                <div class="col-xxl-4 mb-4">
+                  <strong>Any one of the phone details is required.</strong>
+                  <span class="text-danger">*</span>
+                </div>
+                <br /><br />
+                
+                <div class="clearfix"></div>
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-3 flex-lg-nowrap">
+                    <label
+                      for="phone-business"
+                      class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                      >Phone (Business)</label
+                    >
+                    <div class="phone-1-col">
+                      <div class="form-input mb-lg-0 mb-2">
+                        <select
+                          class="form-select form-control"
+                          aria-label="Default select example"
+                          formControlName="phone"
+                          id="phoneNumberCountryCode"
+                        >
+                          <option
+                            *ngFor="let code of isoDialingCodes"
+                            [value]="code"
+                          >
+                            {{ code }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="phone-2-col">
+                      <div class="form-input">
+                        <input
+                        *ngIf="((addEndUserForm.value.country ==240
+                        || addEndUserForm.value.country ==32 
+                        || addEndUserForm.value.country ==41)
+                        && addEndUserForm.value.phone =='+1') || 
+                        ((addEndUserForm.value.country !=240
+                        || addEndUserForm.value.country !=32 
+                        || addEndUserForm.value.country !=41)
+                        && addEndUserForm.value.phone =='+1')"
+                          appPhoneNumber
+                          type="text"
+                          class="form-control"
+                          id="phone-business"
+                          formControlName="business"
+                         maxlength=12
+                          minlength=10
+                          placeholder=""
+                        />
+                        <input
+                        *ngIf="(addEndUserForm.value.country !=240
+                        || addEndUserForm.value.country !=32
+                        || addEndUserForm.value.country !=41)
+                        && addEndUserForm.value.phone !='+1'"
+                          type="text"
+                          class="form-control"
+                          id="phone-business"
+                          formControlName="business"
+                          maxlength=12
+                          minlength=10
+                          appPhoneNumber
+                        />
+                      </div>
+                    </div>
+                    <div class="phone-3-col">
+                      <div class="form-input">
+                        <p class="mb-0 mt-2">Ext.</p>
+                      </div>
+                    </div>
+                    <div class="phone-4-col">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="phone-business"
+                          maxlength="8"
+                          formControlName="extension" (keypress)="omit_special_char($event)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-3 flex-lg-nowrap">
+                    <label
+                      for="phone-home"
+                      class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                      >Phone (Home)</label
+                    >
+                    <div class="phone-1-col">
+                      <div class="form-input mb-lg-0 mb-2">
+                        <select
+                          class="form-select form-control"
+                          aria-label="Default select example"
+                          formControlName="phoneHome"
+                          id="phone-home"
+                          [ngClass]="{ 'is-danger': displayMessage.phoneHome }"
+                        >
+                          <option
+                            *ngFor="let code of isoDialingCodes"
+                            [value]="code"
+                          >
+                           {{ code }}
+                          </option>
+                        </select>
+                       </div>
+                    </div>
+                    <div class="phone-2-col">
+                      <div class="form-input">
+                        <input
+                        *ngIf="((addEndUserForm.value.country ==240
+                        || addEndUserForm.value.country ==32 
+                        || addEndUserForm.value.country ==41)
+                        && addEndUserForm.value.phoneHome =='+1') || 
+                        ((addEndUserForm.value.country !=240
+                        || addEndUserForm.value.country !=32 
+                        || addEndUserForm.value.country !=41)
+                        && addEndUserForm.value.phoneHome  =='+1')"
+                          appPhoneNumber
+                          type="text"
+                          class="form-control"
+                          id="phone-home"
+                          formControlName="home"
+                          placeholder=""
+                          minlength="10"
+                        />
+
+                        <input
+                        *ngIf="(addEndUserForm.value.country !=240
+                        || addEndUserForm.value.country !=32 
+                        || addEndUserForm.value.country !=41)
+                        && addEndUserForm.value.phoneHome !='+1'"
+                        type="text"
+                        class="form-control"
+                        id="phone-home"
+                        formControlName="home"
+                        maxlength="12"
+                        minlength="10"
+                        appPhoneNumber
+                      />
+                      
+                      </div>
+                    </div>
+                    <div class="phone-3-col">
+                      <div class="form-input">
+                        <p class="mb-0 mt-2">Ext.</p>
+                      </div>
+                    </div>
+                    <div class="phone-4-col">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="phone-home"
+                          maxlength="8"
+                          formControlName="extHome"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-6 col-xl-4 col-xxl-4">
+                  <div class="row mb-3 flex-lg-nowrap">
+                    <label
+                      for="Store"
+                      class="col-12 col-sm-12 col-md-4 col-lg-5 col-xl-5 col-xxl-5 col-form-label"
+                      >Phone (Cell)</label
+                    >
+                    <div class="phone-1-col">
+                      <div class="form-input mb-lg-0 mb-2">
+                        <select
+                          class="form-select form-control"
+                          aria-label="Default select example"
+                          formControlName="phoneCell"
+                          id="phone-cell"
+                          
+                          [ngClass]="{ 'is-danger': displayMessage.phoneCell }"
+                        >
+                          <option
+                            *ngFor="let code of isoDialingCodes"
+                            [value]="code"
+                          >
+                           {{ code }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="phone-2-col">
+                      <div class="form-input">
+                        <input
+                        *ngIf="((addEndUserForm.value.country ==240
+                        || addEndUserForm.value.country ==32 
+                        || addEndUserForm.value.country ==41)
+                        && addEndUserForm.value.phoneCell =='+1') || 
+                        ((addEndUserForm.value.country !=240
+                        || addEndUserForm.value.country !=32 
+                        || addEndUserForm.value.country !=41)
+                        && addEndUserForm.value.phoneCell =='+1')"
+                          appPhoneNumber
+                          type="text"
+                          class="form-control"
+                          id="Store"
+                          formControlName="cell"
+                          placeholder=""
+                          minlength="10"
+                        />
+                        <input
+                        *ngIf="(addEndUserForm.value.country !=240
+                      || addEndUserForm.value.country !=32 
+                      || addEndUserForm.value.country !=41)
+                      && addEndUserForm.value.phoneCell !='+1'"
+                        type="text"
+                        class="form-control"
+                        id="Store"
+                        formControlName="cell"
+                        maxlength="12"
+                        minlength="10"
+                        appPhoneNumber
+                      />
+                      </div>
+                    </div>
+                    <div class="phone-3-col">
+                      <div class="form-input">
+                        <p class="mb-0 mt-2">Ext.</p>
+                      </div>
+                    </div>
+                    <div class="phone-4-col">
+                      <div class="form-input">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="Store"
+                          maxlength="8"
+                          formControlName="extCell"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="row">
+                <div class="col-12 d-flex gap-3 flex-wrap">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="CloseModalEndUserInfo()"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    (click)="addFormDetails()"
+                    class="btn btn-primary"
+                    [disabled]="addEndUserForm.invalid || !isNumentered()"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Invoice -->
+    <div
+      class="modal modal-bg"
+      id="addinvoice"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="addinvoiceLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xxl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addinvoiceLabel">Add Invoice</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalAddInvoice()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!-- Check if invoiceNumberList has items, otherwise display a default header -->
+              <ng-container *ngIf="invoiceNumberList.length > 0; else defaultHeader">
+                <ng-container *ngFor="let invoiceNumber of invoiceNumberList">
+                  <div class="col-md-12">
+                    <h4 class="invoice-order">
+                      {{ addInvoiceData[0]?.customerNumber }} Invoice #{{ invoiceNumber }} - {{ addInvoiceData[0]?.invoiceDate | date:'MM/dd/yyyy' }}
+                      (Order
+                      <ng-container *ngFor="let orderNumber of getUniqueOrderNumbersByInvoiceNumber(invoiceNumber)">
+                        <span *ngIf="orderNumber">#{{ orderNumber }}</span>
+                      </ng-container>
+                      )
+                    </h4>
+          
+                    <!-- Display the table with headers, and "No records found" when no data -->
+                    <div class="col-md-12 mb-4">
+                      <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>
+                                <input
+                                  type="checkbox"
+                                  id="selectAll"
+                                  [checked]="isAllSelected(invoiceNumber, checkAll.checked)"
+                                  #checkAll
+                                  (change)="toggleSelectAll(checkAll.checked, invoiceNumber)"
+                                />
+                              </th>
+                              <th>Line<br>Number</th>
+                              <th>Roll<br>Number</th>
+                              <th>Style<br>Number</th>
+                              <th>Color<br>Number</th>
+                              <th>DyeLot</th>
+                              <th>RcsCode</th>
+                              <th>Grade</th>
+                              <th>Width</th>
+                              <th>Length</th>
+                              <th>Qty</th>
+                              <th>UOM</th>
+                              <th>Price</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+          
+                          <!-- Loading spinner -->
+                          <ng-container *ngIf="loading">
+                            <tr>
+                              <td colspan="14" class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                  <span class="visually-hidden">Loading...</span>
+                                </div>
+                              </td>
+                            </tr>
+                          </ng-container>
+          
+ 
+                          <ng-container *ngIf="!loading">
+                            <ng-container *ngIf="getInvoiceDataByInvoiceNumber(invoiceNumber)?.length != 0; else noRecords">
+                              <tr *ngFor="let claim of getInvoiceDataByInvoiceNumber(invoiceNumber)">
+                                <!-- Always show checkbox -->
+                                <td *ngIf="(claim?.lineAmountUsd !== 0 || (claim?.detailTypeCode?.trim()  !== 'TAX' && claim?.detailTypeCode?.trim()  !== 'FRGHT' && claim?.detailTypeCode?.trim()  !== 'MISC CHARGES' && claim?.detailTypeCode?.trim()  !== 'GST' && claim?.detailTypeCode?.trim()  !== 'CHRGS' && claim?.detailTypeCode?.trim()  !== 'HST' && claim?.detailTypeCode?.trim() !== 'CARE SURCHARGE' )) && claim?.detailTypeCode?.trim() !== 'TOTAL'">
+                                  <input
+                                    type="checkbox"
+                                    id="index"
+                                    [checked]="isChecked(claim)"
+                                    #checkboxInput
+                                    (change)="setAddInvoiceData(claim, checkboxInput.checked)"
+                                  />
+                                </td>
+                                                    <!-- Show regular columns or special text based on detailTypeCode -->
+                                   <ng-container *ngIf="claim?.detailTypeCode?.trim() !== 'TAX' && claim?.detailTypeCode?.trim() !== 'FRGHT' && claim?.detailTypeCode?.trim() !== 'CHRGS' && claim?.detailTypeCode?.trim() !== 'MISC CHARGES' && claim?.detailTypeCode?.trim() !== 'GST' && claim?.detailTypeCode?.trim()  !== 'HST' && claim?.detailTypeCode?.trim() !== 'CARE SURCHARGE' && claim?.detailTypeCode?.trim() !== 'TOTAL'">
+                                  <td>{{ claim?.lineNumber }}</td>
+                                  <td>{{ claim?.rollNbr }}</td>
+                                  <td>{{ claim?.sellingStyleNbr }}</td>
+                                  <td>{{ claim?.colorNbr }}</td>
+                                  <td>{{ claim?.dyeLot }}</td>
+                                  <td>{{ claim?.rcsCode }}</td>
+                                  <td>{{ claim?.grade }}</td>
+                                  <td class="pl-1 text-end">{{ claim?.widthFeet }}' {{ claim?.widthInch }}"</td>
+                                  <td class="pl-1 text-end">{{ claim?.lengthFeet }}' {{ claim?.lengthInch }}"</td>
+                                  <td class="pl-1 text-end">{{ claim?.quantity | number:'1.2-2'}}</td>
+                                  <td>{{ claim?.unitofMeasure }}</td>
+                                  <td class="pl-1 text-end">{{ claim?.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
+                                  <td class="pl-1 text-end">{{ claim?.netAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+                                </ng-container>
+                                <!-- Tax, Freight, and Charges rows -->
+                                <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'TAX'">
+                                  <td colspan="12" class="text-end">TAX</td>
+                                  <td class="text-end">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                                </ng-container>
+                                <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'FRGHT'">
+                                  <td colspan="12" class="text-end">FREIGHT</td>
+                                  <td class="text-end">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                                </ng-container>
+                                <ng-container *ngIf="claim?.lineAmountUsd !== 0 && (claim?.detailTypeCode === 'MISC CHARGES' || claim?.detailTypeCode === 'CHRGS' || claim?.detailTypeCode === 'GST' || claim?.detailTypeCode  === 'HST' || claim?.detailTypeCode === 'CARE SURCHARGE')">
+                                  <td colspan="12" class="text-end">{{claim?.detailTypeCode}}</td>
+                                  <td class="text-end">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                                </ng-container>
+                                <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'TOTAL'">
+                                  <!-- <td colspan="12" class="text-end">TOTAL</td> -->
+                                  <td colspan="14" class="text-end fw-semibold total-active-row">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                                </ng-container>
+                              </tr>
+                            </ng-container>
+                          
+                          </ng-container>
+          
+                          <!-- No records found message -->
+                          <ng-template #noRecords>
+                            <tr>
+                              <td class="text-center" colspan="14">
+                                <p class="mb-0 py-2">Records Not Found</p>
+                              </td>
+                            </tr>
+                          </ng-template>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+          
+              <!-- Default header if invoiceNumberList is empty -->
+              <ng-template #defaultHeader>
+                <div class="col-md-12">
+                  <h4 class="invoice-order">
+                    invoice N/A (Order N/A)
+                  </h4>
+                  <div class="col-md-12 mb-4">
+                    <div class="table-responsive">
+                      <table class="table table-striped table-hover">
+                        <thead>
+                          <tr>
+                            <th>
+                              <input type="checkbox" id="selectAll" disabled />
+                            </th>
+                            <th>Line<br>Number</th>
+                            <th>Roll<br>Number</th>
+                            <th>Style<br>Number</th>
+                            <th>Color<br>Number</th>
+                            <th>DyeLot</th>
+                            <th>RcsCode</th>
+                            <th>Grade</th>
+                            <th>Width<br>Inch</th>
+                            <th>Length<br>Inch</th>
+                            <th>Qty</th>
+                            <th>UOM</th>
+                            <th>Price</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="text-center" colspan="14">
+                              <p class="mb-0 py-2">Records Not Found</p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          
+          
+          
+          
+          
+          
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+              
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="invoiceRowselected"
+                  (click)="addInvoice()">
+              
+                  Add
+                </button>
+                <!-- (click)="openModalPriorClaimSummary()" -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prior Claim Summary -->
+    <!-- <div
+      class="modal modal-bg"
+      id="priorclaimsummary"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="priorclaimsummaryLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="priorclaimsummaryLabel">
+              Prior Claim Summary
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalPriorClaimSummary()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive table-summary">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Origin</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-nowrap">Claim #</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-nowrap">Customer #</th>
+                        <th scope="col" [width]="200">Name</th>
+                        <th scope="col" class="text-nowrap">Invoice #</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-nowrap">CRM #</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-nowrap">DBT #</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-nowrap">Reason Code</th>
+                        <th scope="col" class="text-nowrap">Total Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Current</td>
+                        <td>OPEN</td>
+                        <td>578045</td>
+                        <td>08/02/2019</td>
+                        <td>0004069</td>
+                        <td>ISI DESIGN AND INSTALLATION SOLUTIONS INC</td>
+                        <td>7577923</td>
+                        <td>08/02/2019</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Store Information -->
+    <div
+      class="modal modal-bg"
+      id="storeinvoice"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="storeinvoiceLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="storeinvoiceLabel">
+              Store Information
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="CloseModalStoreInvoice()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12 mb-4">
+        
+              
+                <table class="table table-striped table-hover"
+                matSort (matSortChange)="sortData($event)">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th mat-sort-header="store"> Store #</th>
+                      <th mat-sort-header="commcust">Commcust</th>
+                      <th mat-sort-header="customer"> Customer #</th>
+                      <th mat-sort-header="storeName">  Store Name</th>
+                      <th mat-sort-header="address">Address</th>
+                      <th mat-sort-header="cityStateZip"> City, State, Zip</th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th><input type="text" [(ngModel)]="searchText.storeNumber" (input)="onSearch()" class="search-input" /></th>
+                      <th><input type="text" [(ngModel)]="searchText.primaryCustNumber" (input)="onSearch()" class="search-input" /></th>
+                      <th><input type="text" [(ngModel)]="searchText.customerNumber" (input)="onSearch()" class="search-input" /></th>
+                      <th><input type="text" [(ngModel)]="searchText.customerName" (input)="onSearch()"  class="search-input" /></th>
+                      <th><input type="text" [(ngModel)]="searchText.addressLine1" (input)="onSearch()"  class="search-input" /></th>
+                      <th><input type="text" [(ngModel)]="searchText.city" (input)="onSearch()"  class="search-input" /></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="loading">
+                      <td colspan="7" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </td>
+                    </tr>
+                    <ng-container *ngIf="!loading">
+                      <tr *ngIf="storeListData.length === 0">
+                        <td class="text-center" colspan="14">
+                          <p class="mb-0 py-2">Record Not Found</p>
+                        </td>
+                      </tr>
+                      <tr *ngFor="let store of pagedStoreListData; let i = index" [class.selected]="store.selected" (click)="toggleRowSelection(store)">
+                        <td>
+                          <input type="checkbox" [(ngModel)]="store.selected">
+                        </td>
+                        <td>{{ store.storeNumber }}</td>
+                        <td>{{ store.primaryCustNumber }}</td>
+                        <td>{{ store.customerNumber }}</td>
+                        <td>{{ store.customerName }}</td>
+                        <td>{{ store.address[0]?.addressLine1 }}</td>
+                        <td>{{ store.address[0]?.city }}, {{ store.address[0]?.stateCode }}, {{ store.address[0]?.zipCode }}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+                
+                
+                
+                
+
+                <!-- <ng-container *ngIf="this.storeListData">
+                  <app-table
+                    [data]="storeListData"
+                    [headers]="storeTableHeaders"
+                  ></app-table>
+                </ng-container> -->
+              </div>
+              <div class="col-sm-12 col-md-6 text-end text-md-start">
+                <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block">
+                                    <ul class="pagination">
+                                      <li class="page-item">
+                                        <a class="page-link" (click)="onPreviousPageClick()" aria-label="Previous">
+                                          <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                      </li>
+                                      <li class="page-item" *ngFor="let page of getPageNumbers()">
+                                        <a class="page-link" (click)="onPageNumberClick(page)" [class.active]="page === currentPage">{{ page }}</a>
+                                      </li>
+                                      <li class="page-item">
+                                        <a class="page-link" (click)="onNextPageClick()" aria-label="Next">
+                                          <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div></div>
+                          
+                          
+                          <div class="col-sm-12 col-md-6 mt-2 text-end">
+                    <div class="dataTables_length d-sm-inline-block table-page-view">
+                      <div class="d-flex align-items-center">
+                      <label class="white-nowrap pr-10">
+                        Per Page        
+                      </label>
+                      <select
+                      class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                      id="perPageSelect" >
+                      <option>50</option>
+                      <option>100</option>
+                      <option>150</option>
+                      <option>200</option>
+                    </select>
+                    
+                      
+                    </div></div>
+                
+                    <div
+                      class="dataTables_info d-sm-inline-block mx-3"
+                      role="status"
+                      aria-live="polite"
+                    >Showing {{ getDisplayStart() }} to {{ getDisplayEnd() }} of {{ storeListData.length }} entries
+                    </div>
+                  </div>
+                  
+                  
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-12 d-flex gap-3 flex-wrap">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="CloseModalStoreInvoice()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="setCustomerDataFromStoreTable()"
+                  [disabled]="!storeRowselected"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+  class="modal modal-bg"
+  id="customerModalWarning"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="modalWarningLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-warning" id="modalWarningLabel">
+          <i class="fa-solid fa-triangle-exclamation"></i> Warning
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="CloseCustomerModalWarning()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <p>
+              <!-- Lorem ipsum dolor sit amet. Non iste numquam ut explicabo
+              dolore qui voluptas! -->
+              All the enterd fields will be reset. Are you sure to proceed?
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="resetAllFormFields(customerNumber.value)"
+            >
+              OK
+            </button>
+            <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="CloseCustomerModalWarning()"
+          >
+          Cancel
+          </button>
+            <!-- <button type="button" class="btn btn-primary">Ok</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+class="modal modal-bg"
+id="endUserToggleModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="endUserToggleModalLable"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5
+        class="fw-semibold modal-title fs-20"
+        id="endUserToggleModal"
+      >
+      End user claim
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="cancelEndUserToggleModalModal()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <h4 style="font-size: 17px">Are you sure to initiate the claim as End user claim?</h4>
+      </div>
+     
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="confirmEndUserToggle()"
+          >
+            Confirm
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelEndUserToggleModalModal()"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  <app-footer></app-footer>
+</div>

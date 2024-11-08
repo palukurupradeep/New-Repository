@@ -1,0 +1,501 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header></app-header>
+    <div class="main mb-3">
+      <div class="container-fluid">
+        <div class="row mb-3">
+          <div class="col-lg-9">
+            <div class="page-head">
+              <h1 class="mb-0">View Note Template</h1>
+            </div>
+          </div>
+          <div class="col-lg-3 text-end">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addnotes" class="btn btn-sm btn-primary" [disabled]="authService.hasPermission('ADDNOTE')">
+              Add Note Template</button>
+          </div>
+        </div>
+      </div>
+      <div class="card view-note-info p-4">
+        <table class="table table-striped table-hover table-sorting">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Note Group</th>
+              <th>Note Type</th>
+              <th>Template Name</th>
+              <th>Editable</th>
+              <th>Default</th>
+              <th>Is Manual</th>
+              <th>Template Text</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.groupName"
+                (input)="onTabSearch()"></th>
+              <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.typeName"
+                (input)="onTabSearch()"></th>
+              <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.templateName"
+                (input)="onTabSearch()"></th>
+              <!-- <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.edit"
+                (input)="onTabSearch()"></th>
+              <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.default"
+                (input)="onTabSearch()"></th> -->
+                <th></th>
+                <th></th>
+                <th></th>
+              <th><input type="text" class="search-input"
+                [(ngModel)]="tabSearchText.templateText"
+                (input)="onTabSearch()"></th>
+            </tr>
+          </thead>
+          <tbody *ngIf="allNoteTemplates.length> 0; else noData" >
+              <tr *ngFor="let items of allNoteTemplates.slice((noteListCurrentPage - 1) * noteListItemsPerPage, noteListCurrentPage * noteListItemsPerPage)">
+              <td class="icons-first-column" style="width: 50px;">
+                <a class="text-primary model-click" (click)="openEditTemplate(items)"><i class="fa-solid fa-pencil"></i></a>
+                <a *ngIf="items.isManual" class="text-primary model-click ml-10 text-danger"
+                (click)="openDeleteNoteModal(items)"><i class="fa-solid fa-trash-can"></i></a>
+              </td>
+              <td>{{items.noteGroupName}}</td>
+              <td>{{items.noteTypeName}}</td>
+              <td>{{items.noteTemplateName}}</td>
+              <td>{{items.editable}}</td>
+              <td>{{items.isDefault}}</td>
+              <td>{{items.isManual}}</td>
+              <td class="last-td">{{items.noteTemplateText}}</td>
+            </tr>
+          </tbody>
+          <ng-template #noData>
+            <tbody>
+              <tr>
+                <td class="text-center" colspan="8">
+                  <p class="mb-0 py-2">NO DATA AVAILABLE</p>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+
+        <div class="row">
+          <div class="col-sm-12 col-md-6 text-end text-md-start">
+            <div
+                class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+              >
+              <ul class="pagination">
+                <li class="page-item">
+                  <a
+                      class="page-link"
+                      (click)="onPreviousPageClick(true)"
+                      aria-label="Previous"
+                    >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <ng-container *ngFor="let page of getPageNumbers(true)">
+                  <ng-container
+                    *ngIf="
+                      page <= 5 ||
+                      page > getPageNumbers(true).length - 5 ||
+                      (page >= noteListCurrentPage - 2 &&
+                          page <= noteListCurrentPage + 2)" >
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        (click)="onPageNumberClick(page, true)"
+                        [class.active]="page === noteListCurrentPage"
+                        >{{ page }}</a
+                      >
+                    </li>
+                  </ng-container>
+                  <ng-container
+                      *ngIf="page === 5 && getPageNumbers(true).length > 10"
+                    >
+                    <li class="page-item disabled">
+                      <span class="page-link">...</span>
+                    </li>
+                  </ng-container>
+                </ng-container>
+                <li class="page-item">
+                  <a
+                      class="page-link"
+                      (click)="onNextPageClick(true)"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 text-end">
+              <div class="dataTables_length d-sm-inline-block table-page-view">
+                <div class="d-flex align-items-center">
+                  <label style="white-space: nowrap; padding-right: 10px; margin-right: 10px;">Per Page</label>
+              
+                  <select
+                    class="custom-select custom-select-sm form-select form-control form-control-sm"
+                    id="perPageSelect"
+                    [(ngModel)]="noteListItemsPerPage"
+                    (change)="onItemsPerPageChange()"
+                    style="margin-right: 20px; min-width: 80px;" 
+                  >
+                    <option *ngFor="let option of perPageOptions" [value]="option">
+                      {{ option }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div> 
+     
+      </div>
+      
+  </div>
+  <app-footer></app-footer>
+</div>
+
+
+<!-- Add template Modal -->
+
+<div class="modal modal-bg" id="addnotes" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Add Note Template </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal('addnotes')">
+          
+        </button>
+      </div>
+      <div class="modal-body">
+        <form  [formGroup]="addNoteForm">
+        <div>
+         <div class="row">
+            <div class="col-sm-6 mb-3">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-4 col-form-label">Note Type</label>
+                <div class="col-sm-8">
+                  <select  class="form-control form-select" 
+                    formControlName="noteType" 
+                    (change)="setNoteGroupData()" >
+                    <option *ngFor="let type of noteType" [value]="type.noteTypeId" >
+                      {{type.noteTypeDescription}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-4 col-form-label">Note Group</label>
+                <div class="col-sm-8">
+                  <input type="text" 
+                 class="form-control" 
+                 formControlName="noteGroup"
+                 >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 mb-3">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Template Name<span class="text-danger">*</span></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control"
+                  formControlName="templateName"
+                  (input)="inputValidator($event)">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 mb-3">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label"> Note Template Text</label>
+                <div class="col-sm-10 mb-3">
+                  <textarea type="text"
+                   class="form-control"
+                  formControlName="templateText"
+                  (input)="inputValidator($event)"></textarea>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+           <div class="row">
+
+            <div class="col-sm-4">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-4 col-form-label">Editable</label>
+                <div class="col-sm-8">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input mt-2"
+                    formControlName="editable">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-4 col-form-label">Default</label>
+                <div class="col-sm-8">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" 
+                    formControlName="default" class="form-check-input mt-2">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-4 col-form-label">Manual</label>
+                <div class="col-sm-8">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" 
+                    formControlName="manual" class="form-check-input mt-2">
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+
+            <div class="w-100">
+              <hr />
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">Audit History Template Text</label>
+                  <div class="col-sm-10">
+  
+                    <textarea type="text" 
+                     class="form-control"
+                    formControlName="auditHistorytemplateText"
+                    (input)="inputValidator($event)"></textarea>
+  
+                  </div>
+                </div>
+  
+              </div>
+            </div> 
+        </div>
+      </form>
+
+      </div>
+      <div class="modal-footer">
+        <p class="text-danger note-temp-manadatory">** Either Note Template Text or Audit History Template Text is mandatory</p>
+        <button type="button" class="btn btn-secondary" (click)="closeModal('addnotes')">Cancel</button>
+
+        <button type="button" class="btn btn-primary"(click)=saveNoteTemplate() [disabled]="disableSaveBtn()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit template Modal -->
+
+<div class="modal modal-bg" id="editnotes" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Edit Note Template </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal('editnotes')">
+         
+        </button>
+      </div>
+      <div class="modal-body">
+        <form  [formGroup]="editNoteForm">
+          <div>
+            <div class="row">
+               <div class="col-sm-6 mb-3">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-4 col-form-label">Note Type</label>
+                   <div class="col-sm-8">
+                     <select  class="form-control form-select" 
+                     formControlName="editnoteType" 
+                     (change)="setEditNoteGroupData()" >
+                     <option *ngFor="let types of noteType" [value]="types.noteTypeId"
+                     [selected]="types.noteTypeId==editNoteForm.value.editnoteType">
+                       {{types.noteTypeDescription}}
+                     </option>
+                   </select>
+                   </div>
+                 </div>
+               </div>
+               <div class="col-sm-6">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-4 col-form-label">Note Group</label>
+                   <div class="col-sm-8">
+                     <input type="text" 
+                     value="Audit History"
+                    class="form-control" 
+                    formControlName="editnoteGroup">
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-sm-12">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-2 col-form-label">Template Name<span class="text-danger">*</span></label>
+                   <div class="col-sm-10">
+                     <input type="text" class="form-control"
+                     formControlName="edittemplateName"
+                     (input)="inputValidator($event)">
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <br>
+             <div class="row">
+               <div class="col-sm-12">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-2 col-form-label"> Note Template Text</label>
+                   <div class="col-sm-10 mb-3">
+   
+                     <textarea type="text"   class="form-control"
+                     formControlName="edittemplateText"
+                     (input)="inputValidator($event)"></textarea>
+   
+                   </div>
+                 </div>
+   
+               </div>
+             </div>  
+
+             <div class="row">
+   
+               <div class="col-sm-4">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-4 col-form-label">Editable</label>
+                   <div class="col-sm-8">
+                     <div class="form-check form-switch">
+                       <input type="checkbox" class="form-check-input mt-2"
+                       formControlName="editeditable">
+                     </div>
+                   </div>
+                 </div>
+               </div>
+   
+               <div class="col-sm-4">
+                 <div class="form-group row">
+                   <label for="staticEmail" class="col-sm-4 col-form-label">Default</label>
+                   <div class="col-sm-8">
+                     <div class="form-check form-switch">
+                       <input type="checkbox" 
+                       formControlName="editdefault" class="form-check-input mt-2">
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-4 col-form-label">Manual</label>
+                  <div class="col-sm-8">
+                    <div class="form-check form-switch">
+                      <input type="checkbox" 
+                      formControlName="editmanual" class="form-check-input mt-2">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+             </div>
+
+             <div class="w-100">
+              <hr />
+            </div>
+
+             <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">Audit History Template Text</label>
+                  <div class="col-sm-10">
+  
+                    <textarea type="text" 
+                     class="form-control"
+                    formControlName="editauditHistorytemplateText"
+                    (input)="inputValidator($event)"></textarea>
+  
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+           </div>
+       </form>
+
+      </div>
+      <div class="modal-footer">
+        <p class="text-danger note-temp-manadatory">"Either Note Template Text or Audit History Template Text is mandatory."</p>
+        <button type="button" class="btn btn-secondary" (click)="closeModal('editnotes')">Cancel</button>
+
+        <button type="button" class="btn btn-primary" (click)="editSaveTemplate()"[disabled]="disableUpdateBtn()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+class="modal modal-bg"
+id="deleteModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deleteModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title delete-head" id="deleteModalLabel">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="closeModal('deleteModal')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>“This note template might be in use. Are you sure to delete this?”</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteNoteTemplate()">
+             Delete
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+           (click)="closeModal('deleteModal')"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

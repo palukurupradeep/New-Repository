@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="table-responsive table-summary">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="text-uppercase">Overall</th>
+                        <th scope="col" class="text-uppercase">Defect/Labor</th>
+                        <th scope="col" class="text-uppercase">Admin </th>
+                        <th scope="col" class="text-uppercase text-end pe-3">Overall $</th>
+                        <!-- <th scope="col" class="text-uppercase">Overall Credit Amount$</th> -->
+                        <th scope="col" class="text-uppercase text-end pe-3">Defect/Labor $</th>
+                        <th scope="col" class="text-uppercase text-end pe-3">Admin $</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="claimRateDetails.customerClaimRateDetailDTO !== undefined">
+                        <td class="text-uppercase">Customer</td>
+                        <td> {{ claimRateDetails.customerClaimRateDetailDTO.overallRate }} %</td>
+                        <td> {{ claimRateDetails.customerClaimRateDetailDTO.deffectRate }} %</td>
+                        <td> {{ claimRateDetails.customerClaimRateDetailDTO.adminRate }} %</td>
+                        <td class="text-end pe-3">  {{ claimRateDetails.customerClaimRateDetailDTO.overallSalesAmount | currency:'USD':'symbol':'1.2-2'}} </td>
+                        <!-- <td class="text-end pe-3"> ${{ claimRateDetails.customerClaimRateDetailDTO.overallCreditAmount }} </td> -->
+                        <td class="text-end pe-3">  {{ claimRateDetails.customerClaimRateDetailDTO.deffectCreditAmount | currency:'USD':'symbol':'1.2-2'}} </td>
+                        <td class="text-end pe-3">  {{ claimRateDetails.customerClaimRateDetailDTO.adminCreditAmount | currency:'USD':'symbol':'1.2-2'}} </td>
+                    </tr>
+                    <tr *ngIf="claimRateDetails.shawClaimRateDetailDTO !== undefined">
+                        <td class="text-uppercase">Shaw</td>
+                        <td> {{ claimRateDetails.shawClaimRateDetailDTO.overallRate }} % </td>
+                        <td> {{ claimRateDetails.shawClaimRateDetailDTO.deffectRate }} % </td>
+                        <td> {{ claimRateDetails.shawClaimRateDetailDTO.adminRate }} % </td>
+                        <td class="text-end pe-3">  {{ claimRateDetails.shawClaimRateDetailDTO.overallSalesAmount | currency:'USD':'symbol':'1.2-2' }} </td>
+                        <!-- <td class="text-end pe-3"> ${{ claimRateDetails.shawClaimRateDetailDTO.overallCreditAmount }} </td> -->
+                        <td class="text-end pe-3">  {{ claimRateDetails.shawClaimRateDetailDTO.deffectCreditAmount | currency:'USD':'symbol':'1.2-2' }} </td>
+                        <td class="text-end pe-3"> {{ claimRateDetails.shawClaimRateDetailDTO.adminCreditAmount | currency:'USD':'symbol':'1.2-2' }} </td>
+                    </tr>
+                    <tr *ngIf="claimRateDetails.buyingGroupClaimRateDetailDTO !== undefined">
+                        <td class="text-uppercase">Buying Group</td>
+                        <td> {{ claimRateDetails.buyingGroupClaimRateDetailDTO.overallRate }} % </td>
+                        <td> {{ claimRateDetails.buyingGroupClaimRateDetailDTO.deffectRate }} % </td>
+                        <td> {{ claimRateDetails.buyingGroupClaimRateDetailDTO.adminRate }} % </td>
+                        <td class="text-end pe-3">  {{ claimRateDetails.buyingGroupClaimRateDetailDTO.overallSalesAmount | currency:'USD':'symbol':'1.2-2'}} </td>
+                        <!-- <td class="text-end pe-3"> ${{ claimRateDetails.buyingGroupClaimRateDetailDTO.overallCreditAmount }} </td> -->
+                        <td class="text-end pe-3">  {{ claimRateDetails.buyingGroupClaimRateDetailDTO.deffectCreditAmount | currency:'USD':'symbol':'1.2-2' }} </td>
+                        <td class="text-end pe-3">  {{ claimRateDetails.buyingGroupClaimRateDetailDTO.adminCreditAmount | currency:'USD':'symbol':'1.2-2' }} </td>
+                    </tr>
+                    <!-- <tr *ngIf="claimRateDetails.cumulativeClaimRateDetailDTO !== undefined">
+                        <td class="text-uppercase">Cumulative</td>
+                        <td> {{ claimRateDetails.cumulativeClaimRateDetailDTO.overallRate }}% </td>
+                        <td> {{ claimRateDetails.cumulativeClaimRateDetailDTO.deffectRate }} %</td>
+                        <td> {{ claimRateDetails.cumulativeClaimRateDetailDTO.adminRate }}% </td>
+                        <td class="text-end pe-3">$ {{ claimRateDetails.cumulativeClaimRateDetailDTO.overallSalesAmount }} </td>
+                        <td class="text-end pe-3"> $ {{ claimRateDetails.cumulativeClaimRateDetailDTO.overallCreditAmount }} </td>
+                        <td class="text-end pe-3"> $ {{ claimRateDetails.cumulativeClaimRateDetailDTO.deffectCreditAmount }} </td>
+                        <td class="text-end pe-3"> $ {{ claimRateDetails.cumulativeClaimRateDetailDTO.adminCreditAmount }} </td>
+
+                    </tr> -->
+                </tbody>
+                <!-- <ng-template #noRecords>
+                    <tbody>
+                        <tr>
+                            <td>No Records Found</td>
+                        </tr>
+                    </tbody>
+                </ng-template> -->
+            </table>
+        </div>
+    </div>
+</div>

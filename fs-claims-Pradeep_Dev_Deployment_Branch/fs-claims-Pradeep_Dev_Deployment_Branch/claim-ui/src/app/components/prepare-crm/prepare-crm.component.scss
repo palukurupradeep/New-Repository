@@ -1,0 +1,30 @@
+.btn-equal-w {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  
+  .btn-equal-wh-48 {
+    height: 48px;
+    width: 48px !important;
+    padding: 0 !important;
+  }
+  .no-border{
+    border: 0px !important;
+    text-align: center;
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .no-border:focus{
+    outline: 0px !important;
+  }
+  .btn-equal-wh-36{ height: 30px;
+    width: 30px !important;
+    padding: 0 !important;
+  }
+  .no-bg{
+    background: transparent;}
+
+    .pb-3 {
+      padding-bottom: 1rem !important;
+  }

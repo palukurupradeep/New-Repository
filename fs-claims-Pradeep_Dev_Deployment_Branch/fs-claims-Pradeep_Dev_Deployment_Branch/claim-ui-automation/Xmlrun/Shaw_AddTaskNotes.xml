@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShawClaimX Project Automation  " verbose="10">
+<listeners>
+    <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+</listeners>
+
+	<parameter name="appURL"
+		value="https://fs-claims-sys.shawinc.com/initiateClaim" />
+	<parameter name="browserType" value="chrome" />
+	<test
+		name="ShawClaimX Project Functionalities - AddTaskNotesFlow ">
+		<classes>
+			<class name="com.shawclaimx.ui.addtasknotes.tests.PendTaskTest" />
+			<class name="com.shawclaimx.ui.addtasknotes.tests.SaveTaskTest" />
+			
+		</classes>
+	</test>
+</suite>

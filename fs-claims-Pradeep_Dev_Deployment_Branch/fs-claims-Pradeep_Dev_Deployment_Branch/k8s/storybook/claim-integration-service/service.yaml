@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: claim-integration-service
+  namespace: claim-apps
+  labels:
+    app: claim-integration-service
+spec:
+  selector:
+    app: claim-integration-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP

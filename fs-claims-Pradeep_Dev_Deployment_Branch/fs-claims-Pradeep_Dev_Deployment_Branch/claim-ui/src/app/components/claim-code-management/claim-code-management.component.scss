@@ -1,0 +1,117 @@
+.mt-30{
+    margin-top: 30px;
+}
+.px-20{
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.ml-10{
+    margin-left: 10px;
+}
+.inactive-card{
+    background-color: #e8e8ed!important;
+    border: 1px solid #E8E8ED!important;
+}
+.inactive-card h3{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px !important;
+}
+.model-click{
+    cursor: pointer;
+}
+
+.example-chip-list {
+    width: 100%;
+  }
+  .mat-mdc-chip{
+    margin: 1px;
+  }
+  .no-border-control{
+    border: none;
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 0 5px;
+    margin-bottom: 1px;
+  }
+  .no-border-control:focus-visible {
+    outline: 1px solid var(--primary);
+}
+
+.icon-wrap-new{
+    white-space: nowrap;
+}
+
+.p-r-0{
+    padding-right: 0px !important;
+}
+
+.p-l-new{
+    padding-left: calc(var(--bs-gutter-x) * 1) !important;
+}
+
+.p-l-0{
+    padding-left: 0px !important;
+}
+
+.p-l-switch{
+    padding-left: 1.5em !important;
+}
+.new-width-col{
+    width:12.66% !important;
+}
+
+.new-associate-res .new-width-procedure{
+    width: 400px !important;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.w-150-new{
+    width: 150px;
+}
+
+.w-300{
+    width: 300px !important;
+}
+
+.w-75{
+    width: 75px !important;
+}
+
+.procedure-manual {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* display: block; */
+}
+
+.w-500 {
+    width: 500px !important;
+}
+
+.disabled {
+    // opacity: 0.6;
+    // pointer-events: none;
+    background-color: #f5f5f5;
+    color: #a0a0a0;
+    pointer-events: none;
+  }
+
+  th .sort-arrow {
+    visibility: hidden;
+  }
+  
+  th:hover .sort-arrow {
+    visibility: visible;
+  }
+  
+  th.procedure-manual {
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden;    /* Ensures overflow doesn't break layout */
+   
+  }
+  

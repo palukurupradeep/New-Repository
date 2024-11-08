@@ -1,0 +1,35 @@
+name: Delete Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: 'Kubernetes Namespace'
+        required: true
+        default: 'default'
+      deployment_name:
+        description: 'Deployment Name'
+        required: true
+
+jobs:
+  delete-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Kubernetes
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Authenticate to Kubernetes
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      run: |
+        echo "$KUBE_CONFIG_DATA" | base64 --decode > $HOME/.kube/config
+
+    - name: Delete Deployment
+      run: |
+        kubectl delete deployment ${{ github.event.inputs.deployment_name }} --namespace ${{ github.event.inputs.namespace }}

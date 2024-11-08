@@ -1,0 +1,22 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+  <div class="main pb-4">
+    <div class="container-fluid">
+      <div class="row mt-2 mb-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <h4>Product Catalog</h4>
+          <button type="button" class="btn-primary mx-3">Print</button>
+        </div>
+        <app-product-catalog-claim-info></app-product-catalog-claim-info>
+        <app-product-catalog-specifications></app-product-catalog-specifications>
+
+        <app-product-catalog-results></app-product-catalog-results>
+
+
+      </div>
+
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

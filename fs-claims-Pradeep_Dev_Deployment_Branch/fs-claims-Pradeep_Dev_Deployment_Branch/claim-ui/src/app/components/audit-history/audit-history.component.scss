@@ -1,0 +1,28 @@
+h4{
+    border-bottom: 1px solid var(--primary);
+    font-size: 14px !important;
+}
+
+.date-of-note, .timestamp-note {
+    color: #848484;
+    text-align: right;
+    line-height: normal;
+    margin-right: 4px;
+    vertical-align: super;
+  }
+
+  .badge-task {
+    border-radius: 5px;
+    background: #7e7e7e;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 3px 10px;
+    margin-right: 10px;}
+
+    .audit-history-main:nth-child(even){
+        background-color: #EDEDED;
+    }

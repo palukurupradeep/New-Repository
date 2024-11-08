@@ -1,0 +1,352 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mt-2 mb-2">
+                <h4>Claim Vendor Detail</h4>
+                <div class="col-12 mt-2 mb-3">
+                    <p class="fs-15 fw-medium mb-3">View Detail</p>
+                    <div class="row">
+                    <div class="col-6">
+                      <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Claim Vendor Number</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                     <p>{{vendorDetails.claimVendorNumber}}</p>
+                                  </div>                                       
+                              </div>
+                          </div>                                       
+                      </div>
+                    </div>
+                    <div class="col-6 px-0">
+                      <div class="form-group row mb-2">
+                        <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Status</label>
+                        <div  class="col-sm-8 row">
+                            <div class="form-group mb-2">
+                                <div  class="col-sm-9 text-uppercase">
+                                    <p>
+                                 {{vendorDetails.isStatus}}
+                                </p>
+                                  </div>                                       
+                              </div>
+                          </div>                                       
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                    <div class="col-12">
+                        <div class="form-group row mb-2">
+                            <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Vendor Id</label>
+                            <div  class="col-sm-8 row">
+                                <div class="form-group mb-2">
+                                    <div  class="col-sm-9 text-uppercase">
+                                        <p>
+                                            {{vendorDetails.claimVendorId}}
+                                    </p>
+                                      </div>                                       
+                                  </div>
+                              </div>                                       
+                          </div>
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Name</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                  {{vendorDetails.legalName}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Physical Address</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2"  *ngIf="vpaVendorDetail">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                        {{vpaVendorDetail.fullName}}<br>
+                                        {{vpaVendorDetail.addressLine1}}<br>
+                                        {{vpaVendorDetail.addressLine2}}<br>
+                                        {{vpaVendorDetail.addressLine3}}<br>
+                                        {{vpaVendorDetail.city}}, {{vpaVendorDetail.stateName}} {{vpaVendorDetail.postalCode}}<br>
+                                        {{vpaVendorDetail.countryName}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Contact</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                       {{vendorDetails.primaryContact}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Phone Number</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                {{vendorDetails.phoneNumber}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Fax Number</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                     
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Cell Number</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                     {{vendorDetails.cellNumber}}
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Pager Number</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                    
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Email</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                       {{vendorDetails.emailAddress}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-6">
+                      <div class="col-12">
+                        <label for="" class="col-sm-3 col-form-label fw-semibold py-1">Vendor Location</label>
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Trade / DBA Name</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                      <p>
+                                  {{vendorDetails.dbaName}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Remit-To Address</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2" >
+                                  <div  class="col-sm-9 text-uppercase">
+                                    <p *ngIf="remitToAddress">
+                                        {{remitToAddress.fullName}}<br>
+                                        {{remitToAddress.addressLine1}}<br>
+                                        {{remitToAddress.addressLine2}}<br>
+                                        {{remitToAddress.addressLine3}}<br>
+                                        {{remitToAddress.city}}, {{remitToAddress.stateName}} {{remitToAddress.postalCode}}<br>
+                                        {{remitToAddress.countryName}}
+                                  </p>
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group row mb-2">
+                          <label for="" class="col-sm-4 col-form-label fw-semibold py-0">Contact</label>
+                          <div  class="col-sm-8 row">
+                              <div class="form-group mb-2">
+                                  <div  class="col-sm-9 text-uppercase">
+                                     {{vendorDetails.secondaryContact}}
+                                    </div>                                       
+                                </div>
+                            </div>                                       
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                </div>
+                  </div>
+                <div class="col-12 mt-2">
+                    <p class="fs-15 fw-medium mb-3">Certifying Agencies</p>
+                    <div class="table-responsive mb-3">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th> Certifying Agency </th>
+                                        <th> Service Type </th>
+                                        <th>Certificate No.</th>
+                                        <th>Certificate Exp. Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="4" class="text-center">No Certifying Agencies</td>
+                                </tr>                
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="col-12 mt-2">
+                    <p class="fs-15 fw-medium mb-3">Services</p>
+                    <div class="row">
+                        <div class="col-3">
+                            <p class="fw-semibold mb-3">Type</p>  
+                            <div class="form-group row mb-3">
+                                <div *ngFor="let values of inspectionSeviceTypes">
+                                    <label for="" class="col-sm-6 col-form-label">{{values.inspectionServiceTypeName}}</label>
+                                    <div  class="col-sm-2">
+                                        <div class="form-check form-inline">
+                                            <input type="checkbox" 
+                                            [checked] ="checkTypeValues(values)"
+                                            [disabled]="true"
+                                             class="form-check-input mt-2">
+                                        </div>
+                                    </div> 
+                                </div>
+                                                                
+                            </div>
+                        </div>
+                        <div class="col-1 border-left-1">
+                        </div>
+                        <div class="col-8">
+                            <p class="fw-semibold mb-3">Services</p>  
+                            <div class="form-group row mb-3">
+                                <div *ngFor="let services of inspectionSevices">
+                                    <label for="" class="col-sm-3 col-form-label">{{services.inspectionServiceName}}</label>
+                                    <div  class="col-sm-1">
+                                        <div class="form-check form-inline">
+                                            <input type="checkbox"  
+                                            [checked] ="checkServiceValues(services)"
+                                            [disabled]="true" 
+                                             class="form-check-input mt-2">
+                                        </div>
+                                        <!-- [checked] ="checkServiceValues(item)" -->
+                                    </div> 
+                                </div>
+                             </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <p class="fs-15 fw-medium mb-3">Schedule of Charges</p>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%"> Charge Description </th>
+                                    <th> Price </th>
+                                    <th>UOM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center">No Schedule of Charges</td>
+                            </tr>                
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="fw-medium mb-2">Comments</p>
+                    <div class="row mb-2">
+                    <div class="col-4">
+                        <p class="date-and-name">08/19/2023 03:40 PM - <span class="fw-semibold">Sandy Postelle</span></p>
+                    </div>
+                    <div class="col-8 text-uppercase">
+                        <p>The following are the fields that changed in this updated transaction.<br>
+                        Field Background-chk-dt from 2024-11-07 to 1901-01-01.</p>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <p class="date-and-name">08/19/2023 03:40 PM - <span class="fw-semibold">Sandy Postelle</span></p>
+                    </div>
+                    <div class="col-8 text-uppercase">
+                        <p>The following are the fields that changed in this updated transaction.<br>
+                        Field Background-chk-dt from 2024-11-07 to 1901-01-01.</p>
+                    </div>
+                </div>
+                </div>
+                <div class="text-end mt-2 mb-2 col-12">
+                   <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10" (click)="backToMapPage()">Back</button>
+                   <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="openVendorLists()">List Requests</button>
+                   <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToClaimDetail()">Request Inspection</button>
+                   <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToClaimDetail()">Request Invoice Only</button>
+                   <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToClaimDetail()">Request Service</button>
+                   <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToClaimDetail()">Request Addendum</button>
+                   <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10" (click)="openCancelModal()">Cancel</button>
+                 </div>
+            </div>
+</div>
+<app-footer></app-footer>
+</div>
+</div>
+
+<!-- cancel modal -->
+<div
+class="modal modal-bg modal-md" id="cancel-request-Inspection">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"> Cancel Action</h5>
+      <button
+        type="button" class="btn-close" (click)="closeModal('cancel-request-Inspection')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p class="fw-semibold mb-2"> Please Choose your request type:</p> 
+     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary mx-2" (click)="navToClaimDetail()">
+        Confirm
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal('cancel-request-Inspection')">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+</div>

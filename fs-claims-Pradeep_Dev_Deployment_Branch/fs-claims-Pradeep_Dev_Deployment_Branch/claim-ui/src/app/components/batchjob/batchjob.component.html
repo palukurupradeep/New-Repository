@@ -1,0 +1,396 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)" [childNav]="childNavValue"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header></app-header>
+    <div class="main pb-4">
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-lg-4">
+                    <div class="page-head">
+                        <h1 class="mb-0">Claim Job</h1>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 text-end">
+                    <!-- <button type="button" class="btn btn-primary" (click)="openAddJob()" *ngIf="!backBtn">
+                        Add Job
+                    </button> -->
+                    <button type="button" class="btn btn-primary" (click)="onAddJob()" data-bs-toggle="modal"
+                        data-bs-target="#jobFormModal">
+                        Add Job
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card claim-info p-4">
+            <div>
+
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table matSort (matSortChange)="sortData($event.active, $event.direction)"
+                             class="table table-striped table-hover table-sorting">
+                                <thead>
+                                    <tr class="bg-light th-ws-nowrap">
+                                        <th colspan="2">Actions</th>
+                                        <th mat-sort-header="jobName">Job Name</th>
+                                        <th>Job Description</th>
+                                        <th mat-sort-header="frequency">Frequency</th>
+                                        <th>Execution Result</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2"></th>
+                                        <th>
+                                            <input type="text" class="search-input" placeholder="Search Job Name"
+                                                [(ngModel)]="searchJobName"
+                                                (keypress)="onKeyPress($event)"
+                                                 (ngModelChange)="filterJobs()" />
+                                        </th>
+                                        <th></th>
+                                        <th>
+                                            <input type="text" class="search-input" placeholder="Search Frequency"
+                                                [(ngModel)]="searchFrequency" 
+                                                (keypress)="onKeyPress($event)"
+                                                (ngModelChange)="filterJobs()" />
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="!loading; else spinner">
+                                    <!-- Loop through paginatedJobs for pagination to work properly -->
+                                    <tr *ngFor="let job of paginatedJobs">
+                                        <td class="text-center">
+                                            <a class="text-primary model-click" data-bs-toggle="modal"
+                                                data-bs-target="#jobFormModal" (click)="setViewMode(job)">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="text-primary model-click" data-bs-toggle="modal"
+                                                (click)="setEditMode(job)" data-bs-target="#jobFormModal">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </a>
+                                        </td>
+                                        <td>{{ job.jobName }}</td>
+                                        <td>{{ job.jobDescription }}</td>
+                                        <td>{{ job.jobFrequency }}</td>
+                                        <td>{{ job.executionResult }}</td>
+                                        <td>{{ job.alertEmail }}</td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center">
+                                                <label class="form-check form-switch">
+                                                    <input
+                                                        class="form-check-input mt-2 model-click position-relative new-bottom"
+                                                        type="checkbox" id="flexSwitchCheckDefault"
+                                                        [checked]="job.statusId === 1"
+                                                        (change)="toggleStatus($event, job)" />
+                                                    <label class="form-check-label"
+                                                        for="flexSwitchCheckDefault"></label>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Show message when no records are found -->
+                                    <tr *ngIf="paginatedJobs.length === 0">
+                                        <td class="text-center" colspan="8">
+                                            <p class="mb-0 py-2">Records not found</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Loading spinner -->
+                        <ng-template #spinner>
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 text-end text-md-start">
+                        <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block">
+                            <ul class="pagination">
+                                <!-- Previous page link -->
+                                <li class="page-item" [class.disabled]="currentPage === 1">
+                                    <a class="page-link" (click)="onJobsPreviousPageClick()" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <!-- Display page numbers using ngFor loop -->
+                                <ng-container *ngFor="let page of displayedPageNumbers()">
+                                    <li class="page-item" [class.active]="page === currentPage">
+                                        <a class="page-link" (click)="onJobsPageNumberClick(page)">{{ page }}</a>
+                                    </li>
+                                </ng-container>
+
+                                <!-- Next page link -->
+                                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                    <a class="page-link" (click)="onJobsNextPageClick()" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 mt-2 text-end">
+                        <div class="dataTables_length d-sm-inline-block table-page-view">
+                            <div class="d-flex align-items-center">
+                                <label class="per-page-style white-nowrap">Per Page</label>
+
+                                <select
+                                    class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style"
+                                    [(ngModel)]="itemsPerPage" (change)="onJobsPageSizeChange()">
+                                    <option *ngFor="let option of perPageOptions" [value]="option">{{ option }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal modal-bg" id="jobFormModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-all modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="jobModalLabel">
+                                {{ isViewMode ? 'View Job Information' : (isEditMode ? 'Edit Job' : 'Add Job') }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                (click)="closeForm()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form [formGroup]="jobForm">
+                                <!-- First Row: Job Name and Job Description -->
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="jobName" class="col-form-label">Job Name</label>
+                                        <input type="text" class="form-control" formControlName="jobName" id="jobName"
+                                            [readonly]="isViewMode" />
+                                        <div
+                                            *ngIf="jobForm.get('jobName')?.invalid && (jobForm.get('jobName')?.touched || jobForm.get('jobName')?.dirty)">
+                                            <small class="text-danger"
+                                                *ngIf="jobForm.get('jobName')?.errors?.['required']">
+                                                Job Name is required
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="jobDescription" class="col-form-label">Job Description</label>
+                                        <textarea class="form-control" formControlName="jobDescription"
+                                            id="jobDescription" rows="3" [readonly]="isViewMode"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Second Row: Email and Job Status -->
+                                <div class="row mt-3">
+                                    <div class="col-4">
+                                        <label for="alertEmail" class="col-form-label">Email</label>
+                                        <input type="email" class="form-control" formControlName="alertEmail"
+                                            id="alertEmail" [readonly]="isViewMode" />
+                                        <div
+                                            *ngIf="jobForm.get('alertEmail')?.invalid && (jobForm.get('alertEmail')?.touched || jobForm.get('alertEmail')?.dirty)">
+                                            <small class="text-danger"
+                                                *ngIf="jobForm.get('alertEmail')?.errors?.['required']">
+                                                Email is required
+                                            </small>
+                                            <small class="text-danger"
+                                                *ngIf="jobForm.get('alertEmail')?.errors?.['email']">
+                                                Invalid email format
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="jobStatus" class="col-form-label mb-2 text-center w-100">Job
+                                            Status</label>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="form-check form-switch">
+                                                <!-- Bind checkbox checked property to status value, and toggle on change -->
+                                                <input class="form-check-input" type="checkbox" id="jobStatus"
+                                                    [checked]="jobForm.get('status')?.value === 1"
+                                                    (change)="toggleStatusForm($event)" [disabled]="isViewMode" />
+                                                <label class="form-check-label" for="jobStatus"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <!-- Third Row: Frequency and Schedule -->
+                                <div class="row mt-3">
+                                    <!-- Frequency Selection -->
+                                    <div class="col-3">
+                                        <label for="frequency" class="col-form-label">Frequency</label>
+                                        <mat-form-field>
+                                            <mat-select formControlName="frequency" id="frequency"
+                                                [disabled]="isViewMode"
+                                                (selectionChange)="onFrequencyChange($event.value)">
+                                                <mat-option value="noOption">Select option</mat-option>
+                                                <mat-option value="Daily">Daily</mat-option>
+                                                <mat-option value="Weekly">Weekly</mat-option>
+                                                <mat-option value="Monthly">Monthly</mat-option>
+                                                <mat-option value="Yearly">Yearly</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Schedule Selection -->
+                                    <div class="col-1">
+                                        <label for="hours" class="col-form-label">Hour</label>
+                                        <mat-form-field>
+                                            <mat-select formControlName="hour" id="hours" [disabled]="isViewMode">
+                                                <mat-option *ngFor="let hour of hourOptions" [value]="hour">{{ hour
+                                                    }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-1">
+                                        <label for="minutes" class="col-form-label">Minute</label>
+                                        <mat-form-field>
+                                            <mat-select formControlName="minute" id="minutes" [disabled]="isViewMode">
+                                                <mat-option *ngFor="let minute of minuteOptions" [value]="minute">{{
+                                                    minute }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Daily: Show Daily Options (Mon-Fri) -->
+                                    <div *ngIf="showDailyOptions || (isViewMode && jobForm.get('frequency')?.value === 'Daily')||(isEditMode && jobForm.get('frequency')?.value === 'Daily')"
+                                        class="col-3">
+                                        <label class="col-form-label">Days (Daily)</label>
+                                        <div class="d-flex justify-content-between">
+                                            <div *ngFor="let day of daysOfWeek.slice(0, 5)" class="day-checkbox">
+                                                <mat-checkbox disabled="true" checked="true">{{ day }}</mat-checkbox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="showWeeklyOptions || (isViewMode && jobForm.get('frequency')?.value === 'Weekly') || (isEditMode && jobForm.get('frequency')?.value === 'Weekly')"
+                                        class="col-4">
+                                        <label class="col-form-label">Days (Weekly)</label>
+                                        <div class="d-flex justify-content-between">
+                                            <!-- Iterate over daysOfWeek array and display checkboxes for each day -->
+                                            <div *ngFor="let day of daysOfWeek.slice(0, 5)" class="day-checkbox">
+                                                <mat-checkbox [checked]="checkedDays.includes(day.toLowerCase())"
+                                                    (change)="onDaySelectionChange($event, day)"
+                                                    [disabled]="isViewMode">
+                                                    {{ day }}
+                                                </mat-checkbox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Monthly: Allow users to select days -->
+                                    <div *ngIf="jobForm.get('frequency')?.value === 'Monthly'" class="col-3">
+                                        <label class="col-form-label">
+                                            {{ isViewMode ? 'Runs On (Monthly)' : 'Start Date (Monthly)' }}
+                                        </label>
+                                        <div class="input-group">
+                                            <!-- Edit Mode: Monthly Start Date Input with Calendar Icon -->
+                                            <div *ngIf="!isViewMode" class="input-group">
+                                                <!-- Monthly Start Date Input Field -->
+                                                <input type="text" formControlName="monthlyStartDate" class="form-control"
+                                                         #monthlyStartDatePicker="bsDatepicker"
+                                                       [bsConfig]="bsConfig" bsDatepicker triggers="dblclick:click"
+                                                       (bsValueChange)="onDateChange($event, 'Monthly')" placeholder="MM/DD/YYYY"
+                                                       (input)="autoFormatDate($event)" [value]="getFormattedDate('monthlyStartDate')" />
+                                                
+                                                <!-- Calendar Icon to toggle Datepicker -->
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text datepicker" (click)="monthlyStartDatePicker.toggle()">
+                                                        <i class="fa-regular fa-calendar-days"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                    
+                                            <!-- View Mode: Display "Runs On" with only the day from Start Date -->
+                                            <input *ngIf="isViewMode" type="text" class="form-control"
+                                                   [value]="getDayFromDate(jobForm.get('monthlyStartDate')?.value)"
+                                                   [disabled]="isViewMode" />
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Yearly: Start Date for Edit/Add Job Mode, Runs On for View Mode -->
+                                    <div *ngIf="jobForm.get('frequency')?.value === 'Yearly'" class="col-3">
+                                        <label class="col-form-label">
+                                            {{ isViewMode ? 'Runs On (Yearly)' : 'Start Date (Yearly)' }}
+                                        </label>
+                                        <div class="input-group">
+                                            <!-- Edit Mode: Yearly Start Date Input with Calendar Icon -->
+                                            <div *ngIf="!isViewMode" class="input-group">
+                                                <!-- Yearly Start Date Input Field -->
+                                                <input type="text" formControlName="yearlyStartDate" class="form-control"
+                                                       #yearlyStartDatePicker="bsDatepicker" [bsConfig]="bsConfig" bsDatepicker triggers="dblclick:click"
+                                                       (bsValueChange)="onDateChange($event, 'Yearly')" placeholder="MM/DD/YYYY"
+                                                       (input)="autoFormatDate($event)" [value]="getFormattedDate('yearlyStartDate')" />
+                                    
+                                                <!-- Calendar Icon to toggle Datepicker -->
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text datepicker" (click)="yearlyStartDatePicker.toggle()">
+                                                        <i class="fa-regular fa-calendar-days"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                    
+                                            <!-- View Mode: Display "Runs On" with day and month from Start Date -->
+                                            <input *ngIf="isViewMode" type="text" class="form-control"
+                                                   [value]="getDayAndMonthFromDate(jobForm.get('yearlyStartDate')?.value)"
+                                                   [disabled]="isViewMode" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Additional fields for View Mode -->
+                                <div *ngIf="isViewMode" class="row mt-3">
+                                    <div class="col-3">
+                                        <label for="executionResult" class="col-form-label">Execution Result</label>
+                                        <textarea class="form-control" formControlName="executionResult"
+                                            id="executionResult" rows="3" readonly></textarea>
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="error" class="col-form-label">Error</label>
+                                        <textarea class="form-control" formControlName="error" id="error" rows="3"
+                                            readonly></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Form Buttons -->
+                                <div class="mt-3 text-end">
+                                    <button *ngIf="!isViewMode" type="button" class="btn btn-primary"
+                                        (click)="isEditMode ? saveChanges() : addJob()" data-bs-dismiss="modal">
+                                        {{ isEditMode ? 'Save Changes' : 'Add Job' }}
+                                    </button>
+                                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeForm()">
+                            {{ isViewMode ? 'Close' : 'Cancel' }}
+                          </button> -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+          <app-footer></app-footer> 
+
+
+        </div>
+    </div>
+</div>

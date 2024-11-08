@@ -1,0 +1,127 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+  <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+  <div class="main pb-4">
+    <div class="container-fluid">
+      <div class="row mt-2 mb-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <h4>Shop Order #U7255</h4>
+          <button type="button" class="btn-primary mx-3">Print</button>
+        </div>
+
+        <app-product-catalog-claim-info></app-product-catalog-claim-info>
+
+        <div class="col-12 mt-3 mb-3">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="mb-0">View Shop Order</h6>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6" *ngIf="shopOrderData['OrderDate']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Order Date</label>
+                <div class="col-sm-8">
+                  <p class="mb-0">{{ shopOrderData['OrderDate'] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['CompleteDate']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Complete Date</label>
+                <div class="col-sm-8">
+                  <p class="mb-0">{{ shopOrderData['CompleteDate'] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['Style']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Style</label>
+                <div class="col-sm-8">
+                  <p class="mb-0">{{ shopOrderData['Style'] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['Color']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Color</label>
+                <div class="col-sm-8">
+                  <p class="mb-0 text-uppercase">{{ shopOrderData['Color'] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['StdWidth']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Std Width</label>
+                <div class="col-sm-8">
+                  <p class="mb-0 text-uppercase">{{shopOrderData['StdWidth']}}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['CutLength']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Cut Length</label>
+                <div class="col-sm-8">
+                  <a href="" class="">{{shopOrderData['CutLength']}}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['GGComp']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">GG Comp</label>
+                <div class="col-sm-8">
+                  <p class="mb-0 text-uppercase">{{shopOrderData['GGComp']}}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6" *ngIf="shopOrderData['BackingCode']">
+              <div class="form-group row mb-2">
+                <label for="" class="col-sm-4 col-form-label  py-0">Backing Code</label>
+                <div class="col-sm-8">
+                  <p class="mb-0 text-uppercase">{{shopOrderData['BackingCode']}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mt-2 mb-3">
+          <h6 class="mb-3">Production Routing</h6>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col" class="text-center">Process</th>
+                  <th scope="col" class="text-center">Plant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let route of productionRoutingData">
+                  <td class="text-uppercase text-center">{{ route.process }}</td>
+                  <td class="text-uppercase text-center">
+                    <a href="">{{ route.plant }}</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-12 mt-2 mb-3">
+          <h6 class="mb-3">Shop Order Rolls</h6>
+          <app-shop-order-rolls></app-shop-order-rolls>
+        </div>
+
+
+      </div>
+
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

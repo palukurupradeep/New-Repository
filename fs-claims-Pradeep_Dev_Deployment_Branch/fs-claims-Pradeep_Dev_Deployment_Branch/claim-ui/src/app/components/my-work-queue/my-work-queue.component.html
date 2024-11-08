@@ -1,0 +1,216 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header></app-header>
+    <div class="main">
+        <div class="container-fluid">
+          <div class="row mb-3">
+             <div class="col-lg-12">
+              <h1>Work History for: {{ currentDate }}</h1>
+            </div>
+            <div class="col-lg-2">
+              <div class="page-head">
+                <h1 class="mb-0">Work History</h1>
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </div>
+                
+            </div>
+         
+          
+
+                           <!-- First Dropdown -->
+<div class="col-lg-2">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedGroupName" (selectionChange)="getManagersList()">
+      <mat-option *ngFor="let group of groupList" [value]="group.userGroupId">
+        {{ group.userGroupDescription }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- Second Dropdown -->
+<div class="col-lg-2">
+  <mat-form-field>
+    <mat-select [(ngModel)]="selectedManagerName" (selectionChange)="onManagerSelected()">
+      <mat-option *ngFor="let manager of managerList" [value]="manager.userId">
+        {{ manager.firstName + ' ' + manager.middleInitial + ' ' + manager.lastName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+          </div>
+
+          
+  
+          <div class="row mb-3">
+            <div class="card claim-info work-history-info p-4">
+             
+                <table class="table table-striped table-hover" 
+                matSort (matSortChange)="sortData($event)">
+                  <thead>
+                    <tr>
+                      <th mat-sort-header="username">User Name</th>
+                      <th mat-sort-header="workstatus">Work Status</th>
+                      <th mat-sort-header="claimnumber"> Claim Number</th>
+                      <th mat-sort-header="claimAmount">Claim Amount</th>
+                      <th mat-sort-header="reasonCode">Reason Code</th>
+                      <th mat-sort-header="customerNumber">Customer Number</th>
+                      <th mat-sort-header="customername">Customer Name</th>
+                      <th mat-sort-header="citystatezip">city,state zip</th>
+                      <th mat-sort-header="endUserName">endUserName</th>
+                      <th mat-sort-header="workTime">workTime</th>
+                     
+                     
+                    </tr>
+                    <tr>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.userName" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.workstatus" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.claimnumber" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.claimamount" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.reasoncode" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.customernumber" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.customername" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.citystatezip" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.endusername" (input)="onTabSearch()"></th>
+                      <th><input type="text" class="search-input" [(ngModel)]="tabSearchText.worktime" (input)="onTabSearch()"></th>
+                    </tr>
+                    
+                  </thead>
+                  <tbody *ngIf="workHistoryDetails.length> 0; else noData">
+                    <tr *ngFor="let item of workHistoryDetails.slice((workhistoryListCurrentPage - 1) * workhistoryListItemsPerPage, workhistoryListCurrentPage * workhistoryListItemsPerPage)">
+                      <td>{{item.username}}</td>
+                      <td>{{item.workStatus}}</td>
+                      <td>
+                        <a [routerLink]="['/claim-detail',item.claimNumber]">{{ item.claimNumber }}</a>
+                    </td>
+                      <td class="text-align">{{item.claimAmount |  currency:'USD':'symbol':'1.2-2':'en-US'}}</td>
+                      <td>{{item.reasonCode}}</td>
+                      <td>{{item.customerNumber}}</td>
+                      <td>{{item.customerName}}</td>
+                      <td>{{ item.city ? item.city + ', ' : '' }}{{ item.state }} {{ item.zip }}</td>
+                      <!-- <td>{{item.city}}, {{item.state}} {{item.zip}}</td> -->
+                      <td>{{item.endUserName}}</td>
+                      <td>{{ item.workTime | date : "MM-dd-yyyy HH:mm:ss" }}</td>
+                    </tr>
+                  </tbody>
+                  <ng-template #noData>
+                    <tbody>
+                      <tr>
+                        <td class="text-center" colspan="10">
+                          <p class="mb-0 py-2">Records not found</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </ng-template>
+                </table>
+                <!-- <div class="row">
+                  <div class="col-sm-12 col-md-6 text-end text-md-start">
+                    <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block">
+                      <ul class="pagination">
+                        <li class="page-item">
+                          <a aria-label="Previous" class="page-link">
+                            <span aria-hidden="true">«</span></a></li>
+                            <li class="page-item active ng-star-inserted">
+                              <a class="page-link">1</a>
+                            </li>
+                            <li class="page-item">
+                              <a aria-label="Next" class="page-link">
+                                <span aria-hidden="true">»</span></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 mt-2 text-end">
+                          <div class="dataTables_length d-sm-inline-block table-page-view">
+                            <div class="d-flex align-items-center">
+                              <label class="per-page-style white-nowrap">Per Page</label>
+                              <select style="margin-right: 20px;margin-left: 10px; min-width: 80px;" id="perPageSelect" class="custom-select custom-select-sm form-select form-control form-control-sm per-page-select-style ">
+                                <option  value="50" > 50 </option>
+                                <option value="100" > 100 </option>
+                                <option value="250" > 250 </option>
+                                <option  value="500" > 500 </option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+            
+
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 text-end text-md-start">
+                          <div
+                              class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+                            >
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    (click)="onPreviousPageClick(true)"
+                                    aria-label="Previous"
+                                  >
+                                  <span aria-hidden="true">&laquo;</span>
+                                </a>
+                              </li>
+                              <ng-container *ngFor="let page of getPageNumbers(true)">
+                                <ng-container
+                                  *ngIf="
+                                    page <= 5 ||
+                                    page > getPageNumbers(true).length - 5 ||
+                                    (page >= workhistoryListCurrentPage - 2 &&
+                                        page <= workhistoryListCurrentPage + 2)" >
+                                  <li class="page-item">
+                                    <a
+                                      class="page-link"
+                                      (click)="onPageNumberClick(page, true)"
+                                      [class.active]="page === workhistoryListCurrentPage"
+                                      >{{ page }}</a
+                                    >
+                                  </li>
+                                </ng-container>
+                                <ng-container
+                                    *ngIf="page === 5 && getPageNumbers(true).length > 10"
+                                  >
+                                  <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                  </li>
+                                </ng-container>
+                              </ng-container>
+                              <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    (click)="onNextPageClick(true)"
+                                    aria-label="Next"
+                                  >
+                                    <span aria-hidden="true">&raquo;</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6 text-end">
+                            <div class="dataTables_length d-sm-inline-block table-page-view">
+                              <div class="d-flex align-items-center">
+                                <label style="white-space: nowrap; padding-right: 10px; margin-right: 10px;">Per Page</label>
+                            
+                                <select
+                                  class="custom-select custom-select-sm form-select form-control form-control-sm"
+                                  id="perPageSelect"
+                                  [(ngModel)]="workhistoryListItemsPerPage"
+                                  (change)="onItemsPerPageChange()"
+                                  style="margin-right: 20px; min-width: 80px;" 
+                                >
+                                  <option *ngFor="let option of perPageOptions" [value]="option">
+                                    {{ option }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>

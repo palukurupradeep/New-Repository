@@ -1,0 +1,53 @@
+.align-right{
+   text-align: right;
+}
+.btn-rounded{
+    width: 28px;
+    height: 28px;
+    background: var(--primary)!important;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 3px 8px;
+}
+
+thead th{
+    white-space: nowrap;
+}
+
+.btn-rounded img{
+    height: 14px;
+}
+.popup-total-cost{
+    display: flex;
+    justify-content: space-between;
+}
+.search-input{
+    font-size: 11px;
+}
+.font-bold{
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.p-x-1{
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.pt-0{
+    padding-top:0px ;
+}
+
+.w-auto{
+    width:auto
+}
+
+.new-total{
+    font-size: 11.5px !important;
+    margin-right: 5px;
+    font-weight: 600;
+}
+
+.view-disabled{
+    color:grey;
+}

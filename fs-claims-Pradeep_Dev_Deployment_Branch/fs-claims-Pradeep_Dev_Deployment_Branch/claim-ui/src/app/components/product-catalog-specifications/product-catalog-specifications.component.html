@@ -1,0 +1,61 @@
+<div class="col-12 mt-3 mb-3"  [formGroup]="productSpecForm">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h6 class="mb-0">Search for Product Specifications</h6>
+      <button type="button" class="btn-primary mx-3" (click)="onFind()"  [disabled]="productSpecForm.invalid" >Find</button>
+    </div>
+
+    <div class="row mb-3 mt-2">
+      <div class="col-6">
+        <div class="form-group row mb-3">
+          <label for="" class="col-sm-4 col-form-label  py-0">Product</label>
+          <div class="col-sm-8">
+            <mat-form-field>
+              <mat-select formControlName="product">
+                <mat-option *ngFor="let option of productOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+              
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group row mb-3">
+          <label for="" class="col-sm-4 col-form-label  py-0">Style Number</label>
+          <div class="col-sm-8">
+            <input class="form-control" type="text" formControlName="styleNumber">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group row mb-3">
+          <label for="" class="col-sm-4 col-form-label  py-0">Style Name</label>
+          <div class="col-sm-8">
+            <input class="form-control" type="text" formControlName="styleName">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group row mb-3">
+          <label for="" class="col-sm-4 col-form-label  py-0">Cust Ref Number</label>
+          <div class="col-sm-8">
+            <input class="form-control" type="text" formControlName="custRefNumber">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group row mb-3">
+          <label for="" class="col-sm-4 col-form-label  py-0">Std Width</label>
+          <div class="col-sm-8">
+            <p class="mb-0 text-uppercase">144</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>

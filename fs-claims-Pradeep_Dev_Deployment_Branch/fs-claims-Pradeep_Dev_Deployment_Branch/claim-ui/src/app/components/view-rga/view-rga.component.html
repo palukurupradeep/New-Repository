@@ -1,0 +1,189 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+<div class="p-3">
+    <h4>Prepare Return Goods Authorization</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group row mb-2">
+                <label for="" class="col-sm-3 col-form-label">RGA Number:</label>
+                <div  class="col-sm-9 row">
+                    <div class="form-group">
+                        <div  class="col-sm-9 text-uppercase">
+                            <p> {{ rgaNumber }}</p> 
+                        </div>                                       
+                    </div>
+                </div>                                       
+            </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-3 col-form-label">Return To</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase">
+                                <p>{{locationName}}</p>
+                            </div>                                       
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+            <div class="col-12">
+                <!-- <p class="text-uppercase">Accomodation - Dealer Choice</p> -->
+                <div class="table-responsive">
+                    <form >
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Issue Date</th>
+                                    <th scope="col">Claim Number</th>
+                                    <th scope="col">Account Number</th>
+                                    <th scope="col">Sell Co</th>
+                                    <th scope="col">Region</th>
+                                    <th scope="col">Dist</th>
+                                    <th scope="col">Sales Person</th>
+                                    <th scope="col">Area</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Use Angular, React, or other frameworks to iterate through rgaDetails -->
+                                <!-- Example using Angular ngFor -->
+                                <tr *ngIf="rgaDetails">
+                                   
+                                    <!-- <td>{{ ('000' + line.selectedLine.invoiceLineNumber ).slice(-3) }}/{{ ('000' + line.selectedLine.lineNumber).slice(-3) }}</td> -->
+                                    
+                                    <td>{{ rgaDetails.issuedDate}}</td>
+                                    <td>{{claimNumber}}</td>
+                                 
+                                    <td>{{ rgaDetails.customerNumber }}</td>
+                                    <td>{{ rgaDetails.sellingCompany }}</td>
+                                    <td>{{ rgaDetails.region }}</td>
+                                    <td>{{ rgaDetails.division }}</td>
+                                    <td>{{ rgaDetails.salesPerson }}</td>
+                                    <td>{{ rgaDetails.claimAreaId }}</td>
+                                     
+                                </tr>
+                            </tbody>
+                           
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-3 col-form-label">Sold To:</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group mb-2">
+                            <div  class="col-sm-9 text-uppercase">
+                                <div *ngIf="selectedOption === 'soldTo'">
+                                    <div *ngIf="getFilteredAddress()">
+                                      <p>{{ getFilteredAddress().fullName }}</p>
+                                      <p>{{ getFilteredAddress().addressLine1 }}</p>
+                                      <p>{{ getFilteredAddress().addressLine2 }}</p>
+                                      <p>{{ getFilteredAddress().city }}, {{ getFilteredAddress().stateName }} , {{ getFilteredAddress()?.postalCode.length === 9 ? (getFilteredAddress()?.postalCode.slice(0, 5) + '-' + getFilteredAddress()?.postalCode.slice(5)) : getFilteredAddress()?.postalCode }}</p>
+                                    
+                                    </div>
+                                  </div>                                   
+                        </div>
+                    </div>                                       
+                </div>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Line</th>
+                                    <th scope="col">Style Number</th>
+                                    <th scope="col">Style Name</th>
+                                    <th scope="col">Color Number</th>
+                                    <th scope="col">Color Name</th>
+                                    <th scope="col">Roll Number</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Inv Nbr</th>
+                                    <th scope="col">Inv Date</th>
+                                    <th scope="col">Reason Code</th>
+                                    <th scope="col">Reason Desc</th>
+                                    <th scope="col">Width</th>
+                                    <th scope="col">Length</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Use Angular, React, or other frameworks to iterate through rgaDetails -->
+                                <!-- Example using Angular ngFor -->
+                                <tr *ngFor="let item of rgaDetails?.claimRgaLineDTO">
+                                     <!-- <td>{{ ('000' + line.selectedLine.invoiceLineNumber ).slice(-3) }}/{{ ('000' + line.selectedLine.lineNumber).slice(-3) }}</td> --> 
+                                    <td>{{ ('000' +  item.rgaLineNumber).slice(-3)  }}</td>
+                                    <td>{{ item.styleNumber }}</td>
+                                    <td>{{ item.styleName }}</td>
+                                    <td>{{ item.colorNumber }}</td>
+                                    <td>{{ item.colorName }}</td>
+                                    <td>{{ item.rollNumber }}</td>
+                                    <td>{{ item.type }}</td>
+                                    <td>{{ item.invNumber }}</td>
+                                    <td>{{ item.invDate | date:'dd/MM/yyyy' }}</td>
+                                    <td>{{ item.reasonCode }}</td>
+                                    <td>{{ item.reasonCodeDescription || ''  }}</td>
+                                    <td>{{ item.issuedWidthInFeet }}</td>
+                                    <td>{{ item.issuedLengthInFeet }}</td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+    <div class="col-12">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label">Pickup Location:</label>
+            <div  class="col-sm-9 row">
+                <div class="form-group mb-2">
+                    <div  class="col-sm-9 text-uppercase">
+                        <p>{{ rgaDetails?.rgaAddressDTO?.fullName }}<br>
+                            {{ rgaDetails?.rgaAddressDTO?.addressLine1 }}<br>
+                            {{ rgaDetails?.rgaAddressDTO?.addressLine2 }}<br>
+                            {{ rgaDetails?.rgaAddressDTO?.city }}<br>
+                            {{ rgaDetails?.rgaAddressDTO?.stateName }}<br>
+                            {{ rgaDetails.rgaAddressDTO?.postalCode.length === 9 
+                                ? (rgaDetails.rgaAddressDTO.postalCode.slice(0, 5) + '-' + rgaDetails.rgaAddressDTO.postalCode.slice(5)) 
+                                : rgaDetails.rgaAddressDTO?.postalCode 
+                            }}
+                                                  </p>
+                    </div>                                       
+                </div>
+            </div>                                       
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group row mb-2">
+            <label for="" class="col-sm-3 col-form-label">Comments:</label>
+            <div  class="col-sm-9 row">
+                <div class="form-group">
+                    <div  class="col-sm-9 text-uppercase">
+                      <p>{{ rgaDetails?.comments }}</p>
+                    </div>                                       
+                </div>
+            </div>                                       
+        </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-end">
+                <button type="button" class="btn btn-secondary mx-2" (click)="navigateToEditRGa()"
+                 >
+                    Back
+                </button>
+                <button type="button" class="btn btn-secondary mx-2"  (click)="saveAsDraft('P')">
+                    Save as Draft
+                </button>
+                <button type="button" class="btn btn-primary mx-2" (click)="saveAsDraft('I')">
+                    Issue
+                </button>
+                <button type="button" class="btn btn-secondary"  (click)="cancelRga()">
+                    Cancel 
+                </button>
+            </div>
+        </div>
+        </div>
+        </div></div></div>

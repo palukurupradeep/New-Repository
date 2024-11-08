@@ -1,0 +1,10 @@
+<!-- toaster.component.html -->
+<div class="toaster-container">
+    <div *ngFor="let toast of toasts" class="toast" [ngClass]="toast.type">
+      <div class="toast-content">
+        {{ toast.message }}
+      </div>
+      <button class="toast-close-btn" (click)="removeToast(toast)">&#x2715;</button>
+    </div>
+  </div>
+  

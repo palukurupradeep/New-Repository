@@ -1,0 +1,179 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header></app-header>
+    <div class="main">
+      <div class="container-fluid">
+        <div class="row mb-3">
+          <div class="col-lg-12">
+            <div class="page-head">
+              <h1 class="mb-0">Resolution Maintenance</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-lg-12">          
+                <div class="card p-4">
+                  <div class="text-end mt-30">
+                    
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addModel" (click)="setFormValues({}, 'add')" class="d-sm-inline-block btn btn-sm btn-primary ml-10">Add</button>
+                    <button type="button" class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToDashboard()">Done</button>
+                  </div>
+                  <div class="mt-30">
+                    <table class="table table-striped table-hover table-sorting table-resolution-new" 
+                    matSort (matSortChange)="sortData($event)">
+                        <thead>
+                          <tr>
+                            <th class="w-75"></th>
+                            <th mat-sort-header="resolutionName">Resolution Name</th>
+                            <th mat-sort-header="description">Description</th>
+                            <th mat-sort-header="proceduremanual">Procedure Manual Reference</th>
+                            
+                          </tr>
+                          <tr>
+                            <th></th>
+                            <th><input type="text" class="search-input"
+                              [(ngModel)]="tabSearchText.resolutionNameText" (input)="onTabSearch()"></th>
+                            <th><input type="text" class="search-input" 
+                              [(ngModel)]="tabSearchText.resolutionDescription"
+                            (input)="onTabSearch()"></th>
+                            <th><input type="text" class="search-input"
+                              [(ngModel)]="tabSearchText.proceduremanualUrl"
+                            (input)="onTabSearch()"></th>                                           
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="sortedresolutions.length> 0; else noData">
+                          <tr *ngFor="let item of sortedresolutions">
+                            <td class="w-75">
+                              <a class="text-primary model-click" (click)="setFormValues(item, 'edit')" data-bs-toggle="modal" data-bs-target="#addModel"><i class="fa-solid fa-pencil"></i></a>
+                              <a class="text-primary model-click ml-10 text-danger" (click) ="openDeleteModel(item.resolutionId)"><i class="fa-solid fa-trash-can"></i></a>
+                            </td>
+                            <td class="w-200">{{item.resolutionName}}</td>
+                            <td class="w-500">{{item.description}}</td>
+                            <!-- <td>{{item.procedureManual}}</td> -->
+                            <td class="w-300 procedure-manual">
+                              <a href="{{ item.procedureManual }}" target="_blank">{{item.procedureManual}}</a>
+                            </td>
+                           
+                          </tr>
+                        
+                         
+                        </tbody>
+                        <ng-template #noData>
+                          <tbody>
+                            <tr>
+                              <td class="text-center" colspan="6">
+                                <p class="mb-0 py-2">Record Not Found</p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </ng-template>
+                      </table>
+                </div>
+                <div class="text-end mt-30">
+                    
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addModel" (click)="setFormValues({}, 'add')" class="d-sm-inline-block btn btn-sm btn-primary ml-10">Add</button>
+                    <button type="button" class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="navToDashboard()">Done</button>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>
+
+
+
+
+<div class="modal modal-bg" id="addModel" tabindex="-1" role="dialog" aria-labelledby="FieldChooserLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"> {{type == 'add' ? 'Add Resolution Item'  : 'update Resolution Item'}} </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="resolutionForm">
+      <div class="form-group row mb-3">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Resolution Name:<span class="text-danger">*</span></label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputPassword" formControlName="resolutionName" placeholder="Type the menu name">
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Description:<span class="text-danger">*</span></label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputPassword" formControlName="description" placeholder="Type the description of the menu">
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Procedure Manual Reference:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputPassword" formControlName="procedureManual" placeholder="Type the menu URL">
+        </div>
+      </div>
+    </form>
+      
+             
+     
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="addOrUpdateResolution()" [disabled]="resolutionForm.invalid">{{type == 'add' ? 'Add' : 'Update'}}</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div
+class="modal modal-bg"
+id="deleteResolutionModel"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deleteRuleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deleteResolutionModel">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="closeModal()"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Are you want to delete this Resolution</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteResolution()"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

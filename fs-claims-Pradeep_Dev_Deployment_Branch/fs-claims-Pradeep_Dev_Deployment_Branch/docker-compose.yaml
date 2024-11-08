@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  claim-initiation-service:
+    build:
+      context: ./claim-initiation-service
+    ports:
+      - "8080:8082"
+    image: claim-initiation-service:latest
+
+  claim-integration-service:
+    build:
+      context: ./claim-integration-service
+    ports: 
+      - "8081:8081"
+    depends_on:
+      - claim-initiation-service
+    image: claim-integration-service:latest
+  
+  claim-security-service:
+    build:
+      context: ./claim-security-service
+    ports:
+      - "8082:8083"
+    depends_on:
+      - claim-integration-service
+    image: claim-security-service:latest

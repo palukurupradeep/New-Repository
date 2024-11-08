@@ -1,0 +1,19 @@
+<div class="col-12 mt-2 mb-3">
+    <h6 class="mb-3">Plant - PLT 13 CVILLE</h6>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <!--   <thead>
+  <tr>
+    <th scope="col">Process</th>
+    <th scope="col">Plant</th>
+  </tr>
+</thead> -->
+            <tbody>
+                <tr *ngFor="let info of plantInformation">
+                    <td class="text-uppercase fw-semibold">{{ info.key }}</td>
+                    <td class="text-uppercase">{{ info.value }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

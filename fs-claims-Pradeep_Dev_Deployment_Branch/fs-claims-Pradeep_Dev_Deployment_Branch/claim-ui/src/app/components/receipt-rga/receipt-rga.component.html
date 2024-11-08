@@ -1,0 +1,365 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+<div class="p-3">
+    <h4>Receipt of Goods</h4>
+    <div class="row">
+        <h6 class="mb-3 py-2">Receive Goods</h6>
+        <div class="col-4">
+          <form [formGroup]="rgaForm">
+            <div class="form-group row mb-2">
+              <label for="rganumber" class="col-sm-3 col-form-label">RGA Number</label>
+              <div class="col-sm-9 row">
+                <div class="form-group">
+                  <div class="col-12 text-uppercase position-relative search-new-1 cursor-pointer mb-2">
+                    <i class="fa fa-search" (click)="filterRgaData()"></i>
+                    <input type="text" class="form-control" formControlName="rganumber" 
+                           id="rganumber" (keyup.enter)="filterRgaData()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+            </div>
+            <div class="col-4">
+                <div class="form-group row mb-2">
+                    <label for="" class="col-sm-3 col-form-label">Plant</label>
+                    <div  class="col-sm-9 row align-items-center">
+                        <div class="form-group">
+                            <div  class="col-12 text-uppercase">
+                                           <p class="mb-0">PQ &nbsp; <i  (click)="openModalnew()" class="fa fa-edit"></i></p>                          
+                            </div>                                       
+                        </div>
+                    </div>                                       
+                </div>
+                </div>
+                 <div class="col-4">
+                    <button type="button" class="btn btn-primary mx-2" >
+                      Print Inspection Report
+                  </button>
+              </div>
+            <div class="col-4" *ngIf="selectedRga">
+                <div class="form-group row mb-2 align-items-center">
+                    <label for="" class="col-sm-3 col-form-label">RGA date</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group col-12 text-uppercase">
+                               <p class="mb-0">{{ selectedRga.rgaDate }}</p>                         
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+            <div class="col-4" *ngIf="selectedRga">
+                <div class="form-group row mb-2 align-items-center">
+                    <label for="" class="col-sm-3 col-form-label">Claim Number</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group col-12 text-uppercase">
+                               <p class="mb-0"><a href="">{{ selectedRga.claimNumber }}</a></p>                         
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+            <div class="col-4" >
+                <div class="form-group row mb-2 align-items-center">
+                                      <div  class="col-sm-9 row">
+                        <div class="form-group col-12 text-uppercase">
+                               <p class="mb-0 text-center"><a href="/process-receipt">Process Receipts</a></p>                         
+                        </div>
+                    </div>                                       
+                </div>
+            </div>  
+            <div class="col-4"  *ngIf="selectedRga">
+                <div class="form-group row mb-2 align-items-center">
+                    <label for="" class="col-sm-3 col-form-label">Customer</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group col-12 text-uppercase">
+                               <p class="mb-0">{{ selectedRga.customer }}</p>                         
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+            <div class="col-4"  *ngIf="selectedRga">
+                <div class="form-group row mb-2 align-items-center">
+                    <label for="" class="col-sm-3 col-form-label">Special Instructions</label>
+                    <div  class="col-sm-9 row">
+                        <div class="form-group col-12 text-uppercase">
+                               <p class="mb-0">{{ selectedRga.specialInstruction }}</p>                         
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+<div class="col-4"></div>
+
+<div class="col-12 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2 py-2">
+<h6 >Freight</h6>
+<button class="btn-primary btn-equal-wh-48 flex-shrink-0"  (click)="openFreightModal()" >
+    <i aria-hidden="true" class="fa fa-plus"></i></button>
+</div>   
+<div class="table-responsive">
+        <form >
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Carrier Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Prepaid / Collect</th>
+                        <th scope="col">Bill Freight Nbr</th>
+                        <th scope="col">Bill Freight Charge</th>
+                        <th scope="col">Date / Time</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let freight of freightData">
+                    <td>
+                      <a href="#" class="ps-2">
+                        <img src="../../../assets/images/ic_delete.svg" alt="Delete">
+                      </a>
+                    </td>
+                    <td><input type="text" class="form-control" [(ngModel)]="freight.carrierCode"></td>
+                    <td>{{ freight.name }}</td>
+                    <td>
+                      <mat-form-field appearance="fill">
+                        <mat-select [(value)]="freight.prepaidCollect">
+                          <mat-option [value]="'Collect'">Collect</mat-option>
+                          <mat-option [value]="'Prepaid'">Prepaid</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                    <td><input type="text" class="form-control" [(ngModel)]="freight.billFreightNbr"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="freight.billFreightCharge"></td>
+                    <td>{{ freight.dateTime }}</td>
+                    <td>{{ freight.status }}</td>
+                  </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<div class="col-12 mt-3">
+<h6 class="mb-3 py-2">Merchandise</h6>
+<div class="table-responsive mb-3">
+        <form >
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Line</th>
+                        <th scope="col">Selling Style</th>
+                        <th scope="col">Inventory Style</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Roll Nbr</th>
+                        <th scope="col">Lot</th>
+                        <th scope="col">Width</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">New Roll Nbr</th>
+                        <th scope="col">Bin Location</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Received Date / Time</th>
+                        <th scope="col">UOM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> <div class="form-check form-inline">
+                            <input type="checkbox" 
+                             formControlName="check-now" 
+                             class="form-check-input mt-2">
+                        </div></td>
+                        <td>001</td>
+                        <td><a href="">02V26</a></td>
+                        <td>02U26</td>
+                        <td><a href="">00609</a></td>
+                        <td></td>
+                        <td></td>
+                        <td>0' 0"</td>
+                        <td>0' 0"</td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td></td>
+                        <td></td>
+                        <td>EA</td>
+                    </tr>
+                    <tr>
+                        <td> <div class="form-check form-inline">
+                            <input type="checkbox" 
+                             formControlName="check-now" 
+                             class="form-check-input mt-2">
+                        </div></td>
+                        <td>002</td>
+                        <td><a href="">01V04</a></td>
+                        <td>01U04</td>
+                        <td><a href="">00609</a></td>
+                        <td></td>
+                        <td></td>
+                        <td>0' 0"</td>
+                        <td>0' 0"</td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td></td>
+                        <td></td>
+                        <td>EA</td>
+                    </tr>
+                    <tr>
+                        <td> <div class="form-check form-inline">
+                            <input type="checkbox" 
+                             formControlName="check-now" 
+                             class="form-check-input mt-2">
+                        </div></td>
+                        <td>003</td>
+                        <td><a href="">01V54</a></td>
+                        <td>01U54</td>
+                        <td><a href="">00609</a></td>
+                        <td></td>
+                        <td></td>
+                        <td>0' 00"</td>
+                        <td>0' 00"</td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td>F</td>
+                        <td></td>
+                        <td>EA</td>
+                    </tr>
+                    <tr>
+                        <td> <div class="form-check form-inline">
+                            <input type="checkbox" 
+                             formControlName="check-now" 
+                             class="form-check-input mt-2">
+                        </div></td>
+                        <td>004</td>
+                        <td><a href="">VV034</a></td>
+                        <td>UV922</td>
+                        <td><a href="">00609</a></td>
+                        <td></td>
+                        <td></td>
+                        <td>0' 00"</td>
+                        <td>0' 00"</td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td>F</td>
+                        <td></td>
+                        <td>BOX</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+        </div>
+
+         <!-- confirm modal -->
+    <div class="modal modal-bg " id="openModalnew">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content" >
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Plant</h5>
+          <button
+            type="button"
+            class="btn-close" (click)="closeModal('openModalnew')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mt-2">
+                <div  class="col-9 text-uppercase position-relative mb-2">
+                    <mat-form-field appearance="fill">
+                        <mat-select  placeholder="Select Plant">
+                          <mat-option value="DU">
+                            DU
+                          </mat-option>
+                          <mat-option value="PQ">
+                            PQ
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </div>                                       
+            </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-12 d-flex gap-3 flex-wrap">
+              <button
+                type="button"
+                class="btn btn-primary mx-2">
+                Continue
+              </button>     
+              <button
+              type="button"
+              class="btn btn-secondary" (click)="closeModal('openModalnew')">
+              Cancel
+            </button>        
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- Freight Modal -->
+<div class="modal model-bg" id="freightModal" tabindex="-1" aria-labelledby="freightModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="freightModalLabel">Freight Details</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeFreightModel()"></button>
+        </div>
+        <div class="modal-body">
+          <form  *ngIf="freightForm" [formGroup]="freightForm">
+            <div class="mb-3">
+              <label for="carrierCode" class="form-label">Carrier Code</label>
+              <input type="text" class="form-control" id="carrierCode" formControlName="carrierCode">
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" formControlName="name">
+            </div>
+            <div class="mb-3">
+              <label for="prepaidCollect" class="form-label">Prepaid / Collect</label>
+              <select class="form-control" id="prepaidCollect" formControlName="prepaidCollect">
+                <option value="prepaid">Prepaid</option>
+                <option value="collect">Collect</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="billFreightNbr" class="form-label">Bill Freight Nbr</label>
+              <input type="text" class="form-control" id="billFreightNbr" formControlName="billFreightNbr">
+            </div>
+            <div class="mb-3">
+              <label for="billFreightCharge" class="form-label">Bill Freight Charge</label>
+              <input type="text" class="form-control" id="billFreightCharge" formControlName="billFreightCharge">
+            </div>
+            <div class="mb-3">
+              <label for="dateTime" class="form-label">Date / Time</label>
+              <input type="text" class="form-control" id="dateTime" formControlName="dateTime">
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <input type="text" class="form-control" id="status" formControlName="status">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeFreightModel()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="updateFreight()">Update</button>
+        </div>
+      </div>
+    </div>
+</div>
+    
+        <div class="row">
+            <div class="col-12 text-end">
+                <button type="button" class="btn btn-primary mx-2" >
+                    Update
+                </button>
+                <button type="button" class="btn btn-secondary" >
+                    Done
+                </button>
+            </div>
+        </div>
+        </div>
+        </div></div></div>S

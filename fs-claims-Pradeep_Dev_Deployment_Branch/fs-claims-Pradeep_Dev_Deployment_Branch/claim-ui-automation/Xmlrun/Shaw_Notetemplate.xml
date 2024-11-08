@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShawClaimX Project Automation  " verbose="10">
+<listeners>
+    <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+</listeners>
+
+	<parameter name="appURL"
+		value="https://fs-claims-sys.shawinc.com/view-note-template" />
+	<parameter name="browserType" value="chrome" />
+	<test
+		name="ShawClaimX Project Functionalities - NoteTemplateFlow ">
+		<classes>
+			<class name="com.shawclaimx.ui.notetemplate.tests.AddNewNoteTemplateTest" />
+			
+		</classes>
+	</test>
+</suite>

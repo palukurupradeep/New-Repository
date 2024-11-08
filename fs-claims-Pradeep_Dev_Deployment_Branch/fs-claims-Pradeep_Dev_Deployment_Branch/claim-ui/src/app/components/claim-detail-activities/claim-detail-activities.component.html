@@ -1,0 +1,983 @@
+<div class="h-100 card-box-10 cd-newly-added">
+    <div class="position-relative">
+        <div class="card-box-10 py-20 px-20">
+            <div class="cd-notification" id="notification">
+                <span id="sampleArrivalDate">Sample arrived at lab on 3/14/2022</span>
+            </div>
+
+            <div class="border-bottom"></div>
+
+            <div *ngIf="mergedClaimNumbers && mergedClaimNumbers.length > 0" class="other-claims"
+                id="mergedClaimsSection">
+                <div class="row py-0">
+                    <div class="form-group row">
+                        <label id="mergedClaimsDropdownlabel" class="col-sm-4 col-form-label">Merged Claims</label>
+                        <div class="col-sm-8">
+                            <!-- Dynamic dropdown using *ngFor -->
+                            <mat-form-field>
+                                <mat-select id="mergedClaimsDropdown" [(ngModel)]="selectedDropDownMerge">
+                                    <mat-option *ngFor="let claim of mergedClaimNumbers" [value]="claim.claimNumber">
+                                        {{ claim.claimNumber }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button type="button" class="btn-view" (click)="navigateToClaimDetail()" id="viewButton">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-bottom"></div>
+            <div class="right-icon position-relative">
+                <i class="fa fa-hand-pointer position-absolute" id="handPointerIcon"></i>
+            </div>
+            <div class="pt-3 right-side-box-cd d-flex justify-content-start flex-row gap-2 align-items-center flex-wrap"
+                id="buttonSection" clickOutside (clickOutside)="clickOutside()">
+                <button class="btn btn-primary" (click)="getReassignUserList()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    *ngIf="showOtherButtons" id="reassignButton">
+                    Reassign
+                </button>
+                <button class="btn btn-primary" *ngIf="showOtherButtons" (click)="openRoutingModal()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="routeButton">
+                    Route
+                </button>
+                <button *ngIf="!unPauseBtnVisible()" class="btn btn-primary" (click)="updateAllActions('Pause','hideEmit')"
+                    [disabled]="claimDetails.claimStatusId == 1? false : true" id="pauseButton">Pause</button>
+                <button *ngIf="unPauseBtnVisible()" class="btn btn-primary" (click)="pauseAction('unPause')"
+                    id="unpauseButton">UnPause</button>
+                <button class="btn btn-primary" (click)="getDeclineClaim()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    *ngIf="showDeclineBtn" id="declineButton">
+                    Decline
+                </button>
+                <button class="btn btn-primary" (click)="getPendClaim()" id="pendButton" 
+                 [disabled]="claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 2 ||
+                 claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 3" >
+                    Pend
+                </button>
+                <button class="btn btn-primary" (click)="getRqstInfoClaim()" id="requestInfoButton" 
+                 [disabled]="claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 2 || 
+                 claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 3">
+                    Request for Information
+                </button>
+                <button *ngIf="closeVisible()" class="btn btn-primary" (click)="closeopenModal()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="closeButton">Close</button>
+                <button *ngIf="isReopenButtonVisible()" class="btn btn-primary" (click)="updateAllActions('Reopen')"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 3 || !isReopenButtonEnabled() || (claimDetails.claimStatusId == 2 && claimDetails.workStatusId == 60)"
+                    id="reopenButton">Reopen</button>
+                <button class="btn btn-primary" *ngIf="voidAction()" (click)="openVoidModal()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="voidButton">Void</button>
+                <button *ngIf="mergeBtn" class="btn btn-primary" (click)="getUnmergeClaimdata()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="mergeButton">Merge</button>
+                <button *ngIf="showUnMergeBtn" class="btn btn-primary" (click)="openUnMergeModl()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="unmergeButton">Unmerge</button>
+                <button *ngIf="iscButton" class="btn btn-primary" (click)="updateAllActions('AssignedToPricing')"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="assignToPricingButton">Assign To Pricing</button>
+                <button *ngIf="showIscBtn" class="btn btn-primary" (click)="updateAllActions('RemovedFromPricing')"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="removedFromPricingButton">Removed From Pricing</button>
+                <button *ngIf="evaluateSample" class="btn btn-primary" (click)="requestSampleModal()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="requestSampleButton">Request Sample</button>
+                <button *ngIf="sampleReceivedBtn" class="btn btn-primary" (click)="updateSampleReview('SampleReceived')"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="sampleReceivedButton">Sample Received</button>
+                <button *ngIf="samplereviewdBtn" class="btn btn-primary" (click)="openEvaluateModal()"
+                    [disabled]="claimDetails.claimStatusId === 4 || claimDetails.claimStatusId === 2 || claimDetails.claimStatusId === 5 || claimDetails.claimStatusId === 3"
+                    id="reviewSampleButton">Review Sample</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Decline Modal -->
+<div class="modal  modal-bg" id="declainModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="declineModalTitle">Decline Claim</h4>
+                <button type="button" class="btn-close" (click)="closeModal('declainModal')"
+                    id="declineModalCloseButton"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4" id="declineForm">
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="declineReasonLabel">
+                            Decline Reason
+                        </label>
+                        <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12" id="declineReasonContainer">
+
+                            <mat-form-field>
+                                <mat-select [(value)]="declineReasonId" (selectionChange)="onDeclineReasonChange()">
+                                    <mat-option *ngFor="let item of declineList" [value]="item.declineReasonId">
+                                        {{ item.declineReasonDescription}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="showNote">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">Note</label>
+                                <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12">
+
+                                    <textarea type="text" class="form-control" [(ngModel)]="declineReasonNote"
+                                        (input)="inputValidator($event)"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end" id="declineModalFooter">
+                        <button type="button" class="btn btn-primary mx-2" (click)="saveDecline()"
+                            [disabled]="declineBtn()" id="declineButtonId">
+                            Decline
+                        </button>
+                        <!-- <button type="button" class="btn btn-primary mx-2" >
+                Decline & Prepare Disposition
+            </button> -->
+                        <button type="button" class="btn btn-secondary" (click)="closeModal('declainModal')"
+                            id="cancelButton">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pend Modal -->
+<div class="modal  modal-bg" id="PendModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0">Pend Claim</h4>
+                <button type="button" class="btn-close" (click)="closeModal('PendModal')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4">
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                            Pend Claim
+                        </label>
+                        <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12">
+                            <div class="col-4">
+                                <div class="form-check form-inline">
+                                    <input type="radio" class="form-check-input mt-1">
+                                    Pend Replacement
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check form-inline">
+                                    <input type="radio" class="form-check-input mt-1">
+                                    Pend Partial Replacement
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check form-inline">
+                                    <input type="radio" class="form-check-input mt-1">
+                                    Pend STK/ATK
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">Note<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12">
+
+                                    <textarea type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end" id="PendModalFooter">
+                        <button type="button" class="btn btn-primary mx-2" (click)="savePend()">
+                            Pend
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="closeModal('PendModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request for Info Modal -->
+<div class="modal  modal-bg" id="RequestInfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0">Request For Information</h4>
+                <button type="button" class="btn-close" (click)="closeModal('RequestInfoModal')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">Note<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12">
+
+                                    <textarea type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-primary mx-2" (click)="saveRequstInfo()">
+                            Request for Information
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="closeModal('RequestInfoModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reassign modal -->
+<div class="modal modal-bg" id="reassignModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="reassignModalTitle">Reassign Claim</h4>
+                <button type="button" id="reassignModalCloseButton" class="btn-close" aria-label="Close"
+                    (click)="closeModal('reassignModal')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4" id="reassignForm">
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="userGroupLabel">
+                            User Group
+                        </label>
+                        <div class="col-12 col-xxl-10 col-xl-10 col-lg-6 col-md-6 col-sm-12" id="userGroupContainer">
+                            <mat-form-field appearance="fill" id="userGroupField">
+                                <mat-select id="userGroupDropdown" [(ngModel)]="selectedUserName"
+                                    (selectionChange)="getManagersList()">
+                                    <mat-option *ngFor="let user of userList" [value]="user.userGroupId">
+                                        {{ user.userGroupDescription }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="userLabel">
+                            User
+                        </label>
+                        <div class="col-12 col-xxl-10 col-xl-10 col-lg-6 col-md-6 col-sm-12" id="userContainer">
+                            <mat-form-field appearance="fill" id="userField">
+                                <input type="text" matInput id="userInput" [matAutocomplete]="auto"
+                                    [(ngModel)]="selectedManagerName" (input)="filterManagers($event)"
+                                    [disabled]="!isDataLoaded">
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayManagerName">
+                                    <mat-option *ngFor="let manager of filteredManagers" [value]="manager">
+                                        {{ manager.firstName + ' ' + manager.middleInitial + ' ' + manager.lastName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <!-- 
+                          <mat-form-field appearance="fill">
+                              <mat-select [(ngModel)]="selectedManagerName" [disabled]="!isDataLoaded">
+                                  <mat-option *ngFor="let manager of managerList" [value]="manager.userId">
+                                      {{ manager.firstName + ' ' + manager.middleInitial + ' ' + manager.lastName }}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                          -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end" id="reassignModalFooter">
+                        <button type="button" id="reassignButtonModal" class="btn btn-primary mx-2"
+                            data-bs-dismiss="modal" (click)="reAssign()" [disabled]="reassignToggle()">
+                            Reassign
+                        </button>
+                        <button type="button" id="cancelButtonreassign" class="btn btn-secondary"
+                            (click)="closeModal('reassignModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Merge modal -->
+<div class="modal modal-bg" id="mergeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="mergeModalTitle">Merge Claim</h4>
+                <button type="button" id="mergeModalCloseButton" class="btn-close" aria-label="Close"
+                    (click)="closeModal('mergeModal')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4" id="mergeForm">
+                    <div class="row mb-4">
+                        <label for="claimNumberField"
+                            class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                            Claim Number
+                        </label>
+                        <div class="col-12 col-xxl-9 col-xl-10 col-lg-6 col-md-6 col-sm-12 position-relative">
+                            <p *ngIf="selectedMergeReasonCode" class="text-danger mb-0 position-absolute"
+                                id="mergeWarningText">This Claim does not have ReasonCode.</p>
+                            <div class="input-container">
+                                <input #inputMerge [matAutocomplete]="autoMerge" matInput type="text"
+                                    placeholder="Search Claim Number" (input)="filterMergeOptions($event)"
+                                    class="form-control pr-33">
+                                <mat-icon matSuffix class="dropdown-icon">arrow_drop_down</mat-icon>
+                            </div>
+                            <mat-autocomplete #autoMerge="matAutocomplete">
+                                <ng-container *ngIf="filteredMergeOptions?.length > 0; else noDataMessage">
+                                    <mat-option (click)="selectMergeOption(option)"
+                                        *ngFor="let option of filteredMergeOptions" [value]="option.claimNumber">
+                                        {{ option.claimNumber }}
+                                    </mat-option>
+                                </ng-container>
+                                <ng-template #noDataMessage>
+                                    <mat-option disabled>No data Found</mat-option>
+                                </ng-template>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row" id="mergeNoteGroup">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                                    id="mergeNoteLabel">
+                                    Merge Note
+                                </label>
+                                <div class="col-12 col-xxl-9 col-xl-10 col-lg-6 col-md-6 col-sm-12"
+                                    id="mergeNoteContainer">
+                                    <textarea type="text" id="mergeNoteTextarea" class="form-control"
+                                        [(ngModel)]="noteTemplateText" [disable]="noteTextDisable"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4" id="mergeModalFooter">
+                <div class="row">
+                    <div class="col-12 text-end" id="mergeModalButtons">
+                        <button type="button" id="mergeButtonId" class="btn btn-primary mx-2" (click)="mergeClaim()"
+                            [disabled]="!canMerge() || selectedMergeReasonCode || checkDisableMergeBtn()"
+                            data-bs-dismiss="modal">
+                            Merge
+                        </button>
+                        <button type="button" id="cancelButtonmerge" class="btn btn-secondary"
+                            (click)="closeModal('mergeModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- UnMerge modal -->
+<div class="modal modal-bg" id="UnmergeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="unmergeModalTitle">UnMerge Claim</h4>
+                <button type="button" id="unmergeModalCloseButton" class="btn-close"
+                    (click)="closeModal('UnmergeModal')" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4" id="unmergeForm">
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="unmergeClaimNumberLabel">
+                            Claim Number
+                        </label>
+                        <div class="col-12 col-xxl-3 col-xl-10 col-lg-6 col-md-6 col-sm-12"
+                            id="unmergeClaimNumberContainer">
+                            <mat-form-field id="unmergeClaimNumberField">
+                                <mat-select id="unmergeClaimNumberDropdown" [(value)]="unSelectedMerge">
+                                    <mat-option *ngFor="let claim of mergedClaimNumbers" [value]="claim.claimId">
+                                        {{ claim.claimNumber }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row" id="unmergeNoteGroup">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                                    id="unmergeNoteLabel">
+                                    Unmerge Note
+                                </label>
+                                <div class="col-12 col-xxl-3 col-xl-10 col-lg-6 col-md-6 col-sm-12"
+                                    id="unmergeNoteContainer">
+                                    <textarea type="text" id="unmergeNoteTextarea" class="form-control"
+                                        (input)="inputValidator($event)" [(ngModel)]="noteTemplateText"
+                                        [disable]="noteTextDisable"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4" id="unmergeModalFooter">
+                <div class="row">
+                    <div class="col-12 text-end" id="unmergeModalButtons">
+                        <button type="button" id="unmergeButtonId" class="btn btn-primary mx-2" (click)="UnMergeClaim()"
+                            [disabled]="!canUnMerge()">
+                            UnMerge
+                        </button>
+                        <button type="button" id="cancelButtonid" class="btn btn-secondary"
+                            (click)="closeModal('UnmergeModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Routing modal -->
+
+<div class="modal modal-bg" id="routingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="routingModalTitle">Routing</h4>
+                <button type="button" class="btn-close" id="routingModalCloseButton" aria-label="Close"
+                    (click)="closeModal('routingModal')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4" id="routingForm">
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="userGroupLabel">
+                            User Group
+                        </label>
+                        <div class="col-12 col-xxl-10 col-xl-10 col-lg-6 col-md-6 col-sm-12" id="userGroupContainer">
+                            <mat-form-field id="userGroupField">
+                                <mat-select id="userGroupDropdownRoute" [(value)]="selectedUserGroup"
+                                    (selectionChange)="getUsersData()">
+                                    <mat-option *ngFor="let userGroup of routeUsersGroupsList"
+                                        [value]="userGroup.userGroupId">
+                                        {{userGroup.userGroupDescription}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                            id="userLabel">
+                            User
+                        </label>
+                        <div class="col-12 col-xxl-10 col-xl-10 col-lg-6 col-md-6 col-sm-12" id="userContainerId">
+                            <mat-form-field id="userField">
+                                <mat-select id="userDropdown" [(value)]="selectedUsers">
+                                    <mat-option *ngFor="let users of usersDataList" [value]="users.userId">
+                                        {{users.firstName + users.middleInitial + users.lastName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row" id="noteGroup">
+                                <label for="staticEmail"
+                                    class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                                    id="noteLabel">
+                                    Note
+                                </label>
+                                <div class="col-12 col-xxl-10 col-xl-10 col-lg-6 col-md-6 col-sm-12" id="noteContainer">
+                                    <textarea type="text" id="noteTextarea" class="form-control"
+                                        (input)="inputValidator($event)" [(ngModel)]="noteText"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mt-4" id="routingModalFooter">
+                <div class="row">
+                    <div class="col-12 text-end" id="routingModalButtons">
+                        <button type="button" class="btn btn-primary mx-2" id="routeButtonId" (click)="routeNotes()"
+                            [disabled]="routeBtn()">
+                            Route
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="cancelButtonroute"
+                            (click)="closeModal('routingModal')">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Sample request modal -->
+
+<div class="modal modal-bg modal-lg" id="sampleRequest">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestSampleTitle">
+                    Request Sample
+                </h5>
+                <!-- Show the below heading when Claim contact does not have the email id -->
+                <!-- <h5 class="modal-title text-warning">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Warning </h5> -->
+                <button type="button" class="btn-close" id="closeSampleRequestModal" aria-label="Close"
+                    (click)="closeModal('sampleRequest')"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="sampleRequestForm" id="sampleRequestForm">
+                    <div class="row" id="formRows">
+                        <!-- <div class="col-12">
+                          <div class="form-group row mb-3">
+                              <label for="" class="col-form-label">Sample Requirement</label>
+                              <textarea type="text" class="form-control w-95" formControlName="sampleRequirement">{{sampleData?.sampleSizeRequirement}}</textarea>
+                          </div>
+                      </div> -->
+                        <!-- <div class="col-6 d-none">
+                          <div class="form-group row mb-3">
+                              <label for="" class="col-form-label">Testing Requirement</label>
+                              <textarea type="text" class="form-control w-95" [value]="textAreaData">{{textAreaData}}</textarea>
+                          </div>
+                      </div> -->
+                        <div class="col-12" id="sampleRequirementContainer">
+                            <div class="form-group row mb-3" id="sampleRequirementGroup">
+                                <label for="sampleRequirement" class="col-form-label" id="sampleRequirementLabel">Sample
+                                    Requirement</label>
+                                <textarea id="sampleRequirement" type="text" class="form-control w-95"
+                                    formControlName="sampleRequirement"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3" id="sendEmailGroup">
+                            <label for="sendEmailSwitch" class="col-sm-3 col-form-label" id="sendEmailLabel">Send
+                                Email</label>
+                            <div class="col-sm-2" id="sendEmailSwitchContainer">
+                                <div class="form-check form-switch disabled">
+                                    <input type="checkbox" formControlName="sendEmail" class="form-check-input mt-2"
+                                        id="sendEmailSwitch" (change)="toggleBtn()">
+                                </div>
+                            </div>
+                            <!-- <label for="generateFedExLabelSwitch" class="col-sm-5 col-form-label"
+                                id="generateFedExLabelLabel">Generate FedEx Label</label>
+                            <div class="col-sm-2" id="generateFedExLabelSwitchContainer">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" formControlName="fedexLevel" class="form-check-input mt-2"
+                                        id="generateFedExLabelSwitch" [disabled]="fedExLabel">
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" id="sampleRequestModalFooter">
+                <button type="button" class="btn btn-primary mx-2" id="requestSampleButtonId" (click)="sampeRequest()">
+                    Request Sample
+                </button>
+                <button type="button" class="btn btn-secondary" id="closeSampleRequestButton"
+                    (click)="closeModal('sampleRequest')">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Close Action Modal -->
+<div class="modal modal-bg modal-lg" id="closeModalnewTest">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="closeActionModalHeader">
+                <h5 class="modal-title" id="closeActionTitle">
+                    Close Action
+                </h5>
+                <button type="button" class="btn-close" id="closeModalButton"
+                    (click)="closeModal('closeModalnewTest')"></button>
+            </div>
+            <div class="modal-body" id="closeActionModalBody">
+                Are you sure you want to close this claim? Please confirm that all necessary actions have been completed
+                and that this claim is ready to be closed.
+            </div>
+            <div class="modal-footer" id="closeActionModalFooter">
+                <button type="button" class="btn btn-secondary" id="closeModalCancelButton"
+                    (click)="closeModal('closeModalnewTest')">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-secondary" id="confirmCloseActionButton"
+                    (click)="updateAllActions('Close')">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Evaluate sample modal -->
+<div class="modal modal-bg modal-lg" id="evaluateSample">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="evaluateSampleHeader">
+                <h5 class="modal-title" id="evaluateSampleTitle">Review Sample</h5>
+                <button type="button" class="btn-close" id="evaluateSampleCloseButton"
+                    (click)="closeModal('evaluateSample')"></button>
+            </div>
+            <div class="modal-body" id="evaluateSampleBody">
+                <div class="row">
+                    <p id="evaluateSampleMessage">A Sample has been received. Please review it.</p>
+                </div>
+
+                <div class="form-group row" id="sampleNoteId">
+                    <label for="staticEmail"
+                        class="col-12 col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+                        id="priorityNoteLabel">
+                        Priority Note<span class="text-danger">*</span>
+                    </label>
+                    <div class="col-12 col-xxl-9 col-xl-9 col-lg-6 col-md-6 col-sm-12" id="priorityNoteContainer">
+                        <textarea type="text" id="priorityNoteTextarea" class="form-control"
+                            [(ngModel)]=" prioritynoteTemplateText" (input)="inputValidator($event)"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="evaluateSampleFooter">
+                <button type="button" class="btn btn-primary mx-2" id="evaluateSampleApproveButton"
+                    (click)="updateSampleReview('Approved')" [disabled]="prioritynoteTemplateText == ''">
+                    Approve
+                </button>
+                <button type="button" class="btn btn-primary mx-2" id="evaluateSampleDeclineButton"
+                    (click)="updateSampleReview('Declined')" [disabled]="prioritynoteTemplateText == ''">
+                    Decline
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Void Modal -->
+<div class="modal modal-bg modal-lg" id="voidModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="voidModalHeader">
+                <h5 class="modal-title" id="voidModalTitle">
+                    Void Action
+                </h5>
+                <button type="button" class="btn-close" id="voidModalCloseButton"
+                    (click)="closeModal('voidModalId')"></button>
+            </div>
+            <div class="modal-body" id="voidModalBody">
+                Are you sure you want to void this claim? </div>
+            <div class="modal-footer" id="voidModalFooter">
+                <button type="button" class="btn btn-secondary" id="voidModalCancelButton"
+                    (click)="closeModal('voidModalId')">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-secondary" id="voidModalConfirmButton"
+                    (click)="updateAllActions('Void')">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pause Modal -->
+<div class="modal modal-bg modal-lg" id="pause-ModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="pauseModalHeader">
+                <h5 class="modal-title" id="pauseModalTitle">
+                    Pause Action
+                </h5>
+                <button type="button" class="btn-close" id="pauseModalCloseButton"
+                    (click)="cancelPauseAction()"></button>
+            </div>
+            <div class="modal-body" id="pauseModalBody">
+                <div class="col-sm-12">
+                    <div class="form-group row mb-3">
+                        <label for="staticEmail"
+                            class="col-12 col-xxl-3 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">Note</label>
+                        <div class="col-12 col-xxl-9 col-xl-10 col-lg-8 col-md-6 col-sm-12">
+                           <textarea type="text" 
+                            class="form-control"
+                            [(ngModel)]="notePauseText"
+                            ></textarea>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-12">
+                <div class="form-group row mb-3">
+                    <label for="staticEmail" class="col-sm-2 col-form-label">Trace Date</label>
+                    <div class="col-sm-10">
+
+                        <div class="position-relative">
+                            <input type="text" class="form-control" 
+                            [(ngModel)]="traceDate" 
+                            #dp="bsDatepicker" 
+                            [bsConfig]="bsConfig"
+                            bsDatepicker 
+                            triggers="dbllclick:click" 
+                             placeholder="MM/DD/YYYY"
+                             (input)="onInput($event)"
+                              />
+                            
+                            <span class="datepicker" (click)="dp.toggle()">
+                                <i class="fa-regular fa-calendar-days"></i>
+                            </span>
+                        </div>
+                        <div class="text-danger" *ngIf="pastDateError">Past dates are restricted.</div>
+                    </div>
+                </div>
+                </div>
+            </div>
+       
+        <div class="modal-footer" id="pauseModalFooter">
+            <button type="button" class="btn btn-secondary" id="pauseModalCancelButton"
+                (click)="cancelPauseAction()">
+                Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="pauseModalConfirmButton"
+             (click)="pauseBtnAction()" [disabled]="notePauseText == '' || traceDate == ''">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Disposition Modal -->
+<div class="modal modal-bg modal-lg" id="disposition-Modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="disposition-ModalTitlenew">
+                    {{dispoHeaderMsg}}
+                </h5>
+  
+                <button type="button" class="btn-close" id="disposition-Modalnew" aria-label="Close"
+                    (click)="closeModals('disposition-Modal')"></button>
+            </div>
+            <div class="modal-body">
+                    <div class="row" id="disposition-ModalformRowsNew">
+                        <div class="col-12">
+                          <div class="form-group row mb-3">
+                            <p>{{dispoModalBodymsg}}</p>
+                          </div>
+                      </div> 
+                    </div>
+            </div>
+            <div class="modal-footer" id="disposition-ModalFooterNew">
+                <button type="button" class="btn btn-primary mx-2" id="disposition-ModalIdNew"
+                 (click)="openLineItemsModal()" *ngIf="sellingCompanyData[0]?.companyType == 'H'">
+                   PrepareDisposition
+                </button>
+                <button type="button" class="btn btn-secondary" id="disposition-ModalButtonNew"
+                    (click)="closeModals('disposition-Modal')">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Lineitems Modal -->
+  <div class="modal modal-bg modal-lg" id="lineItem-Modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lineItem-ModalTitlenew">
+                    Select Line For Disposition
+                </h5>
+  
+                <button type="button" class="btn-close" id="lineItem-Modalnew" aria-label="Close"
+                    (click)="closelineItemModals('lineItem-Modal')"></button>
+            </div>
+            <div class="modal-body">
+                    <div class="row" id="lineItem-ModalformRowsNew">
+                        <div class="col-12">
+                          <div class="form-group row mb-3">
+                            <!-- Display the table with headers, and "No records found" when no data -->
+                    <div class="col-md-12 mb-4">
+                        <div class="table-responsive">
+                          <table class="table table-striped table-hover">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <input
+                                    type="checkbox"
+                                    id="selectAll"
+                                    [checked]="isAllSelected()"
+                                        #checkAll
+                                      (change)="toggleSelectAll(checkAll.checked)"
+                                  />
+                                  </th>
+                                <th>Line<br>Number</th>
+                                <th>Roll<br>Number</th>
+                                <th>Style<br>Number</th>
+                                <th>Color<br>Number</th>
+                                <!-- <th>DyeLot</th> -->
+                                <!-- <th>RcsCode</th> -->
+                                <!-- <th>Grade</th> -->
+                                <!-- <th>Width<br>Inch</th> -->
+                                <!-- <th>Length<br>Inch</th> -->
+                                <th>Qty</th>
+                                <th>UOM</th>
+                                <!-- <th>Price</th> -->
+                                <th>Amount</th>
+                              </tr>
+                            </thead>
+            
+                            <!-- Loading spinner -->
+                            <ng-container *ngIf="loading">
+                              <tr>
+                                <td colspan="14" class="text-center">
+                                  <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </ng-container>
+            
+   
+                            <ng-container *ngIf="!loading">
+                              <ng-container *ngIf="ClaimDocData; else noRecords">
+                                <tr *ngFor="let claim of ClaimDocData">
+                                  <td >
+                                     <input
+                                      type="checkbox"
+                                      id="index"
+                                      [checked]="isChecked(claim)"
+                                      #checkboxInput
+                                      (change)="setLineInvoiceData(claim, checkboxInput.checked)"
+                                    />
+                                  </td>
+                                                      <!-- Show regular columns or special text based on detailTypeCode -->
+                                     <ng-container >
+                                    <td>{{ claim.invoiceLineNumber && claim.invoiceLineNumber !== 0 
+                                        ? claim.invoiceLineNumber.toString().padStart(3, '0') + '/' 
+                                        : '/'}}{{ claim.lineNumber?.toString().padStart(3, '0') }}</td>
+                                    <td>{{ claim?.rollNumber }}</td>
+                                    <td>{{ claim?.styleNumber }}</td>
+                                    <td>{{ claim?.colorNumber }}</td>
+                                    <!-- <td>{{ claim?.dyeLot }}</td> -->
+                                    <!-- <td>{{ claim?.rcsCodes?.rcsCode }}</td> -->
+                                    <!-- <td>{{ claim?.grade }}</td> -->
+                                    <!-- <td class="pl-1 text-end">{{ claim?.claimDetailRecords[0]?.widthInFeet }}</td> -->
+                                    <!-- <td class="pl-1 text-end">{{ claim?.claimDetailRecords[0]?.lengthInFeet }}</td> -->
+                                    <td class="pl-1 text-end">{{ claim?.quantity | number:'1.2-2'}}</td>
+                                    <td>{{ claim?.unitOfMeasure.unitOfMeasureCode }}</td>
+                                    <!-- <td class="pl-1 text-end">{{ claim?.unitPriceUsd | currency:'USD':'symbol':'1.2-2' }}</td> -->
+                                    <td class="pl-1 text-end">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                                  </ng-container>
+                                </tr>
+                              </ng-container>
+                            
+                            </ng-container>
+            
+                            <!-- No records found message -->
+                            <ng-template #noRecords>
+                              <tr>
+                                <td class="text-center" colspan="14">
+                                  <p class="mb-0 py-2">Records Not Found</p>
+                                </td>
+                              </tr>
+                            </ng-template>
+                          </table>
+                        </div>
+                      </div>
+                          </div>
+                      </div> 
+                    </div>
+            </div>
+            <div class="modal-footer" id="lineItem-ModalFooterNew">
+                <button type="button" class="btn btn-primary mx-2" id="lineItem-ModalIdNew"
+                 [disabled]="lineItemsDetails.length == 0" (click)="navigateToDispoScreen()">
+                   Continue
+                </button>
+                <button type="button" class="btn btn-secondary" id="lineItem-ModalButtonNew"
+                    (click)="closelineItemModals('lineItem-Modal')">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>

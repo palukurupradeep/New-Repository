@@ -1,0 +1,2428 @@
+<div class="row mt-20 bg-white px-20 py-20">
+  <div class="col-12">
+    <div class="cd-invoice-detail--section">
+      <div class="row align-items-center">
+        <div class="col-10 text-start mb-xxl-0">
+          <div class="d-flex align-items-start gap-3 flex-wrap flex-xl-nowrap">
+            <div class="invoive-details--section w-100">
+              
+              <h4 class="mb-2 white-nowrap">
+            Claim Total: <span> {{ claimDetails.claimAmountUsd | currency:'USD':'symbol':'1.2-2'  }} values given in <span class="text-uppercase">{{currencyName ? currencyName : 'UNITED STATES $'}}</span></span>
+          </h4>
+         
+              <h4 class="mb-2">Total Sqft: <span>{{ totalSquareFeet | number:'1.2-2'  }}</span></h4>
+              <h4 class="mb-2">Claimed Total Sqft: <span>{{ claimedTotalSquareFeet | number:'1.2-2'  }}</span></h4>
+              <!-- <h4 class="mb-2 mb-xl-0">
+                Claimed Total Sqft: <span></span>
+              </h4> -->
+            </div>
+            <div class="invoive-details--section w-100">
+              <h4 class="mb-2">Detail Lines: <span>{{ totalLineNumberCount   }}</span></h4>
+              <h4 class="mb-2">Total Yards: <span>{{ totalYards | number:'1.2-2'}}</span></h4>
+              <h4 class="mb-2">Claimed Total Yards: <span>{{ totalYards | number:'1.2-2'}}</span></h4>
+              <!-- <h4 class="mb-2 mb-xl-0">
+                Claimed Total Yards: <span>0.00</span>
+              </h4> -->
+            </div>
+            <div *ngIf="claimDetails.claimDocuments" class="invoive-details--section w-100">
+              <h4 class="mb-2">Invoice: <span>{{getFilteredDocumentsCount()}}</span></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-2 text-start text-xl-end mt-3 mt-xl-0 align-self-center">
+          <div
+            class="d-flex justify-content-end justify-content-xxl-end gap-2 text-nowrap flex-lg-nowrap flex-wrap flex-column"
+          >
+            <button
+              class="btn-primary me-0 me-lg-2"
+              (click)="openAddInvoiceModal()"
+              [disabled]="claimIsVoid || !authService.hasPermission('ADDINVOICE')"
+            >
+              Add Invoice
+            </button>
+            <button *ngIf="!dummyDocument"
+            class="btn-primary me-0 me-lg-2"
+           
+           [disabled]="claimIsVoid"
+
+            (click)="openAddGenricLinesModal()"
+          >
+            Add More Lines
+          </button> 
+            <!-- <button class="btn-primary me-0 me-lg-2">Edit all</button> -->
+            <!-- <div dropdown [insideClick]="true" class="filter-section me-0 me-lg-2 d-flex ">
+                            <button class="btn-secondary  filter-btn dropdown-toggle" id="button-filter-1"
+                                dropdownToggle>
+                                Filter <i class="filter-ic"></i>
+                            </button>
+                            <ul class="filter-menu dropdown-menu" id="dropdown-filter-1" *dropdownMenu
+                                role="menu" aria-labelledby="button-filter-1">
+                                <li>
+                                    <div class="cd-check-item">
+                                        <input id="styled-checkbox-filter-1" type="checkbox"
+                                            class="styled-checkbox" /><label
+                                            for="styled-checkbox-filter-1">Filter 1</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cd-check-item">
+                                        <input id="styled-checkbox-filter-2" type="checkbox"
+                                            class="styled-checkbox" /><label
+                                            for="styled-checkbox-filter-2">Filter 2</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="search-wq me-0 me-lg-2 w-c-100">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control" placeholder="Search" />
+                        </div> -->
+            <!-- <button class="btn-primary me-0">Add</button> -->
+          </div>
+        </div>
+        <div class="border-bottom mt-20 mb-20"></div>
+        <div class="col-12">
+          <div class="d-flex gap-2 overflow-auto text-nowrap pb-2 btn-px-small justify-content-start justify-content-lg-between flex-wrap flex-lg-nowrap btn-parent-48">
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('ADDEDITLINE')"
+              
+              (click)="openinvoiceEditModel()">
+              Edit
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="selectedLine.length == 0"
+              (click)="openModalrestock()"
+            >
+              Prepare CRM
+            </button>
+          
+              <button
+              class="btn btn-primary h-auto"
+              [disabled]="selectedLine.length == 0"
+              (click)="rgaPathModal()"
+            >
+              Prepare RGA
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('ADDEDITLINE')"
+            (click)="requestInspection()"
+            >
+              Request Inspection
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('DUPLICATELINE')"
+              (click)="openDuplicateLineModel()"
+            >
+              Duplicate
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('DELETELINE')"
+              (click)="deleteLineItem()"
+            >
+              Delete
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('CREATE_LABOR_LINE') || !enableCreateServiceBtn"
+              data-bs-toggle="modal"
+              (click)="openinvoiceLaboueModel()"
+             
+            >
+              Create Labor
+            </button>
+             <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('ADDEDITLINE') || !enableCreateServiceBtn"
+              (click)="openCreateServiceModel()"
+            >
+              Create Service
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              [disabled]="checkDocBtnDisable('ADDEDITLINE')"
+             (click)="openModalSample()"
+            >
+              Check Inventory
+            </button>
+            <button
+              class="btn btn-primary h-auto"
+              data-bs-toggle="modal"
+              data-bs-target="#ClaimAnalyzeModal"
+              [disabled]="checkDocBtnDisable('ANALYZELINE')"
+              (click)="openClaimAnalyzeModal()"
+            >
+              Analyze
+            </button>
+
+            <button
+            class="btn btn-primary h-auto d-none"
+            [disabled]="checkDocBtnDisable('ADDEDITLINE')"
+           (click)="openModalSample()"
+          >
+            Prepare Disposition
+          </button>
+            <!-- <button class="btn btn-primary">Request Sample</button>
+                        <button class="btn btn-primary">
+                            Request Additional Info
+                        </button>
+                        <button class="btn btn-primary">More</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 mt-3">
+    <div class="accordion--section">
+      <accordion [isAnimated]="true" [closeOthers]="false">
+        <div *ngFor="let document of ClaimDocData; let docIndex = index">
+          <!-- <div> -->
+          <accordion-group [panelClass]="'customCard'" [isOpen]="true">
+            <!-- Section -->
+            <button
+              class="btn-block justify-content-between d-flex w-100 shadow-none btn-accordion align-items-center"
+              accordion-heading
+              type="button"
+            >
+              <div
+                class="d-flex align-items-start gap-2 gap-lg-4 flex-wrap flex-lg-nowrap"
+              >
+                <div class="">
+                  <h4 class="mb-2">
+                    Invoice:
+                    <span> # {{ document.documentNumber }} - {{ document.documentDate | date:'MM/dd/yyyy'}}</span>
+                  </h4>
+                  <h4 class="mb-0">
+                    Invoice Total: <span>  {{ document.amountUsd |  currency:'USD':'symbol':'1.2-2' }}</span>
+                  </h4>
+                </div>
+                <div class="">
+                  <h4 class="mb-2">
+                    Order: <span> # {{ document.orderNumber }}</span>
+                  </h4>
+                  <h4 class="mb-0">
+                    Exchange Rate: <span>{{ document.exchangeRate | number: '1.2-2'}}</span>
+                  </h4>
+                </div>
+              </div>
+              <div class="toAllignButtons">
+               
+                <button
+               *ngIf="document.priorClaim && !dummyDocument"
+              class="btn-secondary me-0 me-lg-2"
+              (click)="getPriorClaims($event,document)"
+              [disabled]="claimIsVoid" >Prior Claims Exist</button>
+                <button 
+                              class="btn-secondary me-0 me-lg-2"
+                              (click)="getCreditMemos($event,document)"
+                              [disabled]="claimIsVoid">Credit Memos Exist</button>
+                </div>
+              <div class="m-0 align-self-center">
+                <button
+                  class="btn btn-primary"
+                  (click)="handleAddMoreLinesClick($event, document)"
+                  
+                  
+                  [disabled]="claimIsVoid && !authService.hasPermission('ADDMORELINES')"
+>
+                  Add More Lines
+                </button>
+                <!-- <button class="btn btn-primary"  (click)="openModalCreditMemo()">TEST</button> -->
+                <button class="panel-arrow"> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+              </div>
+             
+            </button>
+
+                        <!-- open line items -->
+                        <div class="claim-detail-section" >
+                          <ng-container *ngIf="!document.claimLineDetails || document.claimLineDetails.length === 0">
+                            <p class="text-center">No Records Found</p>
+                          </ng-container>
+              
+                            <ng-container *ngFor="let details of document.claimLineDetails; let i = index">
+                            <!-- <ng-container *ngIf="details.statusId !== 3"> -->
+                             <div class="claim-detail-items"  [ngStyle]="{'background-color': highlightLineItem(details)}">
+<div class="credit-memo-popover" id="credit-memo-popover-id">
+  <ng-template #popTemplatestyleNumberX>
+    <p class="mb-0 text-white text-uppercase">
+        Issued on credit memo 552417 05/29/2024
+    </p>
+</ng-template>
+  </div>
+                                                                                                                              
+                                    <div class="cd-check-item">
+                                        <input [id]="'styled-checkbox-' + i + docIndex" type="checkbox" [(ngModel)]="details.selected" class="styled-checkbox" 
+                                        (click)="toggleRowSelection(details, document, $event)" 
+                                        [disabled]="claimIsVoid " />
+                                        <label [for]="'styled-checkbox-' + i + docIndex"></label>
+                                    </div>
+                                    <div class="cd-invoice-detail">
+                                        <div class="cd-column-1">
+                                          <div class="status-new-width d-flex">
+                                            <a href="javascript:;" class="cd-status status-new-width"
+                                                containerClass="customClassTooltip mt-n40" [adaptivePosition]="true"
+                                                boundariesElement="viewport" placement="top"
+                                                [popover]=" details.detailStatusType.detailStatusTypeDescription | uppercase"
+                                                triggers="mouseenter:mouseleave">
+                                                {{details.detailStatusType.detailStatusTypeCode}}
+                                              </a></div>
+                                            <!-- {{ details.detailStatusType.detailStatusTypeCode}} removed-->
+                                                
+                                            <div  class="cd-cat ml-20 w-110 h-100 d-flex">
+                                                <span 
+                                                    class="h-100 d-flex justify-content-center align-items-center mx-1">  {{ details.detailType.detailTypeCode}}</span>
+                                                    <span [popover]="'Inv/Clm' | uppercase" triggers="mouseenter:mouseleave"
+                                                    class="h-100 d-flex justify-content-center align-items-center mx-1 fs-14">{{ details.invoiceLineNumber && details.invoiceLineNumber !== 0 
+                                                      ? details.invoiceLineNumber.toString().padStart(3, '0') + '/' 
+                                                      : '/'}}{{ details.lineNumber?.toString().padStart(3, '0') }}
+                                                   </span>
+                                                          
+                                            </div>
+                                            <div class="cd-reason-code ml-20">
+                                                <a href="javascript:;" class="cd-dollar" [popover]="'Pay to Keep' | uppercase"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave">
+                                                    <img src="../../../assets/images/ic_dollar.svg" />
+                                                </a>
+                                                <span [popover]="details.claimReasonDefinition.claimReasonDescription | uppercase"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave">{{ details.claimReasonDefinition.claimReasonCode}}</span>
+                                                <a href="javascript:;" class="cd-spanner" [popover]="'Services'"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave">
+                                                    <img src="../../../assets/images/ic_spanner.svg" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="cd-column-2">
+                                            <div class="d-flex d-block-rsp ml-20">
+                                                <div class="cd-qty-pck">
+                                                    <h4 >{{ details.quantity | number:'1.2-2'}}</h4>
+                                                    <p [popover]="'quantity' | uppercase"
+                                                    
+                                                    triggers="mouseenter:mouseleave">QTY</p>
+                                                </div>
+        
+                                                <div class="cd-dyelot--wl ml-20" >
+                                                    <div class="cd-style-color mb-10" >
+                                                        <ng-template #popTemplatestyleNumber>
+                                                            <div class="table-responsive">
+                                                                <table class="table mb-0 text-uppercase">
+                                                                  <thead>
+                                                                    <tr>
+                                                                        <th class="text-center">
+                                                                            Selling Style name
+                                                                        </th>
+                                                                        <th class="text-center">
+                                                                            Product code
+                                                                        </th>
+                                                                        <th class="text-center">
+                                                                            Division Code
+                                                                        </th>
+                                                                        <th class="text-center">
+                                                                            Description
+                                                                        </th>
+                                                                        <th class="text-center">
+                                                                            Short Description
+                                                                        </th>
+                                                                        <th class="text-center">
+                                                                            Product Type
+                                                                        </th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                    <tr>
+                                                                        <td class="text-center">
+                                                                            SWITCH
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            24
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            00
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            Shaw Commercial
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            SWITCH
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            C
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </ng-template>
+                                                        <div class="cd-style" id="new-style-added">
+                                                          <ng-template #popTemplatestyleNumber2>
+                                                            <p class="mb-0 text-white">
+                                                                STYLE NUMBER 
+                                                            </p>
+                                                        </ng-template>
+                                                        <button
+                                                        type="button"
+                                                        class="btn btn-none border-0 p-0 text-end"
+                                                        containerClass="customClassTooltip"
+                                                        [popover]="popTemplatestyleNumber"
+                                                        
+                                                        [adaptivePosition]="true"
+                                                        boundariesElement="viewport"
+                                                        placement="top"
+                                                        [outsideClick]="true"
+                                                        triggers="mouseenter:mouseleave"
+                                                        (click)="toggleTemplateVisibility()"
+                                                      >
+                                                        <span class="mb-10 text-primary-color">{{ details.styleNumber }}</span>
+                                                      </button>
+                                                      <!-- <ng-template *ngIf="showTable" [ngTemplateOutlet]="popTemplatestyleNumber2"></ng-template> -->
+        
+                                                        </div>
+                                                        <div class="cd-color">
+                                                            <ng-template #popTemplateColor>
+                                                                <p class="mb-0 text-white">
+                                                                    COLOR NAME: <strong>ZONE</strong>
+                                                                </p>
+                                                            </ng-template>
+                                                            <button type="button"
+                                                                class="btn btn-none border-0 p-0 text-end"
+                                                                containerClass="customClassTooltip"
+                                                                [popover]="popTemplateColor"
+                                                                [adaptivePosition]="true"
+                                                                boundariesElement="viewport" placement="top"
+                                                                triggers="mouseenter:mouseleave">
+                                                                <span class="text-primary-color">{{ details.colorNumber  }}</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cd-width-length">
+                                                        <div class="cd-width"><span 
+                                                          [popover]="'width' | uppercase"
+                                                          containerClass="customClassTooltip"
+                                                          triggers="mouseenter:mouseleave"
+                                                          >{{ details?.claimDetailRecords[0]?.widthInFeet}}</span></div>
+                                                        <span class="into-x">x</span>
+                                                        <div class="cd-length"><span
+                                                          [popover]="'length' | uppercase"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave"
+                                                    >{{ details?.claimDetailRecords[0]?.lengthInFeet}}</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cd-column-3">
+                                            <div class="d-flex d-block-rsp">
+                                                <div class="cd-cat-2 ml-20 w-150">
+                                                  <ng-template #rollNumber>
+                                                    <p class="mb-0 text-white">
+                                                        ROLL NUMBER 
+                                                    </p>
+                                                </ng-template>
+                                                <span 
+                                                (click)="navigateToRollHistory()"
+                                                [popover]="rollNumber"
+                                                containerClass="customClassTooltip"
+                                                [adaptivePosition]="true"
+                                                boundariesElement="viewport" 
+                                                placement="top"
+                                                [outsideClick]="true"
+                                                triggers="mouseenter:mouseleave"
+                                                class="mb-10 text-primary-color">
+                                                {{ details.rollNumber }}
+                                              </span>
+                                                    <span 
+                                                    [popover]="'dyelot' | uppercase"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave"
+                                                    class="text-primary-color">{{details.dyeLot}}</span>
+                                                </div>
+                                                <div class="cd-cat-3 ml-20">
+                                                  <ng-template #rcsCodeDescription>
+                                                    <p class="mb-0 text-white">
+                                                        {{details.rcsCodes.rcsCodeDescription | uppercase }}
+                                                    </p>
+                                                </ng-template>
+                                                    <span 
+                                                    [popover]="rcsCodeDescription"
+                                                    containerClass="customClassTooltip"
+                                                    [adaptivePosition]="true"
+                                                                boundariesElement="viewport" placement="top"
+                                                                [outsideClick]="true"
+                                                    triggers="mouseenter:mouseleave"
+                                                    class="mb-10 w-eq">{{details.rcsCodes.rcsCode}}</span>
+                                                    <span 
+                                                    [popover]="'Grade' | uppercase"
+                                                    containerClass="customClassTooltip"
+                                                    triggers="mouseenter:mouseleave"
+                                                     class=" w-eq">{{ details.grade}}</span>
+                                                </div>
+                                                <div class="cd-cat-4 ml-20 w-200">
+                                                     <ng-template #popTemplateSF>
+                                                      <p class="mb-0 text-white" *ngIf="details.unitOfMeasure.unitOfMeasureCode">
+                                                      {{details.unitOfMeasure.unitOfMeasureDescription || 'NA'}}
+                                                      </p>
+                                                      
+                                                  </ng-template>
+                                                    <ng-template #RGA>
+                                                      <p class="mb-0 text-white">
+                                                        RGA
+                                                      </p>
+                                                  </ng-template>
+                                                    <span 
+                                                    [popover]="RGA"
+                                                    containerClass="customClassTooltip"
+                                                    [adaptivePosition]="true"
+                                                        boundariesElement="viewport" placement="top"
+                                                    triggers="mouseenter:mouseleave"
+                                                    class="mb-10">NO RGA</span>
+                                                    <button type="button"
+                                                        class="btn btn-none border-0 p-0 text-end w-100"
+                                                        containerClass="customClassTooltip"
+                                                        [popover]="popTemplateSF" [adaptivePosition]="true"
+                                                        boundariesElement="viewport" placement="top"
+                                                        triggers="mouseenter:mouseleave">
+                                                        <span
+                                                            class="d-flex justify-content-center align-items-center">{{ details.unitOfMeasure.unitOfMeasureCode}}</span>
+                                                    </button>
+        
+                                                </div>
+        
+                                            </div>
+                                        </div>
+        
+                                        <div class="cd-column-4">
+                                            <div class="d-flex d-block-rsp h-90">
+        
+                                                <div class="cd-cat-2 ml-20 w-150">
+                                                  <ng-template #UNITPRICE>
+                                                    <p class="mb-0 text-white">
+                                                      UNITPRICE 
+                                                    </p>
+                                                </ng-template>
+                                                    <span
+                                                    [popover]="UNITPRICE"
+                                                    containerClass="customClassTooltip"
+                                                    [adaptivePosition]="true"
+                                                        boundariesElement="viewport" placement="top"
+                                                    triggers="mouseenter:mouseleave"
+                                                        class="h-100 d-flex justify-content-end align-items-center">
+                                                    {{ details.unitPriceUsd | currency:'USD':'symbol':'1.2-2'}}</span>
+                                                </div>
+                                                <div class="cd-cat-2 ml-20 w-150">
+                                                  <ng-template #AMOUNT>
+                                                    <p class="mb-0 text-white">
+                                                      AMOUNT 
+                                                    </p>
+                                                </ng-template>
+                                                    <span
+                                                    [popover]="AMOUNT"
+                                                    containerClass="customClassTooltip"
+                                                    [adaptivePosition]="true"
+                                                        boundariesElement="viewport" placement="top"
+                                                    triggers="mouseenter:mouseleave"
+                                                        class="h-100 d-flex justify-content-end align-items-center">
+                                                     {{ details.lineAmountUsd | currency:'USD':'symbol':'1.2-2'}}</span>
+                                                </div>
+        
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                <!-- </ng-container> -->
+                              </ng-container>
+                          
+                           
+                        </div>
+                    </accordion-group>
+                </div>
+                
+
+            </accordion>
+        </div>
+    </div>
+</div> 
+
+<div  *ngIf="!authService.hasPermission('ASSOCIATEDOCUMENTS')"class="row mt-3">
+  <div class="card p-4 border-0">
+    <div class="row">
+      <div class="col-12 col-xl-4">
+        <h4 class="mb-3">Associated Documents</h4>
+      </div>
+      <div class="col-12 col-xl-8 text-end">
+        <div
+          class="d-flex justify-content-end flex-xl-row gap-2 text-nowrap flex-wrap"
+        >
+          <!-- <button class="btn-secondary me-2 btn-equal-w">Delete</button> -->
+          <button class="btn-primary me-0 me-lg-0" (click)="openAddAssociateDocModal()">Add</button>
+
+          <!-- <button class="btn-primary me-0 me-lg-0" [disabled]="claimIsVoid">Add</button> -->
+          <!-- <div dropdown [insideClick]="true" class="filter-section d-flex ">
+                        <button class="btn-secondary me-2 filter-btn dropdown-toggle" id="button-filter-1"
+                            dropdownToggle>
+                            Filter <i class="filter-ic"></i>
+                        </button>
+                        <ul class="filter-menu dropdown-menu" id="dropdown-filter-1" *dropdownMenu role="menu"
+                            aria-labelledby="button-filter-1">
+                            <li>
+                                <div class="cd-check-item">
+                                    <input id="styled-checkbox-filter-3" type="checkbox"
+                                        class="styled-checkbox" /><label for="styled-checkbox-filter-3">Filter
+                                        1</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="cd-check-item">
+                                    <input id="styled-checkbox-filter-4" type="checkbox"
+                                        class="styled-checkbox" /><label for="styled-checkbox-filter-4">Filter
+                                        2</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="search-wq w-c-100">
+                        <i class="fa fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Search" />
+                    </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Document</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Order#</th>
+                <th scope="col">PO#</th>
+                <th scope="col">BOL#/MBOL#</th>
+                <th scope="col">S/R/D/T</th>
+                <th scope="col">Status</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.document"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.date"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.amount"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.order"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.po"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    [(ngModel)]="tabSearchText.bol"
+                    (input)="onTabSearch()"
+                    class="search-input"
+                  />
+                </th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody *ngIf="fetchedDocumnetsByClaimId.length > 0; else noData">
+              <tr *ngFor="let document of fetchedDocumnetsByClaimId">
+                <td scope="row">
+                  <a href="#" class="ps-2">
+                    <img src="../../../assets/images/ic_delete.svg" alt="" />
+                  </a>
+                </td>
+
+      
+              <!-- <td style="cursor:pointer" (click)="handleDocumentClick(document)">
+                {{ document?.documentTypeCode === 'RET' ? 'RGA' : (document?.documentTypeCode === 'DSP' ? 'DSP' : document?.documentTypeCode) }}-{{ document.documentNumber }}
+            </td>
+             -->
+             <td style="cursor:pointer" (click)="document?.documentTypeCode !== 'RET' && handleDocumentClick($event,document)">
+              {{ document?.documentTypeCode === 'RET' ? 'RGA' : (document?.documentTypeCode === 'DSP' ? 'DSP' : document?.documentTypeCode) }}-{{ document.documentNumber }}
+            </td>
+            
+                <td>{{ document.documentDate | date : "MM/dd/yyyy" }}</td>
+                <td class="text-end pe-3">{{ document.amountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td>
+                  <a href="#">{{ document.orderNumber }}</a>
+                </td>
+                <td>
+                  <a href="#">{{ document.purchaseOrderNumber }}</a>
+                </td>
+                <td>
+                  <!-- <a href="#"
+                    >{{ document.billofLading }} + '/' +
+                    {{ document.masterBillofLading }}</a
+                  > -->
+                  <a href="#">
+                    {{ document?.billofLading }}{{ document?.masterBillofLading ? ' / ' + document?.masterBillofLading : '' }}
+                  </a>
+                  
+                </td>
+                <td>02/06/048/0515</td>
+                <td style="cursor: pointer">
+                  <a href="#" (click)="handleDocumentClick($event,document)">
+                    {{ document.status }}
+                  </a>
+                </td>
+                
+             
+              </tr>
+            </tbody>
+            <ng-template #noData>
+              <tbody>
+                <tr>
+                  <td colspan="9" class="text-center"> Records not Found</td>
+                </tr>
+              </tbody>
+            </ng-template>
+          </table>
+        </div>
+      </div>
+      <!-- <div class="row align-items-center">
+            <div class="col-sm-12 col-md-6 mt-4 d-flex align-items-center">
+                <div class="dataTables_paginate paging_simple_numbers d-sm-inline-block"
+                    id="dataTable_paginate">
+                    <ul class="pagination">
+                        <li class="paginate_button page-item previous disabled" id="dataTable_previous">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                class="page-link"><i class="fas fa-angle-double-left"></i></a>
+                        </li>
+                        <li class="paginate_button page-item active">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0"
+                                class="page-link">1</a>
+                        </li>
+                        <li class="paginate_button page-item">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0"
+                                class="page-link">2</a>
+                        </li>
+                        <li class="paginate_button page-item">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="3" tabindex="0"
+                                class="page-link">3</a>
+                        </li>
+                        <li class="paginate_button page-item">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="4" tabindex="0"
+                                class="page-link">.....</a>
+                        </li>
+                        <li class="paginate_button page-item">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="5" tabindex="0"
+                                class="page-link">10</a>
+                        </li>
+                        <li class="paginate_button page-item next" id="dataTable_next">
+                            <a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0"
+                                class="page-link"><i class="fas fa-angle-double-right"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm align-self-center show-all-btn btn-secondary mx-2 mx-xxl-5 h-auto">Show All Results</a>
+            </div>
+            <div class="col-sm-12 col-md-6 mt-4">
+                <div class="d-flex align-items-center justify-content-lg-end justify-content-start flex-wrap">
+                    <div class="dataTables_length d-sm-inline-block" id="dataTable_length">
+                        <label>Per Page
+                            <select name="dataTable_length" aria-controls="dataTable"
+                                class="custom-select custom-select-sm form-control form-control-sm">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select></label>
+                    </div>
+
+                    <div class="dataTables_info d-sm-inline-block mx-0 mx-lg-3 mt-3 mt-lg-0" id="dataTable_info"
+                        role="status" aria-live="polite">
+                        Showing 1 to 10 of 57 entries
+                    </div>
+
+                    <a href="#"
+                        class="d-none d-sm-inline-block btn btn-sm btn-secondary mt-4 mt-lg-0 h-auto">GO</a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- Sample request Prepare Disposition modal -->
+
+<div class="modal modal-bg modal-lg" id="sampleRequestDisposition">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="requestSampleTitlenew">
+                  Detail Line For Disposition
+              </h5>
+
+              <button type="button" class="btn-close" id="closeSampleRequestModalnew" aria-label="Close"
+                  (click)="closeModal('sampleRequestDisposition')"></button>
+          </div>
+          <div class="modal-body">
+                  <div class="row" id="formRowsNew">
+                      <div class="col-12">
+                        <div class="form-group row mb-3">
+                            <label for="" class="col-form-label">Select line items for the disposition.</label>
+                           <!-- Show Line items here for prepare disposition related -->
+                        </div>
+                    </div> 
+                  </div>
+          </div>
+          <div class="modal-footer" id="sampleRequestModalFooterNew">
+              <button type="button" class="btn btn-primary mx-2" id="requestSampleButtonIdNew">
+                  Prepare Disposition
+              </button>
+              <button type="button" class="btn btn-secondary" id="closeSampleRequestButtonNew"
+                  (click)="closeModal('sampleRequestDisposition')">
+                  Done
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- RGA path modal -->
+<!-- <div class="modal modal-bg " id="rgapathmodal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title">Do Not Issue RGA</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('rgapathmodal')"
+        ></button>
+      </div>
+      <div class="modal-body">
+      
+        <div class="container">
+          <div class="row px-2 py-2">
+      <div class="question">
+          <p class="my-1">
+            Recommend not to issue RGA due to - 
+         </p>
+          <ul>
+            <li *ngFor="let data of rgaErrorMessages">
+              {{data}}
+            </li>
+          </ul>
+        
+      </div>
+      </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-secondary mx-2"
+              (click)="closeModal('rgapathmodal')"
+            >
+            Cancel RGA
+            </button>
+            <button
+            type="button"
+            class="btn btn-primary"
+            (click)="openDefectPercentModal()"
+          >
+          Continue
+          </button>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- credit memo for invoice modal -->
+<div class="modal modal-bg" id="CreditMemoModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Credit Memos for Invoice #5051359</h5>
+        <div class="d-flex justify-content-end align-items-center">
+        <button type="button" class="btn-primary mx-3" >Print</button>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('CreditMemoModal')"
+        ></button>
+      </div></div>
+      <div class="modal-body">
+        <div class="row mt-2 mb-2">
+            <div class="col-12 mt-2 mb-3">
+                <h6 class="mb-3">Claim Information</h6>
+                <div class="row">
+                <div class="col-6">
+                  <div class="form-group row mb-2">
+                      <label for="" class="col-sm-4 col-form-label  py-0">Claim no.</label>
+                      <div  class="col-sm-8">
+                        <p class="mb-0">938255</p>
+                      </div>                                       
+                  </div>
+                </div>
+               
+                <div class="col-6">
+                    <div class="form-group row mb-2">
+                        <label for="" class="col-sm-4 col-form-label  py-0">Customer no.</label>
+                        <div  class="col-sm-8">
+                          <p class="mb-0">0058283</p>
+                        </div>                                       
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="form-group row mb-2">
+                        <label for="" class="col-sm-4 col-form-label  py-0">Claim Initiation Date</label>
+                        <div  class="col-sm-8">
+                          <p class="mb-0">08/25/2010</p>
+                        </div>                                       
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="form-group row mb-2">
+                        <label for="" class="col-sm-4 col-form-label  py-0">Customer Name</label>
+                        <div  class="col-sm-8">
+                          <p class="mb-0 text-uppercase">Glanz industries inc</p>
+                        </div>                                       
+                    </div>
+                  </div>
+
+            </div>
+</div>
+<div class="col-12 mt-2 mb-3">
+  <h6 class="mb-3">Select Credit Memo</h6>
+  <div class="table-responsive"></div>
+    <table class="table table-striped table-hover">
+ <thead>
+        <tr>
+          <th scope="col">Credit Memo Number</th>
+          <th scope="col">Credit Memo Date</th>
+          <th scope="col" >Credit Memo Amount</th>
+          <th scope="col">Claim Number</th>
+        </tr>
+      </thead>
+      <tbody >
+     <tr>
+        <td class="text-uppercase "><a href="">552417</a></td>
+      <td class="text-uppercase">05/29/2024</td>
+      <td class="text-center">$1432.18</td>
+      <td class="text-uppercase"><a href="">992007</a></td>
+     </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+      </div>
+     <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-secondary mx-2"
+              (click)="closeModal('CreditMemoModal')"
+            >
+            Close
+            </button>          
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+
+
+<!-- Defect percent modal -->
+<div class="modal modal-bg " id="defectpercentmodal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title">Defect Percentage</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('defectpercentmodal')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row px-2 py-2">
+            <div class="input-defect">
+              <div class="row mb-3">
+                <label for="Defectpercent" class="col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                  Percentage of Defect
+                </label>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <form [formGroup]="formGroup">
+                    <input
+                      type="text"
+                      id="Defectpercent"
+                      class="form-control"
+                      formControlName="defectPercent"
+                      (keypress)="validateInput($event)"
+                      maxlength="3"
+                    />
+                  </form>
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <app-defect-percent></app-defect-percent> -->
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-secondary mx-2"
+              (click)="closeModal('defectpercentmodal')"
+            >
+              Cancel RGA
+            </button>
+            <button
+            type="button"
+            class="btn btn-primary"
+            (click)="listofdefectmodal()"
+          >
+          Continue
+          </button>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Defect percent modal -->
+<div class="modal modal-bg " id="listofdefectmodal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title">List of Errors</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal('listofdefectmodal')"
+        ></button>
+      </div>
+   
+      <div class="modal-body">
+        <div class="form-group row mt-2">
+          <div class="col-12">
+            <label>Recommended not to issue RGA due to the below list of errors:</label>
+          </div>
+          <div class="col-12 text-uppercase position-relative mb-2">
+            <ul>
+              <li *ngFor="let data of rgaErrorMessages">
+                {{data}}
+              </li>
+            </ul>
+          </div>                                       
+        </div>
+      </div>
+      
+      
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-secondary mx-2"
+              (click)="closeModal('listofdefectmodal')"
+            >
+            Cancel RGA 
+            </button>
+            <button
+            type="button"
+            class="btn btn-primary"
+            (click)="closeOverrideModal()"
+          >
+          Override
+          </button>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Invoice Search Model -->
+<div class="modal modal-bg " id="addinvoice">
+  <div class="modal-dialog modal-xxl">
+  <div class="modal-content">
+  <div class="modal-header">
+  <h5 class="modal-title" id="">Add Invoice</h5>
+  <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeAddInvoiceModal(); resetForm()"
+  ></button>
+  </div>
+  <div class="modal-body">
+  <!-- <div class="py-3" *ngIf="invoiceRetrived; else retrieveContent">
+  <div class="text-center">
+  <div class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+  </div>
+  </div>
+  </div> -->
+  <!-- <ng-template #retrieveContent> -->
+  <form [formGroup]="addInvoiceForm">
+  <div class="row mb-4 justify-content-end justify-content-lg-start">
+  <label
+                for="Store"
+                class="col-12 col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+  >Doc Type/Number/Date</label
+  >
+  <div class="col-12 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+  <div class="row">
+  <div
+                    class="col-12 col-xl-3 col-lg-3 col-md-12 col-sm-3 mb-4 mb-lg-0"
+  >
+ 
+  <mat-form-field appearance="fill">
+    <mat-select 
+      [(value)]="selectedDocType" 
+      formControlName="docType" 
+      (selectionChange)="onassociatedtoGlobalaccountChange('docType')">
+      <mat-option *ngFor="let item of docTypeData" [value]="item.docTypeId">
+        {{ item.lookupCode }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  </div>
+  <div
+                    class="col-12 col-xl-5 col-lg-5 col-md-12 col-sm-4 mb-4 mb-lg-0"
+  >
+  <div class="search w-100">
+                   <input
+                        type="text"
+                        class="form-control"
+                        [ngClass]="{
+                          'is-danger':
+                            addInvoiceForm.controls.docNumber.touched &&
+                            !addInvoiceForm.controls.docNumber.value
+                        }"
+                        formControlName="docNumber"
+                        (keyup.enter)="openModalAddInvoice()"
+                      />
+  </div>
+  </div>
+   
+                  <div
+                    class="col-12 col-xl-4 col-lg-4 col-md-12 col-sm-4 mb-0 mb-lg-0"
+  >
+  <div class="position-relative">
+  <input
+                        type="text"
+                        formControlName="docDate"
+                        class="form-control"
+                        #dp="bsDatepicker"
+                        [bsConfig]="bsConfig"
+                        readonly
+                        bsDatepicker
+                        triggers="dbllclick:click"
+                        (input)="onInput($event)"
+                        placeholder="MM/DD/YYYY"
+                      />
+  <span class="datepicker" (click)="dp.toggle()">
+  <i class="fa-regular fa-calendar-days"></i>
+  </span>
+  </div>
+  <div class="fail-style" *ngIf="futureDateError">
+                      Future dates are restricted.
+  </div>
+  </div>
+  </div>
+  </div>
+   
+              <div
+                class="col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 position-relative top-25 mt-3 mt-lg-0"
+  >
+  <button
+                  type="button"
+                  class="d-sm-inline-block btn btn-sm btn-primary w-100"
+                  (click)="openModalAddInvoice()"
+                  [disabled]="!isRetrieveButtonEnabled()"
+  >
+                  Retrieve Invoice
+  </button>
+  </div>
+  </div>
+  <div class="row mb-3">
+  <label
+                for="Store"
+                class="col-12 col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label"
+  >Roll Number</label
+  >
+  <div class="col-12 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+  <input
+                  type="text"
+                  class="form-control"
+                  id="Store"
+                  formControlName="rollNumber"
+                />
+  <p
+                  *ngIf="showRollNumberError || show404ErrorMessage"
+                  class="fail-style"
+  >
+                 "No invoices found for the current search criteria."
+  </p>
+  <p
+                  *ngIf="noNewInvoice"
+                  class="fail-style"
+  >
+  Invoice Is Already Associated With This Claim.
+  </p>
+  </div>
+  </div>
+  </form>
+  <!-- </ng-template> -->
+  <div class="clearfix"></div>
+  </div>
+  <div class="modal-footer mt-4">
+  <div class="row">
+  <div class="col-12 text-end">
+  <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                (click)="closeAddInvoiceModal(); resetForm()"
+  >
+                Cancel
+  </button>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+<!-- Add Invoice Retrive Data Model -->
+<div
+*ngIf="!noNewInvoice"
+  class="modal modal-bg"
+  id="addinvoices"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addinvoiceLabels"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addinvoiceLabels">Add Invoice</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="CloseModalAddInvoice('addinvoices')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div
+            class="col-md-12"
+            *ngFor="let invoiceNumber of newIvoicesList"
+          >
+           
+            <h4 class="invoice-order">
+              {{ addInvoiceData[0]?.customerNumber }} Invoice #{{ invoiceNumber }} - {{ addInvoiceData[0]?.invoiceDate | date:'MM/dd/yyyy' }}
+              (Order
+              <ng-container *ngFor="let orderNumber of getUniqueOrderNumbersByInvoiceNumber(invoiceNumber)">
+                <span *ngIf="orderNumber">#{{ orderNumber }}</span>
+              </ng-container>
+              )
+            </h4>
+
+            <!-- Display the corresponding table for each unique invoice number  -->
+            <div class="col-md-12 mb-4">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>
+                        <input
+                          type="checkbox"
+                          id="selectAll"
+                          [checked]="isAllSelected(invoiceNumber,checkAll.checked)"
+                          #checkAll
+                          (change)="toggleSelectAll(checkAll.checked ,invoiceNumber)"
+                          
+                        />
+                      </th>
+                      <th>line<br>Number</th>
+                      <th>roll<br>Number</th>
+                      <th>style<br>Number</th>
+                      <th>color<br>Number</th>
+                      <th>DyeLot</th>
+                  
+                       <th>RcsCode</th>
+                      <th>Grade</th> 
+                      <th>width</th>
+                      <th>length</th>
+                      <th>Qty</th>
+                      <th >UOM</th>
+                      <th>Price</th>
+                      <th>Amount</th>
+                     
+                    </tr>
+                  </thead>
+                 
+                  <ng-container *ngIf="loadingData; else dataTemplate">
+                    <tr>
+                      <td colspan="14" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  
+                  <ng-template #dataTemplate>
+                    <ng-container *ngIf="!loadingData && (getInvoiceDataByInvoiceNumber(invoiceNumber)?.length ?? 0) > 0; else noRecords">
+                      <tr *ngFor="let claim of getInvoiceDataByInvoiceNumber(invoiceNumber); let i = index">
+                        <td *ngIf="(claim?.lineAmountUsd !== 0 || (claim?.detailTypeCode?.trim()  !== 'TAX' && claim?.detailTypeCode?.trim()  !== 'FRGHT' && claim?.detailTypeCode?.trim()  !== 'MISC CHARGES' && claim?.detailTypeCode?.trim()  !== 'GST' && claim?.detailTypeCode?.trim()  !== 'CHRGS' && claim?.detailTypeCode?.trim()  !== 'HST' && claim?.detailTypeCode?.trim() !== 'CARE SURCHARGE' )) && claim?.detailTypeCode?.trim()  !== 'TOTAL'">
+                          
+                          <input
+                            type="checkbox"
+                            id="index"
+                            [checked]="claim.checked"
+                            #checkboxInput
+                            (change)="setAddInvoiceData(claim, checkboxInput.checked)"
+                          />
+                        </td>
+                  
+                        <!-- Regular columns or special text based on detailTypeCode -->
+                        <ng-container *ngIf="claim?.detailTypeCode?.trim() !== 'TAX' && claim?.detailTypeCode?.trim() !== 'FRGHT' && claim?.detailTypeCode?.trim() !== 'CHRGS' && claim?.detailTypeCode?.trim() !== 'MISC CHARGES' && claim?.detailTypeCode?.trim() !== 'GST' && claim?.detailTypeCode?.trim()  !== 'HST' &&  claim?.detailTypeCode?.trim() !== 'CARE SURCHARGE' && claim?.detailTypeCode?.trim()  !== 'TOTAL'">
+                          <td>{{ claim?.lineNumber }}</td>
+                          <td>{{ claim?.rollNbr }}</td>
+                          <td>{{ claim?.sellingStyleNbr }}</td>
+                          <td>{{ claim?.colorNbr }}</td>
+                          <td>{{ claim?.dyeLot }}</td>
+                          <td>{{ claim?.rcsCode }}</td>
+                          <td>{{ claim?.grade }}</td>
+                          <td class="pl-1 text-end">{{ claim?.widthFeet }}' {{ claim?.widthInch }}"</td>
+                          <td class="pl-1 text-end">{{ claim?.lengthFeet }}' {{ claim?.lengthInch }}"</td>
+                          <td class="pl-1 text-end">{{ claim?.quantity | number:'1.2-2'}}</td>
+                          <td>{{ claim?.unitofMeasure }}</td>
+                          <td class="pl-1 text-end"> {{ claim?.unitPrice | currency:'USD':'symbol':'1.2-2'}}</td>
+                          <td class="pl-1 text-end"> {{ claim?.netAmount | currency:'USD':'symbol':'1.2-2'}}</td>
+                        </ng-container>
+                  
+                        <!-- Tax, Freight, and Charges Display -->
+                        <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'TAX'">
+                          <td colspan="12">TAX</td>
+                          <td class="text-end"> {{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2'}}</td>
+                        </ng-container>
+                  
+                        <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'FRGHT'">
+                          <td colspan="12">FREIGHT</td>
+                          <td class="text-end"> {{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2'}}</td>
+                        </ng-container>
+                  
+                        <ng-container *ngIf="claim?.lineAmountUsd !== 0 && (claim?.detailTypeCode === 'MISC CHARGES' || claim?.detailTypeCode === 'CHRGS' || claim?.detailTypeCode === 'GST' || claim?.detailTypeCode  === 'HST' || claim?.detailTypeCode === 'CARE SURCHARGE')">
+                          <td colspan="12" class="text-end">{{claim?.detailTypeCode}}</td>
+                          <td class="text-end"> {{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2'}}</td>
+                        </ng-container>
+                        <ng-container *ngIf="claim?.lineAmountUsd !== 0 && claim?.detailTypeCode === 'TOTAL'">
+                          <!-- <td colspan="12" class="text-end">TOTAL</td> -->
+                          <td colspan="14" class="text-end fw-semibold total-active-row">{{ claim?.lineAmountUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                        </ng-container>
+                      </tr>
+                    </ng-container>
+               
+                  </ng-template>
+                  
+                  <ng-template #noRecords>
+                    <tr>
+                      <td class="text-center" colspan="14">
+                        <p class="mb-0 py-2">Records not found</p>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  
+                  
+                  
+                  
+                  
+                  
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <!-- <button type="button" class="btn btn-secondary" (click)="CloseModalAddInvoice()">Cancel</button>  -->
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="addSelectedInvoice()"
+              [disabled]="invoiceRowChecked"
+            >
+              Add
+            </button>
+            <!-- (click)="openModalPriorClaimSummary()"  -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Add more lines Modal -->
+<div class="modal modal-bg" id="addMoreLinesModal">
+  <div class="modal-dialog modal-xxl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addmorelines" *ngIf="!arrowSecTwo">Add More Lines</h5>
+        <h5 class="modal-title" id="addmorelines" *ngIf="arrowSecTwo">Add Line</h5>
+        <div class="btn-add-new">
+          <button class="btn btn-primary" (click)="toggleSectionTwo()">
+            {{ addNewLineButtonText }}
+           </button>
+           <button
+             type="button"
+             data-bs-dismiss="modal"
+             aria-label="Close"
+             class="btn-close"
+             (click)="closeAddMoreLinesModal()"
+           ></button>
+        </div>
+       
+      </div>
+      <div class="modal-body">
+         <!-- Section 1: Add More Lines from Invoice -->
+         <div class="section" [class.collapsed]="section1Collapsed" *ngIf="!arrowSecTwo ">
+          <div class="py-3" *ngIf="loadingData; else tableContent">
+            <!-- Show spinner while loading data -->
+            <div class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+         </div>
+       
+        <ng-template #tableContent>
+         
+          <div class="row" >
+            <div class="col-md-12">
+              <h5>
+                <span class="ps-4">Invoice: #{{selectedClaimLineInfo.documentNumber}} - {{selectedClaimLineInfo.documentDate | date:'MM/dd/yyyy' }}</span>
+                <span class="ps-4">Order: #{{selectedClaimLineInfo.orderNumber}}</span>
+               
+               
+              </h5>
+              <div class="table-responsive table-summary">
+                <table class="table table-striped table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <input type="checkbox" class="styled-checkbox" id="selectAll"
+                                                  [checked]="isAllSelectedMoreLines()" #checkAll 
+                                                  (change)="togglecheckAll(checkAll.checked)" [disabled]="isAllSelectedMoreLines()" /><label for="selectAll"></label>
+                        </th>
+                      <th scope="col" class="text-uppercase">Line</th>
+                      <th scope="col" class="text-uppercase">Roll</th>
+                      <th scope="col" class="text-uppercase">Style</th>
+                      <th scope="col" class="text-uppercase">Color</th>
+                      <th scope="col" class="text-uppercase">DyeLOT</th>
+                      <th scope="col" class="text-uppercase">Type</th>
+                      <th scope="col" class="text-uppercase">Grade</th>
+                      <th scope="col" class="text-uppercase">Width</th>
+                      <th scope="col" class="text-uppercase">Length</th>
+                      <th scope="col" class="text-uppercase">QTY</th>
+                      <th scope="col" class="text-uppercase">UOM</th>
+                      <th scope="col" class="text-uppercase text-end">Price $</th>
+                      <th scope="col" class="text-uppercase text-end">Amount $</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Render Regular Lines -->
+                    <ng-container *ngFor="let lineInfo of selectedClaimLineInfo.claimLineDetails; let i = index">
+                      <ng-container *ngIf="!(lineInfo.lineSource?.lineSourceId === '2' && lineInfo.lineSource?.lineSourceCode === 'ANAL') && !['TAX', 'FRGHT', 'CHRGS', 'MISC CHARGES', 'GST', 'HST', 'TOTAL'].includes(lineInfo.detailType.detailTypeCode)">
+                        <tr>
+                          <!-- Always show checkbox -->
+                          <td>
+                            <div class="cd-check-item">
+                              <input
+
+                                [id]="'styled-checkbox-' + lineInfo.invoiceLineNumber"
+                                type="checkbox"
+                                #checkOne
+                                [ngModel]="isRecordMatched(lineInfo)"
+                                (change)="selectedLineRecord(lineInfo, checkOne.checked)"
+                                class="styled-checkbox"
+                                [checked]="checkRecord(lineInfo)"
+                                [disabled]="isRecordMatched(lineInfo)"
+                              /> <label [for]="'styled-checkbox-' + lineInfo.invoiceLineNumber"></label>
+
+                            </div>
+                          </td>
+        
+                          <!-- Regular columns -->
+                          <td>{{ lineInfo?.invoiceLineNumber?.toString().padStart(3, '0') }}</td>
+                          <!-- <td>{{ lineInfo?.lineNumber?.length >= 2 ? lineInfo?.lineNumber : '00' + lineInfo?.lineNumber }}</td> -->
+                          <td><a href="#" class="text-primary-color">{{lineInfo.rollNumber}}</a></td>
+                          <td><a href="#" class="text-primary-color">{{lineInfo.styleNumber}}</a></td>
+                          <td><a href="#" class="text-primary-color">{{lineInfo.colorNumber}}</a></td>
+                          <td><a href="#" class="text-primary-color">{{lineInfo.dyeLot}}</a></td>
+                          <td>{{lineInfo.rcsCodes.rcsCode}}</td>
+                          <td>{{lineInfo.grade}}</td>
+                          <td class="text-end">{{ lineInfo.claimDetailRecords[0]?.widthInFeet }}' {{ lineInfo.claimDetailRecords[0]?.widthInInches }}"</td>
+                          <td class="text-end">{{lineInfo.claimDetailRecords[0]?.lengthInFeet}}' {{lineInfo.claimDetailRecords[0]?.lengthInInches}}"</td>
+                          <td class="text-end">{{lineInfo.quantity | number:'1.2-2'}}</td>
+                          <td>{{ lineInfo?.unitOfMeasure?.unitOfMeasureCode || lineInfo?.unitOfMeasure }}</td>
+                          <td class="text-end">${{lineInfo.unitPriceUsd}}</td>
+                          <td class="text-end">${{lineInfo.lineAmountUsd}}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+        
+                    <!-- Render Special Lines (TAX, FRGHT, CHRGS) -->
+                    <ng-container *ngFor="let lineInfo of selectedClaimLineInfo.claimLineDetails; let i = index">
+                      <ng-container *ngIf="['TAX', 'FRGHT', 'CHRGS', 'MISC CHARGES', 'GST', 'HST', 'TOTAL'].includes(lineInfo.detailType.detailTypeCode)">
+                        <tr>
+                          <!-- Always show checkbox -->
+                          <td *ngIf="(lineInfo?.lineAmountUsd !== 0 || (lineInfo.detailType?.detailTypeCode?.trim()  !== 'TAX' && lineInfo.detailType?.detailTypeCode?.trim()  !== 'FRGHT' && lineInfo.detailType?.detailTypeCode?.trim()  !== 'MISC CHARGES' && lineInfo.detailType?.detailTypeCode?.trim()  !== 'GST' && lineInfo.detailType?.detailTypeCode?.trim()  !== 'CHRGS' && lineInfo.detailType?.detailTypeCode?.trim()  !== 'HST')) && lineInfo?.detailType.detailTypeCode?.trim()  !== 'TOTAL'">
+                            <div class="cd-check-item">
+                              <input
+                                [id]="'styled-checkbox-special-' + i"
+                                type="checkbox"
+                                #check
+                                [ngModel]="isRecordMatched(lineInfo)"
+                                (change)="selectedLineRecord(lineInfo, check.checked)"
+                                class="styled-checkbox"
+                                [checked]="checkRecord(lineInfo)"
+                                [disabled]="isRecordMatched(lineInfo)"
+                              /><label [for]="'styled-checkbox-special-' + i"></label>
+                            </div>
+                          </td>
+        
+                          <!-- Special columns -->
+                          <!-- Special columns -->
+<td colspan="12" class="text-end">
+  <ng-container *ngIf="lineInfo.detailType.detailTypeCode && lineInfo.lineAmountUsd > 0">
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode === 'TAX'">TAX</ng-container>
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode === 'FRGHT'">FREIGHT</ng-container>
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode !== 'TAX' && lineInfo.detailType.detailTypeCode !== 'FRGHT' && lineInfo.detailType.detailTypeCode !== 'TOTAL'">
+      {{ lineInfo.detailType.detailTypeCode }}
+    </ng-container>
+  </ng-container>
+</td>
+<td class="text-end" [attr.colspan]="lineInfo.detailType.detailTypeCode === 'TOTAL' ? 14 : 1">
+  <ng-container *ngIf="lineInfo.lineAmountUsd > 0">
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode === 'TAX'">{{ lineInfo.lineAmountUsd | currency:'USD':'symbol' }}</ng-container>
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode === 'FRGHT'">{{ lineInfo.lineAmountUsd | currency:'USD':'symbol' }}</ng-container>
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode !== 'TAX' && lineInfo.detailType.detailTypeCode !== 'FRGHT' && lineInfo.detailType.detailTypeCode !== 'TOTAL'">
+      {{ lineInfo.lineAmountUsd | currency:'USD':'symbol' }}
+    </ng-container>
+    <ng-container *ngIf="lineInfo.detailType.detailTypeCode === 'TOTAL'">
+      <span class="fw-semibold">{{ lineInfo.lineAmountUsd | currency:'USD':'symbol' }}</span>
+     
+    </ng-container>
+  </ng-container>
+</td>
+
+                          
+                      
+                          
+                        
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                 
+                    <!-- No Records Found -->
+                    <ng-template #noRecords>
+                      <tr>
+                        <td class="text-center" colspan="14">
+                          <p class="mb-0 py-2">Records not found</p>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        
+        
+        <!-- section 2:Add New Line -->
+        <div class="section" [class.collapsed]="section2Collapsed || !arrowSecTwo">
+          <div class="row my-2">
+            <div class="col-12">
+              <div *ngIf="arrowSecTwo">
+                <form [formGroup]="addLineForm">
+                  <div class="table-responsive" >
+                    <table class="table table-striped table-hover add-edit-table min-padding-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Reason Code</th>
+                                <th scope="col">Style</th>
+                                <th scope="col">Color</th>
+                                <th scope="col" class="roll-top">Roll</th>
+                                <th scope="col">Dyelot</th>
+                                <th scope="col">Line Type</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col" colspan="2">Width</th>
+                                <th scope="col" colspan="2">Length</th>
+                         
+                                <th scope="col">Qty</th>
+                                <th scope="col" style="width: 75px;">UOM</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                
+                              <td class="position-relative reasoncode-select">
+                                <mat-form-field>
+                                  <mat-select
+                                    formControlName="reasonCode"
+                                    [(ngModel)]="selectedReasonCode"
+                                    (openedChange)="filterClaims()"
+                                  >
+                                    <!-- Search Input -->
+                                    <mat-option class="search-new-option">
+                                      <mat-form-field>
+                                        <div style="display: flex; align-items: center;">
+                                          <mat-icon>search</mat-icon>
+                                          <input
+                                            matInput
+                                            placeholder="Search..."
+                                            [value]="codeSearch"
+                                            (input)="onSearchInput($event)"
+                                            autocomplete="off"
+                                            (click)="$event.stopPropagation()"
+                                            style="flex: 1; border: none; padding-left: 8px;"
+                                          />
+                                        </div>
+                                      </mat-form-field>
+                                    </mat-option>
+                                    
+                                    <!-- Filtered Options -->
+                                    <mat-option *ngFor="let data of filteredClaimList" [value]="data.claimReasonCode">
+                                      {{ data.claimReasonCode + ' - ' + data.claimReasonDescription }}
+                                    </mat-option>
+                                    
+                                    <!-- Special Option -->
+                                    <!-- <mat-option *ngIf="claimDetails.claimReasonDefinition" [value]="claimDetails.claimReasonDefinition.claimReasonCode">
+                                      {{ claimDetails.claimReasonDefinition.claimReasonCode + ' - ' + claimDetails.claimReasonDescription }}
+                                    </mat-option> -->
+                                  </mat-select>
+                                </mat-form-field>
+                              </td>
+                              
+                              
+                                <td><input type="text"  class="form-control"  formControlName="style"></td>
+                                <td><input type="text"  class="form-control" formControlName="color"></td>
+                                <td><input type="text"  class="form-control" formControlName="roll"></td>
+                                <td><input type="text"  class="form-control" formControlName="dyeLot"></td>
+                                <td><input type="text"  class="form-control" formControlName="lineType"></td>
+                                <td class="min-width"><input type="text"  class="form-control " formControlName="grade"></td>
+                                <td>
+                                <input type="text"  class="form-control  text-end" formControlName="widthinfeet">
+                                </td>
+                                <td>
+                                  <input type="text"  class="form-control text-end" formControlName="widthininch"></td>
+                                
+                                <td>
+                                  <input type="text"  class="form-control text-end" formControlName="lengthinfeet">
+                                  </td>
+                                  <td>
+                                  <input type="text" class="form-control text-end" formControlName="lengthininch">
+                                </td>
+                                <td><input type="text" class="form-control text-end" formControlName="qty" (input)="onQtyOrPriceChange()"></td>
+                                <td class="px-0 txt-uom">
+                                <select class="form-select form-control" formControlName="uom">
+                                  <option *ngFor="let data of unitOfmeasure" [value]="data.unitOfMeasureCode">
+                                    {{data.unitOfMeasureCode}}
+                                  </option></select></td>
+                                <td><input type="text" class="form-control text-end" formControlName="price" (input)="onQtyOrPriceChange()"></td>
+                                <td><input type="text"  class="form-control text-end" formControlName="amount"  (input)="onAmountChange()"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+               
+                <div class="row mb-3">
+                  <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                    Claim Line Category
+                    <span class="text-danger">*</span></label>
+                  <div class="col-12 col-xxl-4 col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                    <mat-form-field>
+                      <mat-select   formControlName="claimLineCategory">
+                     <mat-option *ngFor="let data of getCategories" 
+                       [value]="data.detailTypeDescription" >
+                       {{ data.detailTypeDescription}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                    Claim Line Add Reason 
+                    <span class="text-danger">*</span></label>
+                  <div class="col-12 col-xxl-4 col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                    <mat-form-field>
+                      <mat-select formControlName="lineAddreason" [(value)]="addReasonTypeData">
+                        <ng-container *ngFor="let data of claimLineAddReasonList">
+                          <mat-option *ngIf="data.lineAddReasonDescription === 'CLAIMS ADMINISTRATOR OPTION'" 
+                          [value]="data.lineAddReasonCode">
+                            {{ data.lineAddReasonDescription }}
+                          </mat-option>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                    
+                  </div>
+                </div>
+                </form>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+    </div>
+      
+      <div *ngIf="!arrowSecTwo" class="modal-footer mt-4">
+        <div class="row">
+          <div class="col-12 text-end">
+            <button
+              type="button"
+              class="btn btn-secondary me-3"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="closeAddMoreLinesModal()"
+            >
+              Cancel
+            </button>
+            
+            <button type="button" class="btn btn-primary" [disabled]="selectedLineInfo.length === 0" (click)="addMoreLineItems(selectedClaimLineInfo)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer mt-4"  *ngIf="arrowSecTwo">
+        <div class="row">
+          <div class="col-12 text-end">
+          <button type="button" class="btn btn-primary" (click)="addNewLine()" [disabled]="addLineForm.invalid">Add New Line</button>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+<!-- Edit line item modal -->
+  <div class="modal modal-bg" id="invoiceEditModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title p-0" id="staticBackdropLabel">Edit Line</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeinvoiceEditModel()"></button>
+        </div>
+        <div class="modal-body">
+          <app-add-edit-line [claimList]="claimList" [unitOfmeasure]="unitOfmeasure" [selectedLine]="selectedLine" [editpayloadResponse]="editpayloadResponse"  [claimDetails]="claimDetails" [claimId]="claimId" (refreshInvoiceData)="refreshInvoiceData($event)"></app-add-edit-line>
+        </div>
+        <div class="modal-footer mt-4"> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal modal-bg fade" id="ClaimAnalyzeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0" id="staticBackdropLabel">Claim Line Analysis</h4>
+                <div class="d-flex align-items-center">
+                  <button type="button" class="btn-primary mx-3" >Print</button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            </div>
+            <div class="modal-body">
+                <app-analyze-claim  [analyzeClaimdetailsData]="claimDetails" 
+                  [customerdata]="customerdata" 
+                 [reasonCodeData]="selectedLineForAnalyze"
+                 [resolutionsAndPhotosData]="resolutionsAndPhotosData"></app-analyze-claim>
+                </div>
+                <!-- <div class="modal-footer mt-4">
+                    <div class="row">
+                        <div class="col-12 text-end">
+                            <button type="button" class="btn btn-primary mx-2" >
+                                Check Inventory
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+<div *ngIf="enableDuplicateLineBtn && payloadResponse">
+    <app-duplicate [selectedLine]="selectedLine"
+     [payloadResponse]="payloadResponse" 
+     (refreshInvoiceData)="refreshInvoiceData($event)"
+      (duplicateEvent)="duplicateLine()"
+      [claimList]="claimList" 
+      [unitOfmeasure]="unitOfmeasure"></app-duplicate>
+</div>
+<div *ngIf="enableCreateServiceBtn && payloadResponse">
+  <app-create-service [selectedLineItem]="selectedLineItem"
+  (refreshInvoiceData)="refreshInvoiceData($event)"
+   [unitOfmeasure]="unitOfmeasure"
+  [claimList]="claimList" 
+   [payloadResponse]="payloadResponse"></app-create-service>
+</div>
+<div
+  class="modal modal-bg"
+  id="deleteLineItemModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDeleteLineItemModel()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <p>Are you sure you want to delete the selected line(s)?</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="confirmDeleteLineItemModel()"
+            >
+              Confirm
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="cancelDeleteLineItemModel()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Labour Line modal  -->
+
+<div class="modal modal-bg" id="invoiceLaboueModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xxl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title p-0" id="staticBackdropLabel">Create Labor Line</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeinvoiceLaboueModel()"></button>
+      </div>
+      <div class="modal-body">
+        <app-create-line [selectedLine]="selectedLine"
+         [payloadResponse]="payloadResponse"
+          (refreshInvoiceData)="refreshLabourModelData()"
+          [claimList]="claimList" 
+          [unitOfmeasure]="unitOfmeasure"></app-create-line>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- restock  overlay -->
+<div class="modal modal-bg modal-lg" id="restock-fee">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Restock Fee</h5>
+        <button type="button" class="btn-close" (click)="closeModal('restock-fee')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="first-column col-5">
+            <div class="cust-default-1">
+              <h5>Customer Default</h5>
+            </div>
+            <div class="first-column">
+              <div class="cust-default-1 ">
+                <p>Hard Surface</p>
+              </div>
+             <!--  <div class="cust-default-1 col-6">
+                <p>Tier 1</p>
+              </div> -->
+            </div>
+          </div>
+          <div class="second-column col-2">
+            <div class="cust-default-1 editable-field-1 restock-fee-wrapper">
+              <div class="restock-fee-container">
+                <input 
+                  class="no-border restock-fee-input" 
+                  type="number" 
+                  [(ngModel)]="restockFeeData.restockFeePercentage" 
+                  (ngModelChange)="updateRestockFee($event)" 
+                />
+                <span class="percentage-symbol">%</span>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          
+          <div class="third-column col-2">
+            <div class="cust-default-1 editable-field-2">
+              <input 
+                class="no-border" 
+                type="text" 
+                [value]=" '$' + editRestockFeeData" 
+                placeholder="16%" 
+              />
+            </div>
+            <div class="cust-default-1 editable-field-2">
+              <input 
+                class="no-border" 
+                type="text" 
+                [value]="'$' + (restockFeeData.restockFee | number:'1.2-2')"
+                placeholder="17%" 
+                disabled 
+              />
+            </div>
+          </div>
+          
+          <div class="fourth-column col-3 align-self-center">
+            <button class="btn btn-primary" (click)="prepCRMmodal()">Apply now</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal('restock-fee')">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- sample overlay -->
+<div
+  class="modal modal-bg modal-md" id="staticBackdropinvoice">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Title</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('staticBackdropinvoice')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+       <p> Development in Progress</p>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal('staticBackdropinvoice')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Prepare CRM modal -->
+
+<!-- <div
+  class="modal modal-bg modal-xl" id="prepare-CRM">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Maintain Credit Memo</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('prepare-CRM')"
+        ></button>
+      </div>
+      <div class="modal-body">
+     
+      
+      
+      <app-prepare-crm [selectedLine]="selectedLine" [claimDetails]="claimDetails"></app-prepare-crm>
+     
+     
+    
+      
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary mx-2" (click)="closeModal('prepare-CRM')">
+          Continue
+        </button>
+        <button type="button" class="btn btn-secondary mx-2" (click)="saveCrmDraft('P')">
+          Save as draft
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal('prepare-CRM')">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Prior claim summary modal -->
+<div class="modal modal-bg" id="modalPriorClaimSummary" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header mb-3">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Prior Claim Summary
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="CloseModalPriorSummary()"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="py-3" *ngIf="priorClaimloading; else priortableContent">
+          <!-- Show spinner while loading data -->
+          <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <!-- <app-table [data]="priorClaimTableData" [headers]="priorClaimTableHeaders"></app-table> -->
+        <ng-template #priortableContent>
+          <!-- <div class="table-container"> -->
+            <table class="table table-striped table-hover table-nowrap table-fixed">
+              <thead>
+                <tr>
+                  <th>ORIGIN</th>
+                  <th>STATUS</th>
+                  <th>CLAIM#</th>
+                  <th>CLAIM DATE</th>
+                  <th>CUSTOMER#</th>
+                  <th>NAME</th>
+                  <th>INVOICE #</th>
+                  <th>INVOICE DATE</th>
+                  <th>CRM</th>
+                  <th>CRM DATE</th>
+                  <th>DBT#</th>
+                  <th>DBT DATE</th>
+                  <th>REASON CODE</th>
+                  <th>TOTAL AMOUNT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="priorClaimTableData.length === 0">
+                  <td class="text-center" colspan="14">
+                    <!-- <p class="mb-0 py-2">Record Not Found</p> -->
+                    <p class="mb-0 py-2">No Prior Claim Is Available</p>
+                  </td>
+                </tr>
+                <tr *ngFor="let claim of priorClaimTableData; let i = index">
+                  <td></td> <!-- ORIGIN -->
+                  <td>{{ claim?.status }}</td><!-- STATUS -->
+                  <!-- <td *ngIf="claimstatusPriordata">{{ claimstatusPriordata?.claimStatusDescription }}</td>STATUS -->
+                  <!-- <td><a [routerLink]="'/claim-detail/' + claim.claimNumber">{{ claim?.claimNumber }}</a></td> -->
+
+                  <td><a [routerLink]="'/claim-detail/' + claim.claimNumber" target="_blank">{{ claim?.claimNumber }}</a></td>
+
+                  <td>{{ claim.claimDate | date:'dd/MM/yyyy' }}</td> <!-- DATE -->
+                  <td>{{ claim?.customerNumber }}</td> <!-- CUSTOMER# -->
+                  <td>{{ claim.name }}</td> <!-- NAME -->
+                  <td>{{ claim.invoiceData[0]?.invoiceNumber }}</td> <!-- INVOICE # -->
+                  <td>{{ claim.invoiceData[0]?.invoiceDate | date:'MM/dd/yyyy' }}</td> <!-- DATE -->
+                  <td>{{claim?.crmNumberList[0]?.crmNumber}}</td> <!-- CRM -->
+                  <td>{{claim?.crmNumberList[0]?.crmDate | date:'MM/dd/yyyy'}}</td> <!-- DATE -->
+                  <td></td> <!-- DBT# -->
+                  <td></td> <!-- DATE -->
+                  <td>{{ claim?.reasonCode }}</td>  <!-- REASON CODE -->
+                  <td class="text-end">${{ claim?.totalAmount | number:'1.2-2'}}</td> <!-- TOTAL AMOUNT -->
+                </tr>
+              </tbody>
+            </table>
+          <!-- </div> -->
+        </ng-template>
+      </div>
+      <div class="modal-footer border-top-0">
+        <div class="text-end mt-3">
+
+          <!-- <button class="d-sm-inline-block btn btn-sm btn-primary" (click)="initiateClaimModal()" [disabled]="loading">Continue Initiation</button> -->
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex gap-3 flex-wrap">
+            
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="CloseModalPriorSummary()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REquest inspection modal -->
+<div
+class="modal modal-bg modal-md" id="request-Inspection">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"> Select Request type</h5>
+      <button
+        type="button" class="btn-close" (click)="closeModal('request-Inspection')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p class="fw-semibold mb-2"> Please Choose your request type:</p>
+      <div class="form-check form-check-inline">
+        <input type="radio" id="Option1" name="serviceIns" class="form-check-input" />
+        <label class="form-check-label" for="Option1">Inspections</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="radio" id="Option2" name="serviceIns" class="form-check-input" />
+        <label class="form-check-label" for="Option2">Services</label>
+    </div>
+     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary mx-2" (click)="openClaimVendorMap()">
+        Continue
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal('request-Inspection')">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Associate Document ADD overlay -->
+<div
+  class="modal modal-bg modal-xl" id="addAssociateDoc">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Associate Documents</h5>
+        <button
+          type="button" class="btn-close" (click)="closeModal('addAssociateDoc')"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="d-flex align-items-center justify-content-between">
+       <h6 class="mb-2 fs-14">Enter Document Information</h6>
+       <button class="btn-primary btn-equal-wh-36 flex-shrink-0">
+           <i class="fa fa-plus" aria-hidden="true"></i>
+       </button>
+      </div>
+       <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Type</th>
+                <th scope="col">Document Number</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Remarks</th>
+              </tr>
+            </thead>
+            <tbody >
+             <tr>
+              <td>  <input
+                type="checkbox" class="form-check-input mt-2"/> </td>
+              <td><mat-form-field>
+                <mat-select>
+                    <mat-option></mat-option>
+                </mat-select>
+              </mat-form-field></td>
+              <td><input type="text" class="form-control"></td>
+              <td class="position-relative">  <input type="text"class="form-control"value="DD-MM-YYYY"/>
+              <span class="datepicker-1">
+                <i class="fa-regular fa-calendar-days"></i></span></td>
+              <td><input type="text" class="form-control"></td>
+              <td><p class="mb-0 text-danger">Warning message here, if any</p></td>
+             </tr>
+            </tbody>
+            <ng-template #noData>
+              <tbody>
+                <tr>
+                  <td colspan="9" class="text-center"> Records not Found</td>
+                </tr>
+              </tbody>
+            </ng-template>
+          </table>
+        </div>
+      </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mx-2 " (click)="closeModal('addAssociateDoc')">
+          Remove
+        </button>
+        <button type="button" class="btn btn-primary mx-2 " (click)="closeModal('addAssociateDoc')">
+          Save
+        </button>
+        <button type="button" class="btn btn-secondary " (click)="closeModal('addAssociateDoc')">
+          Cancel
+        </button>
+       <!--  <button type="button" class="btn btn-primary mx-2 d-none" (click)="closeModal('addAssociateDoc')">
+          More
+        </button>
+        <button type="button" class="btn btn-secondary d-none" (click)="closeModal('addAssociateDoc')">
+          Close
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+*ngIf="!noNewInvoice"
+  class="modal modal-bg"
+  id="addGenricLines"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addGenricLinesLabels"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xxl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addinvoiceLabels">Add More Lines</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeAddGenricLinesModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form [formGroup]="addLineForm">
+            <div class="table-responsive" >
+              <table class="table table-striped table-hover add-edit-table min-padding-table">
+                  <thead>
+                      <tr>
+                          <th scope="col">Reason Code</th>
+                          <th scope="col">Style</th>
+                          <th scope="col">Color</th>
+                          <th scope="col" class="roll-top">Roll</th>
+                          <th scope="col">Dyelot</th>
+                          <th scope="col">Line Type</th>
+                          <th scope="col">Grade</th>
+                          <th scope="col" colspan="2">Width</th>
+                          <th scope="col" colspan="2">Length</th>
+                   
+                          <th scope="col">Qty</th>
+                          <th scope="col" style="width: 75px;">UOM</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Amount</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          
+                        <td class="position-relative reasoncode-select">
+                          <mat-form-field>
+                            <mat-select
+                              formControlName="reasonCode"
+                              [(ngModel)]="selectedReasonCode"
+                              (openedChange)="filterClaims()"
+                            >
+                              <!-- Search Input -->
+                              <mat-option class="search-new-option">
+                                <mat-form-field>
+                                  <div style="display: flex; align-items: center;">
+                                    <mat-icon>search</mat-icon>
+                                    <input
+                                      matInput
+                                      placeholder="Search..."
+                                      [value]="codeSearch"
+                                      (input)="onSearchInput($event)"
+                                      autocomplete="off"
+                                      (click)="$event.stopPropagation()"
+                                      style="flex: 1; border: none; padding-left: 8px;"
+                                    />
+                                  </div>
+                                </mat-form-field>
+                              </mat-option>
+                              
+                              <!-- Filtered Options -->
+                              <mat-option *ngFor="let data of filteredClaimList" [value]="data.claimReasonCode">
+                                {{ data.claimReasonCode + ' - ' + data.claimReasonDescription }}
+                              </mat-option>
+                              
+                              <!-- Special Option -->
+                              <!-- <mat-option *ngIf="claimDetails.claimReasonDefinition" [value]="claimDetails.claimReasonDefinition.claimReasonCode">
+                                {{ claimDetails.claimReasonDefinition.claimReasonCode + ' - ' + claimDetails.claimReasonDescription }}
+                              </mat-option> -->
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        
+                        
+                          <td><input type="text"  class="form-control"  formControlName="style"></td>
+                          <td><input type="text"  class="form-control" formControlName="color"></td>
+                          <td><input type="text"  class="form-control" formControlName="roll"></td>
+                          <td><input type="text"  class="form-control" formControlName="dyeLot"></td>
+                          <td><input type="text"  class="form-control" formControlName="lineType"></td>
+                          <td class="min-width"><input type="text"  class="form-control " formControlName="grade"></td>
+                          <td>
+                            <input type="text"  class="form-control  text-end" formControlName="widthinfeet">
+                            </td>
+                            <td>
+                             <input type="text"  class="form-control text-end" formControlName="widthininch"></td>
+                        
+                          <td >
+                            <input type="text"  class="form-control text-end" formControlName="lengthinfeet">
+                           </td>
+                           <td>
+                            <input type="text" class="form-control text-end" formControlName="lengthininch"> 
+                          </td>
+                          <td><input type="text" class="form-control text-end" formControlName="qty" (input)="onQtyOrPriceChange()"></td>
+                          <td class="px-0 txt-uom">
+                          <select class="form-select form-control" formControlName="uom">
+                            <option *ngFor="let data of unitOfmeasure" [value]="data.unitOfMeasureCode">
+                              {{data.unitOfMeasureCode}}
+                            </option></select></td>
+                          <td><input type="text" class="form-control text-end" formControlName="price" (input)="onQtyOrPriceChange()"></td>
+                          <td><input type="text"  class="form-control text-end" formControlName="amount"  (input)="onAmountChange()"></td>
+                      </tr>
+                  </tbody>
+              </table>
+            </div>
+         
+          <div class="row mb-3">
+            <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+              Claim Line Category
+              <span class="text-danger">*</span></label>
+            <div class="col-12 col-xxl-4 col-xl-4 col-lg-5 col-md-6 col-sm-12">
+              <mat-form-field>
+                <mat-select   formControlName="claimLineCategory">
+               <mat-option *ngFor="let data of getCategories" 
+                 [value]="data.detailTypeDescription" >
+                 {{ data.detailTypeDescription}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-12 col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-12 col-form-label">
+              Claim Line Add Reason 
+              <span class="text-danger">*</span></label>
+            <div class="col-12 col-xxl-4 col-xl-4 col-lg-5 col-md-6 col-sm-12">
+              <mat-form-field>
+                <mat-select formControlName="lineAddreason" [(value)]="addReasonTypeData">
+                  <ng-container *ngFor="let data of claimLineAddReasonList">
+                    <mat-option *ngIf="data.lineAddReasonDescription === 'CLAIMS ADMINISTRATOR OPTION'" [value]="data.lineAddReasonCode">
+                      {{ data.lineAddReasonDescription }}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          </form>
+        </div>
+</div>
+<div  class="modal-footer mt-4">
+  <div class="row">
+    <div class="col-12 text-end">
+      <button
+        type="button"
+        class="btn btn-secondary me-3"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="closeAddGenricLinesModal()"
+      >
+        Cancel
+      </button>
+      
+      <button type="button" class="btn btn-primary" (click)="addGenricLine()" [disabled]="addLineForm.invalid">Add New Line</button>
+    </div>
+  </div>
+</div>
+    
+     
+    </div>
+  </div>
+</div>

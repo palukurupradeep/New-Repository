@@ -1,0 +1,41 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: szue2fintechaksdacr1.azurecr.io
+  IMAGE_NAME: ShawCMSDev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Deploy to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: sz-ue2-fintechaks-d-aks-1
+          resource-group: sz-ue2-fintechaks-d-rg-1
+
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/ShawCMSDev-deployment ShawCMSDev=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

@@ -1,0 +1,39 @@
+.w-50{
+    width: 50% !important;
+}
+
+.form-select{
+    font-size: 13px !important;
+}
+
+.pr-0{
+    padding-right: 0 !important;
+}
+
+.bg-blue{
+   background-color: #5d87ff !important; 
+}
+
+.badge-clear {
+    button {
+      outline: none;
+      border: 1px solid #5d87ff;
+      background-color: white;
+      color: #5d87ff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 50px;
+      margin-right: 2px;
+  
+      &.clearall {
+        border: 1px solid #5d87ff;
+        background-color: #5d87ff;
+        color: #fff;
+  
+        img {
+          filter: brightness(0) invert(1);
+        }
+      }
+    }
+  }

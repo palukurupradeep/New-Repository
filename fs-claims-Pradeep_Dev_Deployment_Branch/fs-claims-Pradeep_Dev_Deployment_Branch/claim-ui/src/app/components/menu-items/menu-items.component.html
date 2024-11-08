@@ -1,0 +1,77 @@
+<!-- <li class="top-li">
+  <a (click)="toggleSubMenu(menuItem)">{{ menuItem.menuName }}
+
+    <i class="fa fa-caret-right icon-right" *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+
+  </a>
+
+  <ul class="submenu-new" *ngIf="menuItem.expanded && menuItem.subMenu && menuItem.subMenu.length > 0">
+    <app-menu-items *ngFor="let subItem of menuItem.subMenu" [menuItem]="subItem"></app-menu-items>
+  </ul>
+</li> -->
+
+<!-- <li class="top-li">
+  <a *ngIf="menuItem.linkUrl; else noLink"
+     [href]="menuItem.linkUrl"
+     target="_blank">
+    {{ menuItem.menuName }}
+    <i class="fa fa-caret-right icon-right" *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+  </a>
+
+  <ng-template #noLink>
+    <a href="#" (click)="toggleSubMenu(menuItem); $event.preventDefault();">
+      {{ menuItem.menuName }}
+      <i class="fa fa-caret-right icon-right" *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+    </a>
+  </ng-template>
+
+  <ul class="submenu-new" *ngIf="menuItem.expanded && menuItem.subMenu && menuItem.subMenu.length > 0">
+    <app-menu-items *ngFor="let subItem of menuItem.subMenu" [menuItem]="subItem"></app-menu-items>
+  </ul>
+</li> -->
+
+
+<!-- <li class="top-li">
+  <a  *ngIf="menuItem.linkUrl && !(menuItem.subMenu && menuItem.subMenu.length > 0); else noLink"
+     [href]="menuItem.linkUrl"
+     target="_blank">
+    {{ menuItem.menuName }}
+    <i class="fa" [ngClass]="menuItem.expanded ? 'fa-caret-down' : 'fa-caret-right'" 
+       *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+  </a>
+
+  <ng-template #noLink>
+    <a href="#" (click)="toggleSubMenu(menuItem); $event.preventDefault();">
+      {{ menuItem.menuName }}
+      <i class="fa" [ngClass]="menuItem.expanded ? 'fa-caret-down' : 'fa-caret-right'" 
+         *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+    </a>
+  </ng-template>
+
+  <ul class="submenu-new" *ngIf="menuItem.expanded && menuItem.subMenu && menuItem.subMenu.length > 0">
+    <app-menu-items *ngFor="let subItem of menuItem.subMenu" [menuItem]="subItem"></app-menu-items>
+  </ul>
+</li> -->
+
+
+<li class="top-li">
+  <a *ngIf="menuItem.linkUrl && !(menuItem.subMenu && menuItem.subMenu.length > 0); else noLink"
+     [href]="menuItem.linkUrl"
+     target="_blank">
+    {{ menuItem.menuName }}
+    <i class="fa" [ngClass]="menuItem.expanded ? 'fa-caret-down' : 'fa-caret-right'" 
+       *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+  </a>
+
+  <ng-template #noLink>
+    <a href="#" (click)="toggleSubMenu(menuItem); $event.preventDefault();">
+      {{ menuItem.menuName }}
+      <i class="fa" [ngClass]="menuItem.expanded ? 'fa-caret-down' : 'fa-caret-right'" 
+         *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0"></i>
+    </a>
+  </ng-template>
+
+  <ul class="submenu-new" *ngIf="menuItem.expanded && menuItem.subMenu && menuItem.subMenu.length > 0">
+    <app-menu-items *ngFor="let subItem of menuItem.subMenu" [menuItem]="subItem"></app-menu-items>
+  </ul>
+</li>

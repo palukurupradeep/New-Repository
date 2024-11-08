@@ -1,0 +1,106 @@
+.top-li{
+    position: relative;
+    list-style-type: none;
+}
+ 
+.top-li a{
+    padding: 5px 10px;
+    width: 100%;
+    display: block;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+    font-family: Montserrat, sans-serif !important;
+}
+ 
+.top-li ul:nth-child(even) li{
+    display: none;
+}
+ 
+.top-li ul:nth-child(even) li:nth-child(odd){
+    display: block;
+}
+ 
+/* .top-li:hover ul:nth-child(even) li:nth-child(odd){
+    display: block;
+} */
+ 
+.top-li ul:nth-child(even) li::before{
+    content: "-";
+    font-size: 20px;
+    line-height: 1;
+    top: 3px;
+    left: -3px;
+    position: absolute;
+}
+/* 
+.top-li:hover ul:nth-child(even) li:nth-child(odd) ul:nth-child(even){
+    display: none;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even){
+    display: block;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd) ul:nth-child(even){
+    display: none;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even){
+    display: block;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd) ul:nth-child(even) li:nth-child(odd) ul:nth-child(even){
+    display: none;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even){
+    display: block;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd) ul:nth-child(even) li:nth-child(odd) ul:nth-child(even) li:nth-child(odd) ul:nth-child(even){
+    display: none;
+}
+ 
+.top-li:hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even) li:nth-child(odd):hover ul:nth-child(even){
+    display: block;
+} */
+ 
+.icon-container {
+    position: relative;
+    display: inline-block;
+  }
+ 
+  .icon-right,
+  .icon-down {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 24px;
+    cursor: pointer;
+  }
+ 
+  .icon-down {
+    display: none;
+  }
+ 
+  .icon-container:hover .icon-right {
+    display: none;
+  }
+ 
+  .icon-container:hover .icon-down {
+    display: inline;
+  }
+ 
+  .fa-caret-right{
+    position: relative;
+    top: 1px;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .icon-right {
+    transition: transform 0.2s ease-in-out;
+  }
+  

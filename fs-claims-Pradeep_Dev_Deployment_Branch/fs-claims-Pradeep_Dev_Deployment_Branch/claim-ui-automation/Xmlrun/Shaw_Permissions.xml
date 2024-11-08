@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShawClaimX Project Automation  " verbose="10">
+	<parameter name="appURL"
+		value="https://fs-claims-sys.shawinc.com/admin/permissions" />
+	<parameter name="browserType" value="chrome" />
+	<test
+		name="ShawClaimX Project Functionalities - Permission Module Flow ">
+		<classes>
+			<class name="com.shawclaimx.ui.roles.tests.AddPermissionTest" />
+
+		</classes>
+	</test>
+</suite>

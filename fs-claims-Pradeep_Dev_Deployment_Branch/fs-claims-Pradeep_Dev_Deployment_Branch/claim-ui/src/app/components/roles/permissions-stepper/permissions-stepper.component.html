@@ -1,0 +1,176 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <!-- Step 1 -->
+
+<mat-step [completed]="permissionFlag">
+  <ng-template matStepLabel>Permissions</ng-template>
+  <!-- Your step 1 content goes here -->
+  <form [formGroup]="permissionForm">
+    <ng-template matStepLabel>Permissions</ng-template>
+    <section class="custom-scrollable">
+      <div class="row">
+        <div class="col-12 col-lg-4">
+          <div class="form-group mb-4">
+            <label for="permissionName" class="mb-2"
+              >Permission Code <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="permissionCode"
+              id="permissionName"
+              class="form-control w-100"
+            />
+          </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="col-12 col-lg-4">
+          <div class="form-group">
+            <label for="name" class="mb-2"
+              >Permission Description
+              <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="permissionDescription"
+              id="name"
+              class="form-control w-100"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="text-end p-abs-bottom">
+     
+      <button
+        class="btn btn-primary"
+        (click)="addPermissionAndNext()"
+        [disabled]="!isStep1Completed()"
+      >
+        Next
+      </button>
+    </div>
+  </form>
+</mat-step>
+
+
+  <!-- Step 2 -->
+  <mat-step [completed]="permissionSetFlag" [editable]="permissionFlag">
+    <ng-template matStepLabel>Permissions Set</ng-template>
+    <p class="fs-1rem">Select Permissions</p>
+    <div *ngFor="let permission of permissionObject; let i = index">
+      <div class="main-one">
+        <!-- Permission Header -->
+        <button
+          class="tree-btn"
+          mat-icon-button
+          *ngIf="permissionHasActionsOrFunctions(permission)"
+          (click)="togglePermissions(i)"
+        >
+          <mat-icon>
+            {{
+              permissionsVisible[i] ? "expand_more" : "keyboard_arrow_right"
+            }}
+          </mat-icon>
+        </button>
+        <mat-checkbox
+          class="example-margin name-of-top"
+          [checked]="selectedPermissions[permission.objectId]"
+          (change)="selectPermission(permission.objectId, i)"
+        >
+          {{ permission.objectDescription }}
+        </mat-checkbox>
+
+        <!-- Permission Content -->
+        <div
+          *ngIf="
+            permissionHasActionsOrFunctions(permission) &&
+            permission.applicationFunctions &&
+            permission.applicationFunctions.length > 0
+          "
+          [ngClass]="{ 'nested-visible': permissionsVisible[i] }"
+        >
+          <div *ngIf="permissionsVisible[i]" class="div-margin-new">
+            <!-- Functions Header -->
+            <div>
+              <span class="fs-new">Functions</span>
+              <button
+                mat-icon-button
+                class="tree-btn-new"
+                (click)="toggleFunctions(i)"
+              >
+                <mat-icon>
+                  {{
+                    functionsVisible[i]
+                      ? "expand_more"
+                      : "keyboard_arrow_right"
+                  }}
+                </mat-icon>
+              </button>
+            </div>
+
+            <!-- Functions Content -->
+            <div *ngIf="functionsVisible[i]" class="new-margin">
+              <div
+                *ngFor="let functionItem of permission.applicationFunctions"
+              >
+                <div class="new-padding">
+                  <mat-checkbox
+                    class="example-margin"
+                    [checked]="selectedFunctions[functionItem.functionId]"
+                    (change)="selectFunction(functionItem.functionId, i)"
+                  >
+                    {{ functionItem.functionDescription }}
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions Header -->
+            <div class="margin-extra">
+              <span class="fs-new">Actions</span>
+              <button
+                mat-icon-button
+                class="tree-btn-new"
+                (click)="toggleActions(i)"
+              >
+                <mat-icon>
+                  {{
+                    actionsVisible[i]
+                      ? "expand_more"
+                      : "keyboard_arrow_right"
+                  }}
+                </mat-icon>
+              </button>
+            </div>
+
+            <!-- Actions Content -->
+            <div *ngIf="actionsVisible[i]" class="margin-extra new-margin">
+              <div *ngFor="let actionItem of permission.applicationActions">
+                <div class="new-padding">
+                  <mat-checkbox
+                    class="example-margin"
+                    [checked]="selectedActions[actionItem.actionId]"
+                    (change)="selectAction(actionItem.actionId, i)"
+                  >
+                    {{ actionItem.actionDescription }}
+                  </mat-checkbox>
+                </div>
+              </div>
+              <!-- Add your content for actions here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-end p-abs-bottom">
+      <button class="btn btn-primary" (click)="savePermissionObject()">
+        Save
+      </button>
+     
+    </div>
+  </mat-step>
+
+  
+  
+</mat-horizontal-stepper>

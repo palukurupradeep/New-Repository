@@ -1,0 +1,41 @@
+<div class="modal modal-bg d-block" id="DeclineModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title p-0">Decline Claim</h4>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="mt-4">
+                <div class="row mb-3">
+                    <label class="col-12 col-xxl-2 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-form-label">
+                      Decline Reason</label>
+                      <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                        <select
+                          class="form-select form-control">
+                          <option *ngFor="let item of declineList">
+                           {{ item.declineReasonDescription}}
+                          </option>
+                        </select>
+                      </div>
+                  </div>
+                  </form>
+            </div>
+            <div class="modal-footer mt-4">
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-primary mx-2" >
+                            Decline
+                        </button>
+                        <button type="button" class="btn btn-primary mx-2" >
+                            Decline & Prepare Disposition
+                        </button>
+                        <button type="button" class="btn btn-secondary" >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

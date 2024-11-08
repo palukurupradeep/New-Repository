@@ -1,0 +1,99 @@
+.top-nav .nav-item {
+  display: inline-block;
+  flex-direction: column;
+}
+
+.top-nav .nav-link.user-name {
+  font-size: 14px;
+  color: #2a3547;
+  padding: 0;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 165px;
+}
+.top-nav .nav-item .nav-link img{
+  width: 80%;
+  vertical-align: top;
+}
+
+.top-nav .dropdown-toggle::after {
+  display: none;
+}
+
+.top-nav .badge {
+  position: absolute;
+    transform: scale(.75);
+    transform-origin: top right;
+    right: -8px;
+    margin-top: 0;
+    color: #fff;
+    background-color: var(--primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 18px;
+    line-height: 10px;
+    text-align: center;
+    font-size: 11px;
+    top: -8px;
+}
+
+.fa-user-circle,.fa-bell{font-size: 16px;}
+
+.search input {
+  text-indent: 10px;
+}
+
+.top-nav .search{width:200px}
+
+.top-nav .search-phone{width:230px; position: relative;}
+
+.top-nav .search:after{
+  //content: 'Go';
+  font-weight: 500;
+  line-height: 1.2;
+  width:50px;
+  height: 32px;
+  color: #fff;
+  font-size: 13px!important;
+  padding: .5rem .75rem!important;
+  text-align: center;
+  left: auto;
+    right: 0;
+    top: 0;
+    bottom: auto;
+  border-radius: 30px;
+  position: absolute;
+  background: #5D87FF;
+}
+.search-phone input {
+  border: 1px solid var(--primary);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--primary);
+  text-indent: 10px;
+  border-radius: 30px!important;
+}
+.top-nav .search-phone .phone-search {
+  
+  width: 50px;
+  height: 32px;
+  color: #fff;
+  font-size: 13px !important;
+  padding: .3rem .75rem !important;
+  text-align: center;
+  left: auto;
+  right: 0;
+  top: 0;
+  bottom: auto;
+  border-radius: 30px;
+  position: absolute;
+  background: #5D87FF;
+}
+
+@media (min-width:1600px){
+  .search-phone input{
+    font-size: 13px !important;
+  }
+}

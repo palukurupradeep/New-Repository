@@ -1,0 +1,166 @@
+name: Claim Deployment Pipeline
+on:
+  push:
+    branches:
+      - QA_Deployment_Branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+    
+    - name: Set up Docker Build
+      uses: docker/setup-buildx-action@v1
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        kubeconfig: ${{ github.workspace }}/kubeconfig
+    
+    # Setup Kubelogin
+    - uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.24'
+    
+    - name: Compiling the Docker Image
+      run: |
+          ls -lart  
+          docker build -t claim-initiation-qa-service:latest claim-initiation-service/
+          docker build -t claim-integration-qa-service:latest claim-integration-service/
+          docker build -t claim-security-qa-service:latest claim-security-service/
+          docker build -t claim-ui-qa-service:latest claim-ui/ 
+          docker images
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          az acr login --name szue2fintechaksdacr1
+          # TAG Docker Images
+          docker tag claim-initiation-qa-service:latest szue2fintechaksdacr1.azurecr.io/claim-initiation-qa-service:latest
+          
+          # Pushing To Azure Container Registry
+          docker push szue2fintechaksdacr1.azurecr.io/claim-initiation-qa-service:latest
+          
+          # TAG Docker Images
+          docker tag claim-integration-qa-service:latest szue2fintechaksdacr1.azurecr.io/claim-integration-qa-service:latest
+          
+          # Pushing To Azure Container Registry
+          docker push szue2fintechaksdacr1.azurecr.io/claim-integration-qa-service:latest
+          
+          # TAG Docker Images
+          docker tag claim-security-qa-service:latest szue2fintechaksdacr1.azurecr.io/claim-security-qa-service:latest
+          
+          # Pushing To Azure Container Registry
+          docker push szue2fintechaksdacr1.azurecr.io/claim-security-qa-service:latest
+
+          # # TAG Docker Images
+          docker tag claim-ui-qa-service:latest szue2fintechaksdacr1.azurecr.io/claim-ui-qa-service:latest
+          
+          # Pushing To Azure Container Registry
+          docker push szue2fintechaksdacr1.azurecr.io/claim-ui-qa-service:latest
+
+          docker images 
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, linux]
+    # runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        kubeconfig: ${{ github.workspace }}/kubeconfig
+    
+    # Setup Kubelogin
+    - uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.24' 
+    
+    - name: Deployment to aks
+      run: |
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+        kubelogin convert-kubeconfig -l azurecli
+        az acr login --name szue2fintechaksdacr1 --expose-token
+
+        ## Deployment to AKS
+        NAMESPACE="qa"
+        # Check if the namespace exists, and if not, create it
+        if ! kubectl get namespace "${NAMESPACE}" &> /dev/null; then
+            kubectl create namespace "${NAMESPACE}"
+        fi
+
+        # Check ns
+        kubectl get ns
+
+        # Update the files
+        
+        # Array of services
+        services=("claim-initiation" "claim-integration" "claim-security" "claim-ui")
+        
+        # Loop over services and apply sed commands
+        for service in "${services[@]}"; do
+          # Deployment
+          sed -i \
+            -e "s|${service}-service|${service}-${NAMESPACE}-service|" \
+            -e "s|namespace: claim-apps|namespace: ${NAMESPACE}|" \
+            k8s/storybook/${service}-service/deployment.yaml
+          
+          # Ingress
+          sed -i \
+            -e "s|${service}|${service}-${NAMESPACE}|" \
+            -e "s|namespace: claim-apps|namespace: ${NAMESPACE}|" \
+            -e "s|fs-claims-dev|fs-claims-${NAMESPACE}|" \
+            k8s/storybook/${service}-service/ingress.yaml
+
+          # Service
+          sed -i \
+            -e "s|${service}-service|${service}-${NAMESPACE}-service|" \
+            -e "s|namespace: claim-apps|namespace: ${NAMESPACE}|" \
+            k8s/storybook/${service}-service/service.yaml
+        done
+
+        # Claim Initiation Service
+        kubectl apply -f k8s/storybook/claim-initiation-service/deployment.yaml -f k8s/storybook/claim-initiation-service/ingress.yaml -f k8s/storybook/claim-initiation-service/service.yaml
+
+        # Claim Integration Service
+        kubectl apply -f k8s/storybook/claim-integration-service/deployment.yaml -f k8s/storybook/claim-integration-service/ingress.yaml -f k8s/storybook/claim-integration-service/service.yaml
+
+        # Claim security Serviceml
+        kubectl apply -f k8s/storybook/claim-security-service/deployment.yaml -f k8s/storybook/claim-security-service/ingress.yaml -f k8s/storybook/claim-security-service/service.yaml
+
+        # Claim UI Service
+        kubectl apply -f k8s/storybook/claim-ui-service/deployment.yaml -f k8s/storybook/claim-ui-service/ingress.yaml -f k8s/storybook/claim-ui-service/service.yaml
+
+        #Scaling deployments to zero
+        kubectl scale deployments claim-ui-qa-service-deployment -n ${NAMESPACE} --replicas 0
+        kubectl scale deployments claim-security-qa-service-deployment -n ${NAMESPACE} --replicas 0
+        kubectl scale deployments claim-initiation-qa-service-deployment -n ${NAMESPACE} --replicas 0
+        kubectl scale deployments claim-integration-qa-service-deployment -n ${NAMESPACE} --replicas 0
+
+        #Scaling Deployments again
+        kubectl scale deployments claim-ui-qa-service-deployment -n ${NAMESPACE} --replicas 1
+        kubectl scale deployments claim-security-qa-service-deployment -n ${NAMESPACE} --replicas 1
+        kubectl scale deployments claim-initiation-qa-service-deployment -n ${NAMESPACE} --replicas 1
+        kubectl scale deployments claim-integration-qa-service-deployment -n ${NAMESPACE} --replicas 1
+
+
+
+
+    

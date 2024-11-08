@@ -1,0 +1,22 @@
+<div class="table-responsive">
+   <table class="table table-striped table-hover">
+      <thead>
+         <tr>
+            <th colspan="2">Product Specifications</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr *ngFor="let specifications of productSpecifications">
+            <td class="text-uppercase">{{ specifications.key }}</td>
+            <td class="text-uppercase">
+               <!-- Conditionally render a hyperlink or plain text -->
+               <a *ngIf="specifications.key === 'mfg_StyleNumber'" href="#">{{ specifications.value }}</a>
+               <span *ngIf="specifications.key !== 'mfg_StyleNumber'">{{ specifications.value }}</span>
+            </td>
+         </tr>
+         <tr>
+            <td colspan="2" class="text-uppercase fw-semibold">Special Features</td>
+         </tr>
+      </tbody>
+   </table>
+</div>

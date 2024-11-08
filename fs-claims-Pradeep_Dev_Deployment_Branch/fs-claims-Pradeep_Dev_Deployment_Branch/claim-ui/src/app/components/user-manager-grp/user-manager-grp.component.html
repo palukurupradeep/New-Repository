@@ -1,0 +1,31 @@
+<div class="col-lg-3">
+
+                  
+    <select
+        class="form-select form-control"
+        aria-label="Default select example"
+        [(ngModel)]="selectedGroupName"
+      
+        (change)="getManagersList()"
+      >
+        <option
+          *ngFor="let group of groupList"
+          [value]="group.userGroupId"
+        >
+          {{ group.userGroupDescription }}
+        </option>
+      </select>
+</div>
+<div class="col-lg-3">
+   
+    <select 
+    class="form-select form-control"
+    aria-label="Default select example"
+    [(ngModel)]="selectedManagerName"
+    (change)="onManagerSelected()"
+  >
+    <option *ngFor="let manager of managerList" [value]="manager.userId">
+      {{ manager.firstName + " " + manager.middleInitial + " " + manager.lastName }}
+    </option>
+  </select>
+</div>

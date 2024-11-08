@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [ShawClaimX Project Automation]" guice-stage="DEVELOPMENT" verbose="10">
+  <parameter name="appURL" value="http://localhost:4200/initiateClaim "/>
+  <parameter name="browserType" value="chrome"/>
+  <test thread-count="5" name="ShawClaimX Project Functionalities - Claim Details Module Flow (failed)" verbose="10">
+    <classes>
+      <class name="com.shawclaimx.ui.claimdetails.tests.ClaimDetailsTest">
+        <methods>
+          <include name="setUp"/>
+          <include name="verifyClaimDetailsTestWithCustomerNumberPage"/>
+          <include name="tearDown"/>
+          <include name="initializeTestBaseSetup"/>
+        </methods>
+      </class> <!-- com.shawclaimx.ui.claimdetails.tests.ClaimDetailsTest -->
+    </classes>
+  </test> <!-- ShawClaimX Project Functionalities - Claim Details Module Flow (failed) -->
+</suite> <!-- Failed suite [ShawClaimX Project Automation] -->

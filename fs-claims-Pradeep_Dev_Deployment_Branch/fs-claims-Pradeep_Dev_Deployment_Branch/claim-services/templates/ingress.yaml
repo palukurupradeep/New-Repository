@@ -1,0 +1,42 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "claim-services.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "claim-services.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ .Values.ingress.tlsSecretName }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          {{- range $serviceName, $serviceConfig := .Values.services }}
+          {{- if $serviceConfig.enabled }}
+          - path: {{ $serviceConfig.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $serviceName }}
+                port: 
+                  {{- if eq $serviceName "claim-ui" }}
+                  name: port-0
+                  {{- else }}
+                  name: http
+                  {{- end }}
+          {{- end }}
+          {{- end }}
+{{- end }}

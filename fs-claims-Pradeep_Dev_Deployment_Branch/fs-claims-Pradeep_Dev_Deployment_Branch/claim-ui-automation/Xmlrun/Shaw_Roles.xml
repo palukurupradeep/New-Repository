@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShawClaimX Project Automation  " verbose="10">
+	<parameter name="appURL"
+		value="https://fs-claims-sys.shawinc.com/admin/roles" />
+	<parameter name="browserType" value="chrome" />
+	<test
+		name="ShawClaimX Project Functionalities - Roles Module Flow ">
+		<classes>
+			<class name="com.shawclaimx.ui.roles.tests.AddRoleTest" />
+			<class name="com.shawclaimx.ui.roles.tests.AddRoleNegativeTest" />
+
+		</classes>
+	</test>
+</suite>

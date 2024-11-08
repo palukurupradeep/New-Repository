@@ -1,0 +1,97 @@
+.status-card {
+    background: #ECF2FF;
+    border-radius: 15px;
+    padding: 25px 30px;
+}
+
+.status-card:hover {
+    background: #acc1ff;
+}
+
+.status-card i {
+    width: 45px;
+    line-height: 25px;
+    height: 45px;
+    background: var(--primary);
+    padding: 10px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 16px;
+    margin: 0 0 15px;
+}
+
+.status-card h3 {
+    font-size: 36px;
+    line-height: 44px;
+    color: var(--primary);
+}
+.status-card p {
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--primary);
+    margin: 0;
+}
+.card:hover {
+    box-shadow: 1px 9px 11px -3px #c5c5c5;
+}
+
+.status-card p {
+    font-size: 14px;
+    line-height: 19px;
+}
+.status-card h3{
+    font-weight: bold;
+    font-size: 19px !important;
+    padding: 0px;
+    margin: 0px;
+}
+.status-card h3 span,.status-card h5{
+    font-weight: bold;
+    font-size: 15px !important;
+}
+.status-card p input.form-control {
+    width: 40px;
+    margin: 0 auto;
+    padding: 3px !important;
+    text-align: center;
+}
+.status-card{
+    padding: 25px 12px;
+    display: flex;
+    justify-content: space-between;
+    min-height: 180px;
+    border: 1px solid #acc1ff;
+}
+.status-card.non-clickable h3,.status-card.non-clickable p{
+    color: #2A3547;
+}
+.card-group-data{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.margin_top p{
+    margin-bottom: 10px;
+}
+.red-color{
+    color: #FF2E2E;
+}
+.green-color{
+    color: #32CD32;
+}
+.orange-color{
+    color: #FCAE1E;
+}
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+    --bs-table-color-type: none;
+    --bs-table-bg-type: none;
+}
+.widget-six p {
+    color: black;
+}
+.widget-six h3 {
+    color: black;
+}

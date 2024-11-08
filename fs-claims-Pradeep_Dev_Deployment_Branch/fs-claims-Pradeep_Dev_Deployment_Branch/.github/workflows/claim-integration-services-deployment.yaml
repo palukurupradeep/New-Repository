@@ -1,0 +1,48 @@
+# name: Claim Integration Pipeline
+# on:
+#   push:
+#     branches:
+#       - TMP7777610_shawinc-patch-1
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout Repository
+#       uses: actions/checkout@v2
+
+#     - name: Set up JDK 17
+#       uses: actions/setup-java@v2
+#       with:
+#         distribution: 'adopt'
+#         java-version: '17'
+
+#     - name: Build with Maven
+#       run: |
+#         cd claim-integration-service
+#         mvn -B clean install
+#         ls -lart
+    
+#     - name: Set up Docker Buildx
+#       uses: docker/setup-buildx-action@v1
+
+#     - name: Deploy to Azure Container Registry
+#       run: |
+#         # Azure Authentication
+#         cd claim-integration-service
+#         ls -lart
+#         docker build -t claim-integration-package:v0.1 .
+#         az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+#         az acr login --name szue2fintechaksdacr1
+#         docker tag claim-integration-package:v0.1 szue2fintechaksdacr1.azurecr.io/claim-integration-package:v0.1
+#         docker push szue2fintechaksdacr1.azurecr.io/claim-integration-package:v0.1
+
+#     # - name: Clean up
+#     #   run: mvn clean
+
+#     # - name: Logout from Azure
+#     #   run: az logout
+
+
+    

@@ -1,0 +1,212 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header fetchClaimDetails="fetchClaimDetails(claimNumber)"></app-header>
+    <div class="main">
+        <div class="container-fluid">
+            <div class="p-3">
+                <h4>Pick up schedule</h4>
+                <div class="row">
+                    <h6 class="mb-3 py-2">Pick up schedule</h6>
+                    <div class="left-side-column col-6">
+                        <form [formGroup]="claimForm">
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">Claim #</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group">
+                                            <div
+                                                class="col-9 text-uppercase position-relative search-new-1 cursor-pointer mb-2">
+                                                <i class="fa fa-search cursor-pointer"
+                                                    (click)="fetchClaimDetails()"></i>
+                                                <input type="text" class="form-control" formControlName="claimNumber" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">RGA #</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group">
+                                            <div
+                                                class="col-9 text-uppercase position-relative search-new-1 cursor-pointer mb-2">
+                                                <i class="fa fa-search" (click)="fetchRgaDetails()"></i>
+                                                <input type="text" class="form-control" formControlName="rganumber">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Customer #</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase" *ngIf="claimData">
+                                            <p class="mb-0">{{ claimData.customerNumber }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Customer Name</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase" *ngIf="claimData">
+                                            <p class="mb-0"> {{ claimData.customerName }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Customer Email</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase" *ngIf="claimData">
+                                            <p class="mb-0">{{ claimData.customerEmail }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Customer Phone Number</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase" *ngIf="claimData">
+                                            <p class="mb-0">{{ claimData.customerPhone }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Notes</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase">
+                                            <button class="btn-primary btn-equal-wh-48 flex-shrink-0"><i
+                                                    aria-hidden="true" class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="right-side-column col-6">
+                        <form [formGroup]="claimForm">
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">Claim Date</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group">
+                                            <div class="col-12 text-uppercase position-relative" *ngIf="claimData">
+                                                <p class="mb-0">{{ claimData.claimDate }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">RGA date</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-12 text-uppercase" *ngIf="claimData">
+                                            <p class="mb-0">{{ claimData.rgaDate }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Date PickUp is Scheduled</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-9 text-uppercase position-relative">
+                                            <input type="text" formControlName="pickupDate"
+                                                #pickupDatePicker="bsDatepicker" class="form-control"
+                                                [bsConfig]="bsConfig" bsDatepicker triggers="dblclick:click"
+                                                (bsValueChange)="onPickupDateChange($event)" placeholder="MM/DD/YYYY"
+                                                (input)="autoFormatDate($event)" />
+                                            <span class="datepicker" (click)="pickupDatePicker.toggle()">
+                                                <i class="fa-regular fa-calendar-days"></i>
+                                            </span>
+
+                                            <div class="fail-style text-danger" *ngIf="pickupDateFutureError"> Pick-up
+                                                date cannot be in future.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2 align-items-center">
+                                    <label for="" class="col-sm-3 col-form-label">Reschedule Date</label>
+                                    <div class="col-sm-9 row">
+                                        <div class="form-group col-9 text-uppercase position-relative">
+                                            <input type="text" formControlName="rescheduleDate"
+                                                #rescheduleDatePicker="bsDatepicker" class="form-control"
+                                                [bsConfig]="bsConfig" bsDatepicker triggers="dblclick:click"
+                                                (bsValueChange)="onRescheduleDateChange($event)"
+                                                placeholder="MM/DD/YYYY" (input)="autoFormatDate($event)" />
+                                            <span class="datepicker" (click)="rescheduleDatePicker.toggle()">
+                                                <i class="fa-regular fa-calendar-days"></i>
+                                            </span>
+
+                                            <div class="fail-style text-danger" *ngIf="rescheduleDateFutureError">
+                                                Reschedule date cannot be in future.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">Schedule-on Route</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group">
+                                            <div class="col-9 text-uppercase">
+                                                <input class="form-control" type="text" formControlName="scheduleOnRoute">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">Quantity of RGA</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group">
+                                            <div class="col-9 text-uppercase">
+                                                <input class="form-control" type="text" formControlName="quantityOfRGA">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row mb-2">
+                                    <label for="" class="col-sm-3 col-form-label">Special Equipment needed</label>
+                                    <div class="col-sm-9 row align-items-center">
+                                        <div class="form-group col-12">
+                                            <div class="form-check form-switch">
+                                                <input type="checkbox" class="form-check-input mt-2" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-primary mx-2" (click)="updateClaim()">
+                            Update
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                            Done
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

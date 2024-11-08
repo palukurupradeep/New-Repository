@@ -1,0 +1,1175 @@
+<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<div class="body" [ngClass]="getBodyClass()">
+    <app-header></app-header>
+    <div class="main pb-4">
+      <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-lg-12">
+              <div class="page-head">
+                <h1 class="mb-0">Claim Code Management</h1>
+              </div>
+            </div>
+          </div>
+        <div class="row mb-3">
+          <div class="col-lg-12">
+                <div class="card p-4">
+                  <mat-horizontal-stepper #stepper linear>
+                    <!-- Step 1 -->
+                    <mat-step [completed]="step1Completed">
+                      <ng-template matStepLabel>Reason Code Definition</ng-template>
+                      <form [formGroup]="claimResonCodeForm">
+                        <ng-template matStepLabel>Reason Code Definition</ng-template>
+                        <div class="row mt-30">
+                            <div class="col-lg-6">
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Claim Reason Code</label>
+                                    <div  class="col-sm-3">
+                                        <div class="search cursor-pointer mb-2">
+                                            <span class="fa fa-search" (click)="claimCodeSearch()" [class.disabled]="searchIconDis"></span>
+                                            <input type="text"
+                                             appinputrestriction="" 
+                                             formControlName="claimSearch" 
+                                             maxlength="3"
+                                             class="form-control"
+                                             (input)="checkMaxLength()"
+                                             (keyup.enter)="claimCodeSearch()">
+                                        </div>
+                                        <span class="text-danger" *ngIf="checkClaimSearch">{{"Reason code " + claimResonCodeForm.value.claimSearch + " not found." }}</span>
+                                    </div>
+                                    <div  class="col-sm-6">
+                                          <mat-form-field>
+                                            <mat-select formControlName="claimReasonselect" 
+                                            [(value)]="selectReasonCode" placeholder="Select ReasonCode"
+                                            (selectionChange)="checkSelectedClaimReasoncode()">
+                                          
+                                              <mat-option *ngFor="let reasonCode of reasonCodes"
+                                              [value]="reasonCode.code" >
+                                              {{ reasonCode.code }} - {{ reasonCode.description }}
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Definition<span class="text-danger">*</span>
+                                    </label>
+                                    <div  class="col-sm-9">
+                                        <textarea type="text" formControlName="definition" 
+                                        class="form-control"
+                                        (input)="inputValidator($event)"
+                                       ></textarea>
+                                    </div>                                       
+                                </div>
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Cause<span class="text-danger">*</span>
+                                    </label>
+                                    <div  class="col-sm-9">
+                                        <textarea type="text" 
+                                        formControlName="cause" 
+                                        (input)="inputValidator($event)"
+                                        class="form-control"
+                                        ></textarea>
+                                    </div>                                       
+                                </div>
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Testing<span class="text-danger">*</span>
+                                    </label>
+                                    <div  class="col-sm-9">
+                                        <textarea type="text" 
+                                         (input)="inputValidator($event)" 
+                                        formControlName="testing" 
+                                        class="form-control"
+                                      ></textarea>
+                                    </div>                                       
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">
+                                      Sample Size Requirement<span class="text-danger">*</span>
+                                    </label>
+                                    <div  class="col-sm-9">
+                                        <textarea type="text" 
+                                        formControlName="samSizeReq" 
+                                        class="form-control"
+                                        (input)="inputValidator($event)"
+                                       ></textarea>
+                                    </div>                                       
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Claim Category
+                                    </label>                                      
+                                    
+                                    <div class="col-sm-9">
+                                      <mat-form-field>
+                                        <mat-select  formControlName="claimCategory"  placeholder="Select Claim Category"
+                                          [(value)]="claimCategoryData" >
+                                          <mat-option *ngFor="let category of claimCategories"
+                                           [value]="category.claimCategoryCode">
+                                            {{ category.claimCategoryName }}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">
+                                      Visibility Scope<span class="text-danger">*</span>
+                                    </label> 
+                                    <div class="col-sm-9">
+                                      <mat-form-field>
+                                        <mat-select formControlName="visibilityScope" 
+                                        placeholder="Select Visibility Scope"
+                                        [(value)]="visibility">
+                                          
+                                          <mat-option *ngFor="let item of visibleList" [value]="item.lookupId">
+                                            {{ item.lookupDescription }}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Type<span class="text-danger">*</span>
+                                    </label>                                      
+                                    <div  class="col-sm-9">
+                                        <mat-form-field>
+                                          <mat-select formControlName="type" 
+                                          [(value)]="lookUpType"
+                                          placeholder="Select Type">
+                                           
+                                            <mat-option  *ngFor="let types of typeList" [value]="types.lookupId">
+                                              {{ types.lookupDescription }}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    
+                                </div>
+
+                               
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Allowance to Keep</label>
+                                    <div  class="col-sm-2">
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" 
+                                             formControlName="allowanceToKeep" 
+                                             class="form-check-input mt-2">
+                                        </div>
+                                    </div> 
+                                    <label for="" class="col-sm-2 col-form-label">Service to Keep</label>
+                                    <div  class="col-sm-4">
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox"
+                                              formControlName="serviceTokeep" 
+                                              class="form-check-input mt-2">
+                                        </div>
+                                    </div>                                       
+                                </div>
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Return Eligible?</label>
+                                    <div  class="col-sm-2">
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" 
+                                            (change)="returnEligibleStatusChange()"
+                                            formControlName="returnEligible" 
+                                            class="form-check-input mt-2">
+                                        </div>
+                                    </div> 
+                                    <label for="" class="col-sm-2 col-form-label">
+                                      Return Type<span class="text-danger" *ngIf="returnEligibleStatus">*</span>
+                                    </label>
+                                    <div  class="col-sm-5">
+                                        <div class="form-check form-switch">
+                                    <mat-form-field>
+                                      <mat-select formControlName="returnType" 
+                                       placeholder="Select Return Type"
+                                       [(value)]="returnTypeData" >
+                                        
+                                        <mat-option *ngFor="let returnType of returnTypes"
+                                        [value]="returnType.codeRuleReturnTypeCode">
+                                        {{ returnType.codeRuleReturnTypeDescription}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                       
+                                    </div>                                       
+                                </div>
+                              </div>  
+
+                                <div class="form-group row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Distribution Compliance</label>
+                                    <div  class="col-sm-9">
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox"
+                                             formControlName="distributionCompliance"
+                                              class="form-check-input mt-2">
+                                        </div>
+                                    </div> 
+                                                                          
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="text-end mt-30">
+                          <!-- <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary" (click)="skipToSecondTab()">Skip</button> -->
+                          <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10"
+                          (click)="saveAndCloseclaimresCode()" [disabled]="saveAndContinueBtnDisable()">Save & Close</button>
+                          <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10"
+                          (click)="saveAndContinueclaimresCode()" [disabled]="saveAndContinueBtnDisable()">Save & Continue</button>
+                        </div>
+                      </form>
+                     
+                    </mat-step>
+                  
+                    <!-- Step 2 -->
+                    <mat-step [completed]="step2Completed" [disabled]="!step1Completed">
+                      <ng-template matStepLabel>Rule Definition</ng-template>
+                      <form [formGroup]="ruleDefinitionGroup">
+                        <div class="row mt-30">
+                         <div class="col-lg-12">
+                             <div class="card-box-10 py-20 px-20 inactive-card">
+                                 <h3 class="add-rule-title"><b>Rule List for Reason Code:</b> {{stepperReasonCode + '-'+ stepperClaimReasondescription}} </h3>
+                                </div>
+                            
+                             <div>
+                                 <table class="table table-striped table-hover"  matSort (matSortChange)="sortRuledefiniton($event)">
+                                     <thead>
+                                      
+                                       <tr>
+                                        <th style="width: 50px;"> </th>
+                                        <th mat-sort-header="description">Description</th>
+                                        <th mat-sort-header="category">Category</th>
+                                        <th mat-sort-header="type">Type</th>
+                                        <th mat-sort-header="level">Level</th>
+                                        <th mat-sort-header="areaOfimpact">Area of Impact</th>
+                                        <th mat-sort-header="actionType">Action Type</th>
+                                      </tr>
+
+                                       <tr>
+                                         <th></th>
+                                         <th><input type="text" 
+                                           class="search-input" 
+                                          #description
+                                           (input)="onTabRuleDefinitionSearch(description.value,'description')"
+                                           (keypress)="onKeyPress($event)"></th>
+                                         <th><input type="text"
+                                            class="search-input"
+                                            #category
+                                           (input)="onTabRuleDefinitionSearch(category.value,'category')"
+                                           (keypress)="onKeyPress($event)"></th>
+                                           
+                                         <th><input type="text"
+                                            class="search-input"
+                                           #type
+                                           (input)="onTabRuleDefinitionSearch(type.value,'type')"
+                                           (keypress)="onKeyPress($event)"></th>
+
+                                         <th><input type="text" 
+                                           class="search-input"
+                                          #level
+                                           (input)="onTabRuleDefinitionSearch(level.value,'level')"
+                                           (keypress)="onKeyPress($event)"></th>
+
+                                         <th><input type="text"
+                                            class="search-input"
+                                           #areaOfImpact
+                                           (input)="onTabRuleDefinitionSearch(areaOfImpact.value,'areaOfImpact')"
+                                           (keypress)="onKeyPress($event)"></th>
+                                         <th><input type="text"
+                                            class="search-input"
+                                           #actionType
+                                           (input)="onTabRuleDefinitionSearch(actionType.value,'actionType')"
+                                           (keypress)="onKeyPress($event)"></th>                                            
+                                       </tr>
+                                    
+                                     </thead>
+                                     <tbody *ngIf="sortedruleDefinitionList.length > 0; else noRecords">
+                                       <tr *ngFor="let rule of sortedruleDefinitionList">
+                                         <td class="icon-wrap-new">
+                                           <a class="text-primary model-click" (click)="editRuleDefinition(rule)"><i class="fa-solid fa-pencil"></i></a>
+                                           <a class="text-primary model-click ml-10 text-danger" (click)="openDeleteRuleModal(rule.codeRuleId)"><i class="fa-solid fa-trash-can"></i></a>
+                                         </td>
+                                         <td>{{ rule.ruleDescription }}</td>
+                                         <td>{{ rule.codeRuleCategoryDTO.codeRuleCategoryDescription }}</td>
+                                         <td>{{ rule.codeRuleTypeDTO.codeRuleTypeDescription }}</td>
+                                         <td>{{ rule.codeRuleLevelDTO.codeRuleLevelDescription }}</td>
+                                         <td>{{ rule.codeRuleImpactAreaDTO.codeRuleImpactAreaDescription }}</td>
+                                         <td>{{ rule.codeRuleActionTypeDTO.codeRuleActionTypeDescription }}</td>
+                                       </tr>
+                                     </tbody>
+                                     <ng-template #noRecords>
+                                       <tbody>
+                                         <tr>
+                                           <td colspan="7" class="text-center">No rule for this reason code</td>
+                                         </tr>
+                                       </tbody>
+                                     </ng-template>
+                                     
+                                   </table>
+                             </div>
+                             <div class="d-flex justify-content-end">
+                               <button type="button" 
+                               class="d-sm-inline-block btn btn-sm btn-secondary ml-10" 
+                               (click)="skipToNextTab()"
+                               >Skip</button>
+                               <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10" (click)="backToPrevious()">Back</button>
+                         
+                                 <button type="button" 
+                                 class="d-sm-inline-block btn btn-sm btn-primary ml-10"
+                                 (click)="toggleFormFields()">Add New Rule</button>
+                             </div>
+                             <div class="w-100"><hr></div>
+                             <div class="add-new-rule" *ngIf="showFormFields">
+                                 <div class="row">
+                                     <div class="col-lg-12">
+                                         <div class="form-group row mb-3">
+                                             <label class="new-width-col col-form-label">Rule Description<span class="text-danger">*</span></label>
+                                             <div class="col">
+                                                 <textarea type="text" 
+                                                  formControlName="ruleDescription" 
+                                                  class="form-control"></textarea>
+                                             </div>                                       
+                                         </div>
+                                     </div>
+                                 </div>
+                                     <div class="row">
+                                         <div class="col-lg-6">
+                                             <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Rule Category<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="ruleCategory"  [(ngModel)]="ruleCategoryData">
+                                                         <mat-option *ngFor="let category of returnCategories" [value]="category.codeRuleCategoryCode">
+                                                           {{category.codeRuleCategoryCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label"> Rule Level<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="ruleLevel"  [(ngModel)]="ruleLevelData">
+                                                         <mat-option  *ngFor="let levels of ruleLevels " [value]="levels.codeRuleLevelCode">
+                                                           {{levels.codeRuleLevelCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Data Type (Optional)<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="dataType"  [(ngModel)]="dataTypeData"
+                                                       (selectionChange)="fetchDataListByDataType()">
+                                                         <mat-option  *ngFor="let dataType of resolutionDataTypes" [value]="dataType.codeRuleDataTypeCode">
+                                                           {{dataType.codeRuleDataTypeCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Data List (Optional) </label>                                      
+                                                 <div  class="col-sm-9">
+                                                    
+                                                     <mat-chip-list #chipList class="form-control">
+                                                       <input  class="no-border-control"
+                                                       #newChip
+                                                       (keyup.enter)="add(newChip.value)" (blur)="add(newChip.value)">
+                                                       <mat-chip *ngFor="let chip of datalist" [removable]="true"
+                                                        (removed)="remove(chip)"  [style.background-color]="'#5d87ff'"
+                                                        [style.color]="'white'">
+                                                         {{ chip }}
+                                                         <mat-icon matChipRemove>cancel</mat-icon>
+                                                       </mat-chip>
+                                                      
+                                                     </mat-chip-list>
+                                                    </div>
+                                             </div>
+
+
+                                            <!--  <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Success Message</label>
+                                                 <div  class="col-sm-9">
+                                                     <textarea type="text" 
+                                                    
+                                                     formControlName="sucessMessage" class="form-control"></textarea>
+                                                 </div>                                       
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label">Allow Override</label>
+                                                 <div  class="col-sm-9">
+                                                     <div class="form-check form-switch">
+                                                         <input type="checkbox" 
+                                                         formControlName="allowOverride" class="form-check-input mt-2">
+                                                     </div>
+                                                 </div>                                       
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label">Update Work Status <span class="text-danger"  *ngIf="checkStatus">*</span></label>
+                                                 <div  class="col-sm-1">
+                                                     <div class="form-check form-switch">
+                                                         <input type="checkbox"
+                                                         formControlName="updateworkStatus" 
+                                                          class="form-check-input mt-2"
+                                                          (change)="statusChange()" >
+                                                     </div>
+                                                 </div>  
+                                                 <div  class="col-sm-5">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="workStatus"  [(ngModel)]="workStatusData">
+                                                         <mat-option *ngFor="let status of workStatus" [value]="status.workStatusCode" >
+                                                           {{status.workStatusDescription}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>                                        
+                                             </div> -->
+                                             
+                                         </div>
+                                         <div class="col-lg-6">
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label"> Rule Type<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="ruleType"  [(ngModel)]="ruleTypeData">
+                                                         <mat-option *ngFor="let types of ruleTypes " [value]="types.codeRuleTypeCode">
+                                                           {{types.codeRuleTypeCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Area of Impact<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="areaofImpact"  [(ngModel)]="areaofImpactData">
+                                                         <mat-option *ngFor="let area of ruleImpactAreaCode"[value]="area.codeRuleImpactAreaCode">
+                                                           {{area.codeRuleImpactAreaCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label">Action Type<span class="text-danger">*</span></label>                                      
+                                                 <div  class="col-sm-9">
+                                                     <mat-form-field>
+                                                       <mat-select formControlName="actionType"  [(ngModel)]="actionTypeData">
+                                                         <mat-option *ngFor="let actionType of ruleActionTypes" [value]="actionType.codeRuleActionTypeCode" >
+                                                           {{actionType.codeRuleActionTypeCode}}
+                                                         </mat-option>
+                                                       </mat-select>
+                                                     </mat-form-field>
+
+
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label">Action Description<span class="text-danger">*</span></label>
+                                                 <div  class="col-sm-9">
+                                                     <textarea type="text"
+                                                       formControlName="actionDescription" class="form-control"></textarea>
+                                                 </div>                                       
+                                             </div>
+
+                                           <!--   <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Failure Message </label>
+                                                 <div  class="col-sm-9">
+                                                     <textarea type="text" 
+                                                     formControlName="failureMessage" class="form-control"></textarea>
+                                                 </div>                                       
+                                             </div>
+                                             <p  *ngIf="actionTypeData == 'Message'" class="text-danger note-temp-manadatory">**Success Message  Either Failure Message  is mandatory</p>
+    
+                                             <div class="form-group row mb-3">
+                                                 <label class="col-sm-3 col-form-label">Approval Required</label>
+                                                 <div  class="col-sm-9">
+                                                     <div class="form-check form-switch">
+                                                         <input type="checkbox"
+                                                           formControlName="approvalRequired" class="form-check-input mt-2">
+                                                     </div>
+                                                 </div>                                       
+                                             </div>
+                                             <div class="form-group row mb-3">
+                                                 <label  class="col-sm-3 col-form-label">Work Status Remarks <span class="text-danger" *ngIf="checkStatus">*</span></label>
+                                                 <div  class="col-sm-9">
+                                                     <div class="form-check form-switch">
+                                                         <textarea type="text" 
+                                                        formControlName="workStatusRemarks" class="form-control"></textarea>
+                                                     </div>
+                                                 </div>                                       
+                                             </div> -->
+                                         </div>
+                                         <div class="row">
+                                           <div class="col-6">
+                                           <div class="form-group row mb-3">
+                                           <label class="col-sm-3 col-form-label">Success Message</label>
+                                           <div  class="col-sm-9 p-r-0">
+                                           <textarea type="text" 
+                                                   formControlName="sucessMessage" class="form-control"></textarea>
+                                           </div>                                       
+                                           </div>
+                                           <p  *ngIf="actionTypeData == 'Message'" class="text-danger note-temp-manadatory">**Either a Success Message or a Failure Message is mandatory</p>
+                                           </div>
+                                           <div class="col-6 p-r-0 p-l-new" >
+                                           <div class="form-group row mb-3">
+                                           <label class="col-sm-3 col-form-label">Failure Message </label>
+                                           <div  class="col-sm-9 p-r-0">
+                                           <textarea type="text" 
+                                                   formControlName="failureMessage" class="form-control"></textarea>
+                                           </div>                                       
+                                           </div>
+                                           </div>
+                                           </div>
+                                         <div class="row">
+                                           <div class="col-lg-6">
+                                           <!-- <div class="form-group row mb-3">
+                                             <label class="col-sm-3 col-form-label">Success Message</label>
+                                             <div  class="col-sm-9">
+                                                 <textarea type="text" 
+                                                
+                                                 formControlName="sucessMessage" class="form-control"></textarea>
+                                             </div>                                       
+                                         </div> -->
+                                         <div class="form-group row mb-3">
+                                             <label  class="col-sm-3 col-form-label">Allow Override</label>
+                                             <div  class="col-sm-9">
+                                                 <div class="form-check form-switch">
+                                                     <input type="checkbox" 
+                                                     formControlName="allowOverride" class="form-check-input mt-2">
+                                                 </div>
+                                             </div>                                       
+                                         </div>
+                                         <div class="form-group row mb-3">
+                                             <label  class="col-sm-3 col-form-label">Update Work Status<span class="text-danger"  *ngIf="checkStatus">*</span></label>
+                                             <div  class="col-sm-1">
+                                                 <div class="form-check form-switch">
+                                                     <input type="checkbox"
+                                                     formControlName="updateworkStatus" 
+                                                      class="form-check-input mt-2"
+                                                      (change)="statusChange()" >
+                                                 </div>
+                                             </div>  
+                                             <div  class="col-sm-5">
+                                                 <mat-form-field>
+                                                   <mat-select formControlName="workStatus"  [(ngModel)]="workStatusData">
+                                                     <mat-option *ngFor="let status of workStatus" [value]="status.workStatusCode" >
+                                                       {{status.workStatusDescription}}
+                                                     </mat-option>
+                                                   </mat-select>
+                                                 </mat-form-field>
+                                             </div>                                        
+                                         </div>
+                                       </div>
+
+                                         <div class="col-lg-6 p-r-0 p-l-new">
+                                           <!-- <div class="form-group row mb-3">
+                                             <label class="col-sm-3 col-form-label">Failure Message </label>
+                                             <div  class="col-sm-9 p-r-0">
+                                                 <textarea type="text" 
+                                                 formControlName="failureMessage" class="form-control"></textarea>
+                                             </div>                                       
+                                         </div>
+                                         <p  *ngIf="actionTypeData == 'Message'" class="text-danger note-temp-manadatory">** Either a Success Message or a Failure Message is mandatory</p>
+ -->
+                                         <div class="form-group row mb-3">
+                                             <label class="col-sm-3 col-form-label">Approval Required</label>
+                                             <div  class="col-sm-9 p-r-0">
+                                                 <div class="form-check form-switch">
+                                                     <input type="checkbox"
+                                                       formControlName="approvalRequired" class="form-check-input mt-2">
+                                                 </div>
+                                             </div>                                       
+                                         </div>
+                                         <div class="form-group row mb-3">
+                                             <label  class="col-sm-3 col-form-label">Work Status Remarks<span class="text-danger" *ngIf="checkStatus">*</span></label>
+                                             <div  class="col-sm-9 p-r-0 p-l-0">
+                                                 <div class="form-check form-switch p-l-switch">
+                                                     <textarea type="text" 
+                                                    formControlName="workStatusRemarks" class="form-control"></textarea>
+                                                 </div>
+                                             </div>                                       
+                                         </div>
+                                       </div>
+                                         </div>
+                                     </div>
+                                    
+                                   
+                             </div>
+                         </div>
+                        </div>
+                        <div class="text-end mt-30" *ngIf="showFormFields">
+                         <!-- <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary" (click)="backToPrevious()">Back</button> -->
+                         <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10" (click)="cancelRuleDefinition()">Cancel</button>
+                         <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10"
+                         (click)="saveAndCloseRuleDefinition()" [disabled]="checkRuleDefinitionStatus()">Save & Close</button>
+                         <button type="button"  class="d-sm-inline-block btn btn-sm btn-primary ml-10" 
+                         (click)="saveRuleDefinition()" [disabled]="checkRuleDefinitionStatus()">Save & Continue</button>
+                       </div>
+                       </form>
+                    
+                    </mat-step>
+                  
+                    <!-- Step 3 -->
+                    <mat-step [completed]="step3Completed" [disabled]="!step2Completed">
+                      <ng-template matStepLabel>Possible Resolutions</ng-template>
+                      <form [formGroup]="possibleResolutionFormGroup">
+                        <div class="mt-30">
+                            <table class="table table-striped table-hover table-resolution-new" 
+                             matSort (matSortChange)="sortPossibleresolutions($event)">
+                                <thead>
+                                 <tr>
+                                  <th></th>
+                                   <th mat-sort-header="resolutionName"> Resolution Name</th>
+                                        <th mat-sort-header="description">Description</th>
+                                        <th mat-sort-header="procedureManualReference"> Procedure Manual Reference</th>
+                                      </tr>
+                                </thead>
+                                  <tbody *ngIf="sortedResolutions.length > 0; else noData">
+                                    <tr *ngFor="let resolution of sortedResolutions"
+                                    [class.selected]="resolution.selected">
+                                    <td>
+                                      <a class="text-primary model-click text-danger"
+                                       (click)="deleteResourceModel(resolution.codeResolutionId)">
+                                       <img src="../../../assets/images/ic_delete.svg" alt=""></a>
+                                  </td>
+                                      <td>{{ resolution.claimResolution.resolutionName }}</td>
+                                      <td class="w-500">{{ resolution.claimResolution.description }}</td>
+                                      <td class="w-300 procedure-manual">
+                                        <a href="{{ resolution.procedureManual }}" target="_blank">{{ resolution.claimResolution.procedureManual }}</a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                   <ng-template #noData>
+                                    <tbody>
+                                      <tr>
+                                        <td colspan="7" class="text-center">Records Not Found</td>
+                                      </tr>
+                                    </tbody>
+                                  </ng-template>
+                            </table>
+                        </div>
+                        <div class="text-end mt-30">
+                            <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary " (click)="skipToFourthStep()">Skip/Next</button>
+                            
+                            <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary ml-10" (click)="backToPrevious()">Back</button>
+
+                            <button type="button"
+                              class="d-sm-inline-block btn btn-sm btn-primary ml-10"
+                              (click)="openResloutionModal()">
+                              <!-- (click)="associateResolution()"
+                              [disabled]="enableAssociateResolution()" -->
+                              Associate Resolution</button>
+                          </div>
+                      </form>
+                    </mat-step>
+                  
+                    <!-- Step 4 -->
+                    <mat-step [completed]="step4Completed" [disabled]="!step3Completed">
+                      <ng-template matStepLabel>Photos</ng-template>
+                      <div class="mt-30">
+                        <table class="table table-striped table-hover"
+                        matSort (matSortChange)="sortPhotos($event)">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th mat-sort-header="photo">Photo</th>
+                              <th mat-sort-header="description">Description</th>
+                                     
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="sortclaimCodePhotos.length > 0; else noPhotos">
+                            <tr *ngFor="let photo of sortclaimCodePhotos">
+                              <td>
+                                <a class="text-primary model-click text-danger" (click)="deleteCodePhotos(photo.codePhotoId)">
+                                  <img src="../../../assets/images/ic_delete.svg" alt="">
+                                </a>
+                              </td>
+                              <td>{{ photo.photoName }}</td>
+                              <td>{{ photo.photoDescription }}</td>
+                            </tr>
+                          </tbody>
+                          <ng-template #noPhotos>
+                            <tbody>
+                              <tr>
+                                <td colspan="3" class="text-center">Records Not Found</td>
+                              </tr>
+                            </tbody>
+                          </ng-template>
+                        </table>
+                      </div>
+                      <div class="text-end mt-30">
+                        <button type="button" class="d-sm-inline-block btn btn-sm btn-secondary" (click)="backToPrevious()">Back/Reset</button>
+                        <button type="button" matStepperNext class="d-sm-inline-block btn btn-sm btn-primary ml-10" (click)="openClaimPhotosModal()">Associate Photos</button>
+                      </div>
+                    </mat-step>
+                       
+                  </mat-horizontal-stepper>
+      </div>
+          </div>
+        </div>
+        </div>
+
+        <app-footer></app-footer>
+      
+          <div
+        class="modal modal-bg"
+        id="claimPhotosModal"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">
+                {{ '  Associated New Photo' }} 
+              
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                (click)="closeClaimPhotosModal()"
+              ></button>
+            </div>
+            <div class="modal-body">
+             
+              <div class="row mb-3">
+               
+
+                <table class="table table-striped table-hover table-sorting">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Photo</th>
+                        <th>Description</th>
+                        <th></th>
+                      </tr>
+                     
+                    </thead>
+                    <tbody *ngIf="claimPhotos.length > 0; else noData">
+                        <tr *ngFor="let photo of claimPhotos" [class.disabled]="isRowPhotoDisabled(photo)">
+                       
+                            <td [disabled]="isRowPhotoDisabled(photo)">
+                                <input type="checkbox"
+                                 [checked]="selectedClaimPhoto === photo" (change)="onCheckboxChange(photo)">
+                              </td>
+                          <td>
+                            <a href="javascript:void(0);" class="text-primary" (click)="previewPhoto(photo)">{{ photo.photoName }}</a>
+                            <!-- Overlay for photo preview -->
+                           
+                          </td>
+                        
+                          <td>{{ photo.photoDescription }}</td>
+                        </tr>
+                      </tbody>
+                      <ng-template #noData>
+                        <tbody>
+                          <tr>
+                            <td colspan="3" class="text-center">Records Not Found</td>
+                          </tr>
+                        </tbody>
+                      </ng-template>
+                      
+                  </table>
+            
+            
+            
+          
+              </div>
+              
+            </div>
+            <div class="modal-footer">
+              <div class="row">
+                <div class="col-12 d-flex gap-3 flex-wrap">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="saveCodePhotos()"
+                    [disabled]="selectedClaimPhoto == null"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+
+    </div>
+   
+</div>
+<!-- Delete modal for possible resolutions -->
+<div
+class="modal modal-bg"
+id="deleteModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deleteModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deleteModalLabel">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="closeModal('deleteModal')"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Are you want to delete this resolution?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteCodeResolution()"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal('deleteModal')"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- not using if we want use for others -->
+<div
+class="modal modal-bg"
+id="possibleResModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="possibleResModalModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog  modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="possibleResModalModalLabel">
+       
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+         
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="continueToUpdate()"
+          >
+            Continue
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div
+class="modal modal-bg"
+id="deletecodeModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deletecodeModal"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deletecodeModal">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="cancelDeletePhotoModel()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Are you sure to delete the photo?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="confirmDeletePhotoModel()"
+          >
+            Confirm
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            (click)="cancelDeletePhotoModel()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- update reasoncode -->
+<div
+class="modal modal-bg"
+id="updateModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="updateModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="updateModalLabel">
+       Update confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="closeModal('updateModal')"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>This reason code is earlier present. Are you sure to update it?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="updatedReasonCodeModal()"
+          >
+            Continue
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal('updateModal')"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Delete modal for Rule definition -->
+<div
+class="modal modal-bg"
+id="deleteRuleModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="deleteRuleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="deleteRuleModalLabel">
+        <i class="fa-solid fa-trash-can"></i> Delete Confirmation
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="closeModal('deleteRuleModal')"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Are you want to delete this Rule definition</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteCodeRuledefinition()"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal('deleteRuleModal')"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Associate resolution Modal -->
+<div
+class="modal modal-bg"
+id="resolutionModal"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-xl modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">
+        {{ '  Associate Resolutions' }} 
+      
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        (click)="closeModal('resolutionModal')"
+      ></button>
+    </div>
+    <div class="modal-body">
+     
+      <div class="row mb-3">
+       
+
+        <table class="table table-striped table-hover table-sorting new-associate-res table-resolution-new">
+            <thead>
+              <tr>
+                <th class="w-75"></th>
+                <th class="w-150-new"> Resolution Name </th>
+                <th class="w-500">Description</th>
+                <th class="w-300 procedure-manual">Procedure Manual Reference</th>
+              </tr>
+             
+            </thead>
+            <tbody *ngIf="claimResolutions.length > 0; else noData" >
+              <tr *ngFor="let resolution of claimResolutions"
+              [class.selected]="resolution.selected"  [class.disabled]="isRowDisabled(resolution)">
+                <td class="w-75" [disabled]="isRowDisabled(resolution)">
+                  <div class="cd-check-item">
+                      <input type="checkbox"
+                      [checked]="resolution.selected"
+                      (click)="resolutionRowSelection(resolution)"
+                      > 
+                  </div>
+                </td>
+                <td class="w-150-new">{{ resolution.resolutionName }}</td>
+                <td class="w-500">{{ resolution.description }}</td>
+                <td class="w-300 procedure-manual">
+                  <a href="{{ resolution.procedureManual }}" target="_blank">{{ resolution.procedureManual }}</a>
+                </td>
+              </tr>
+              </tbody>
+              <ng-template #noData>
+                <tbody>
+                  <tr>
+                    <td colspan="3" class="text-center">Records Not Found</td>
+                  </tr>
+                </tbody>
+              </ng-template>
+              
+          </table>
+    </div>
+      
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-12 d-flex gap-3 flex-wrap">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="associateResolution()" 
+            [disabled]="!selectedRowData">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>         

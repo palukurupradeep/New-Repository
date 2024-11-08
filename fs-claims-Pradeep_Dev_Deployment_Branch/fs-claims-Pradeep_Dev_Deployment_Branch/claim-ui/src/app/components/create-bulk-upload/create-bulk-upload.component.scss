@@ -1,0 +1,63 @@
+.datepicker {
+    position: absolute;
+    cursor: pointer;
+    right: 10px;
+    top: 3px;
+    margin-top: 0;
+    color: #5d87ff;
+    font-size: 18px;
+}
+.ml-10{
+    margin-left: 10px;
+}
+.bulk-upload{
+    box-shadow: none;
+    background: #fff;
+    background-color: #fff !important;
+    border: 1px solid var(--primary)!important;
+    color: var(--primary)!important;
+    padding: 0 60px;
+    width: 100%;
+}
+.styled-checkbox+label:before {
+    content: "";
+    margin-right: 4px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: -2px;
+}
+.per-page-style{white-space: nowrap; padding-right: 10px; margin-right: 10px;}
+tbody tr, tbody td {
+    border-bottom-width: 0px!important;
+    line-height: inherit;
+}
+.border-bottom {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+    margin-bottom: 15px;
+}
+.search-input{
+    font-size: 13px;
+}
+
+.inactive-card{
+    background-color: #e8e8ed!important;
+    border: 1px solid #E8E8ED!important;
+}
+.inactive-card h3{
+    padding: 0;
+    margin: 0;
+    font-size: 13px!important;
+}
+.px-20 {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+tbody tr, tbody td {
+    border-bottom-width: 0px!important;
+    line-height: inherit !important;
+}

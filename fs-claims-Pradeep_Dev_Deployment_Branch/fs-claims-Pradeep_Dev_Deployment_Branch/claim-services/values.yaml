@@ -1,0 +1,129 @@
+global:
+  namespace: dev
+  imagePullSecrets:
+    - name: jfrog-registry-secret
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  host: "fs-claims-dev.shawinc.com"
+  tls: true
+  tlsSecretName: "shawinc-wildcard-2024"
+
+services:
+  claim-batch-service:
+    name: claim-batch-service
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-batch-service
+      tag: latest
+    port: 8085
+    ingress:
+      path: /claim/dev/batch
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+  claim-initiation-service:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-initiation-service
+      tag: latest
+    port: 8082
+    ingress:
+      path: /claim/dev/initiation
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+  claim-integration-service:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-integration-service
+      tag: latest
+    port: 8081
+    ingress:
+      path: /claim/dev/integration
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+  claim-notification-service:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-notification-service
+      tag: latest
+    port: 8084
+    ingress:
+      path: /claim/dev/notification
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+  claim-security-service:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-security-service
+      tag: latest
+    port: 8083
+    ingress:
+      path: /claim/dev/security
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+  claim-ui:
+    name: claim-ui
+    enabled: true
+    isClaimUI: true
+    replicaCount: 1
+    image:
+      repository: jfrog.shawinc.io/docker-local/claim-ui
+      tag: latest
+    ports:
+      - 80
+      - 4200
+    ingress:
+      path: /dev
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "1500Mi"
+        cpu: "500m"
+
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: claim-services
+    meta.helm.sh/release-namespace: dev

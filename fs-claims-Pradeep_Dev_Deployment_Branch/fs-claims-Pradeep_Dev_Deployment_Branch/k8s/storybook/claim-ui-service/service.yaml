@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: claim-ui-service
+  namespace: claim-apps
+  labels:
+    app: claim-ui-service
+spec:
+  selector:
+    app: claim-ui-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http-port
+    - name: angular
+      protocol: TCP
+      port: 4200
+      targetPort: angular-port
+  type: ClusterIP
